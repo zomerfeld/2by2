@@ -197,7 +197,26 @@ export function TodoSidebar() {
     updateMutation.mutate({ id, updates });
   };
 
-  const activeItems = todoItems.filter(item => !item.completed);
+  // Sort active items: unassigned first, then by distance to top-right corner (high urgency + high impact)
+  const activeItems = todoItems
+    .filter(item => !item.completed)
+    .sort((a, b) => {
+      // Unassigned items (no position) come first
+      const aUnassigned = a.positionX === null || a.positionY === null;
+      const bUnassigned = b.positionX === null || b.positionY === null;
+      
+      if (aUnassigned && !bUnassigned) return -1;
+      if (!aUnassigned && bUnassigned) return 1;
+      if (aUnassigned && bUnassigned) return a.number - b.number; // Sort unassigned by number
+      
+      // For assigned items, calculate distance to top-right corner (1, 0)
+      // Closer to top-right = higher priority (lower distance)
+      const aDistance = Math.sqrt(Math.pow(1 - a.positionX!, 2) + Math.pow(0 - (1 - a.positionY!), 2));
+      const bDistance = Math.sqrt(Math.pow(1 - b.positionX!, 2) + Math.pow(0 - (1 - b.positionY!), 2));
+      
+      return aDistance - bDistance;
+    });
+  
   const completedItems = todoItems.filter(item => item.completed);
   const existingNumbers = todoItems.map(item => item.number);
 
@@ -208,7 +227,7 @@ export function TodoSidebar() {
         <Button
           onClick={() => setShowModal(true)}
           className="w-full"
-          disabled={todoItems.length >= 15}
+          disabled={todoItems.length >= 100}
         >
           <Plus className="mr-2 h-4 w-4" />
           Add New Item

@@ -241,15 +241,15 @@ export function PriorityMatrix() {
         >
           {editingYAxis ? (
             <Input
-              value={yAxisLabel}
-              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+              value={xAxisLabel}
+              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
               onBlur={() => setEditingYAxis(false)}
               onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
               className="w-24 h-6 text-sm transform rotate-90"
               autoFocus
             />
           ) : (
-            yAxisLabel
+            xAxisLabel
           )}
         </div>
         
@@ -261,15 +261,15 @@ export function PriorityMatrix() {
         >
           {editingXAxis ? (
             <Input
-              value={xAxisLabel}
-              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+              value={yAxisLabel}
+              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
               onBlur={() => setEditingXAxis(false)}
               onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
               className="w-24 h-6 text-sm"
               autoFocus
             />
           ) : (
-            xAxisLabel
+            yAxisLabel
           )}
         </div>
 

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Download, Save, RotateCcw } from "lucide-react";
+import { Download, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { MatrixItem } from "./matrix-item";
@@ -11,6 +10,8 @@ import { useQuadrantDrop } from "@/hooks/use-drag-drop";
 import { type DragItem, type Position, type QuadrantType } from "@/lib/types";
 import { type TodoItem, type MatrixSettings } from "@shared/schema";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 interface QuadrantProps {
   type: QuadrantType;
@@ -64,6 +65,8 @@ export function PriorityMatrix() {
 
   const [xAxisLabel, setXAxisLabel] = useState(settings?.xAxisLabel || "Impact");
   const [yAxisLabel, setYAxisLabel] = useState(settings?.yAxisLabel || "Urgency");
+  const [editingXAxis, setEditingXAxis] = useState(false);
+  const [editingYAxis, setEditingYAxis] = useState(false);
 
   const updateItemMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<TodoItem> }) => {
@@ -129,24 +132,66 @@ export function PriorityMatrix() {
   };
 
   const handleExport = async () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     try {
-      const response = await fetch("/api/export");
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "priority-matrix.json";
-      a.click();
-      window.URL.revokeObjectURL(url);
+      // Export JSON data
+      const exportData = {
+        todoItems: todoItems,
+        matrixSettings: { xAxisLabel, yAxisLabel },
+        exportedAt: new Date().toISOString(),
+      };
+
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const jsonUrl = URL.createObjectURL(dataBlob);
       
+      const jsonLink = document.createElement("a");
+      jsonLink.href = jsonUrl;
+      jsonLink.download = `priority-matrix-${timestamp}.json`;
+      document.body.appendChild(jsonLink);
+      jsonLink.click();
+      document.body.removeChild(jsonLink);
+      URL.revokeObjectURL(jsonUrl);
+
+      // Export PNG screenshot
+      const element = document.body;
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#ffffff',
+        scale: 1,
+        useCORS: true,
+      });
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const pngUrl = URL.createObjectURL(blob);
+          const pngLink = document.createElement("a");
+          pngLink.href = pngUrl;
+          pngLink.download = `priority-matrix-${timestamp}.png`;
+          document.body.appendChild(pngLink);
+          pngLink.click();
+          document.body.removeChild(pngLink);
+          URL.revokeObjectURL(pngUrl);
+        }
+      });
+
+      // Export PDF
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 297; // A4 landscape width
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save(`priority-matrix-${timestamp}.pdf`);
+
       toast({
-        title: "Success",
-        description: "Matrix exported successfully",
+        title: "Export successful",
+        description: "Matrix exported as JSON, PNG, and PDF files",
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to export matrix",
+        title: "Export failed",
+        description: "There was an error exporting the matrix",
         variant: "destructive",
       });
     }
@@ -168,9 +213,8 @@ export function PriorityMatrix() {
         {/* Export Controls */}
         <div className="mb-6 flex items-center justify-end">
           <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="mr-2 h-4 w-4" />
-              Export
+            <Button variant="outline" onClick={handleExport} title="Export data">
+              <Download className="h-4 w-4" />
             </Button>
             <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
               <RotateCcw className="mr-2 h-4 w-4" />
@@ -180,10 +224,25 @@ export function PriorityMatrix() {
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className="flex-1 relative p-20">
+        <div className="flex-1 relative p-16 mt-4">
           {/* Y-Axis Labels - centered vertically on left side */}
-          <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700">
-            {yAxisLabel}
+          <div 
+            className="absolute -left-6 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            onDoubleClick={() => setEditingYAxis(true)}
+            title="Double-click to edit"
+          >
+            {editingYAxis ? (
+              <Input
+                value={yAxisLabel}
+                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+                onBlur={() => setEditingYAxis(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
+                className="w-24 h-6 text-sm transform rotate-90"
+                autoFocus
+              />
+            ) : (
+              yAxisLabel
+            )}
           </div>
           
           {/* Y-Axis Value Labels */}
@@ -195,8 +254,23 @@ export function PriorityMatrix() {
           </div>
           
           {/* X-Axis Labels - centered horizontally on bottom */}
-          <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-lg font-semibold text-gray-700">
-            {xAxisLabel}
+          <div 
+            className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            onDoubleClick={() => setEditingXAxis(true)}
+            title="Double-click to edit"
+          >
+            {editingXAxis ? (
+              <Input
+                value={xAxisLabel}
+                onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+                onBlur={() => setEditingXAxis(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
+                className="w-24 h-6 text-sm"
+                autoFocus
+              />
+            ) : (
+              xAxisLabel
+            )}
           </div>
           
           {/* X-Axis Value Labels */}
@@ -259,37 +333,6 @@ export function PriorityMatrix() {
                 />
               </div>
             </TooltipProvider>
-          </div>
-
-          {/* Impact Label and Axis Controls */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Impact vs {yAxisLabel} Matrix</h2>
-            </div>
-            <div className="flex items-center justify-center space-x-8">
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">
-                  Y-Axis Label:
-                </Label>
-                <Input
-                  id="y-axis"
-                  value={yAxisLabel}
-                  onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                  className="w-32 h-8 text-sm"
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="x-axis" className="text-sm font-medium text-gray-700">
-                  X-Axis Label:
-                </Label>
-                <Input
-                  id="x-axis"
-                  value={xAxisLabel}
-                  onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-                  className="w-32 h-8 text-sm"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>

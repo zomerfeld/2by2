@@ -94,7 +94,7 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add New Todo Item</DialogTitle>
+          <DialogTitle>Add New To-Do Item</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

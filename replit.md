@@ -117,6 +117,14 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Added double-click to remove items from matrix
   - Implemented automatic matrix removal when items are completed
   - Added memory for item positions when toggling completion status
+- June 28, 2025. UI improvements and enhanced export:
+  - Changed all "todo" references to "To-Do" in user interface
+  - Removed export button label, now icon-only with tooltip
+  - Enhanced export to include JSON, PDF, and PNG screenshot formats
+  - Removed "Impact vs Urgency Matrix" title for cleaner interface
+  - Repositioned matrix higher in container for better visual balance
+  - Replaced bottom axis controls with inline double-click editing
+  - Axis labels now editable via double-click with immediate visual feedback
 
 ## User Preferences
 

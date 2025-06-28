@@ -197,23 +197,21 @@ export function TodoSidebar() {
     updateMutation.mutate({ id, updates });
   };
 
-  // Helper function to determine quadrant based on VISUAL position
+  // Helper function to determine quadrant based on chart coordinates
+  // X-axis (Urgency): 0 = Low (left), 1 = High (right)
+  // Y-axis (Impact): 0 = High (top), 1 = Low (bottom)
   // Quadrant 1 = top-right (high urgency + high impact)
   // Quadrant 2 = top-left (low urgency + high impact)  
   // Quadrant 3 = bottom-left (low urgency + low impact)
   // Quadrant 4 = bottom-right (high urgency + low impact)
   const getQuadrant = (x: number, y: number): number => {
-    // In our swapped coordinate system:
-    // Impact is vertical: y < 0.5 = high impact (top), y >= 0.5 = low impact (bottom)
-    // Urgency is horizontal: x >= 0.5 = high urgency (right), x < 0.5 = low urgency (left)
+    const highUrgency = x >= 0.5;  // right half of chart
+    const highImpact = y <= 0.5;   // top half of chart
     
-    const highUrgency = x >= 0.5;  // right side of matrix
-    const highImpact = y < 0.5;    // top side of matrix
-    
-    if (highUrgency && highImpact) return 1;   // top-right
-    if (!highUrgency && highImpact) return 2;  // top-left
-    if (!highUrgency && !highImpact) return 3; // bottom-left  
-    return 4; // bottom-right
+    if (highUrgency && highImpact) return 1;   // top-right: high urgency, high impact
+    if (!highUrgency && highImpact) return 2;  // top-left: low urgency, high impact
+    if (!highUrgency && !highImpact) return 3; // bottom-left: low urgency, low impact
+    return 4; // bottom-right: high urgency, low impact
   };
 
   // Sort active items: unassigned first, then by quadrant (1,2,4,3), then by height (lower y = higher), then by x position (higher x = higher priority)

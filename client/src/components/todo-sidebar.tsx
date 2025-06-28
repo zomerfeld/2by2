@@ -241,7 +241,22 @@ export function TodoSidebar() {
           <>
             <Separator className="mx-6" />
             <div className="p-6">
-              <h3 className="text-sm font-medium text-gray-600 mb-4">Completed ({completedItems.length})</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    completedItems.forEach(item => {
+                      deleteMutation.mutate(item.id);
+                    });
+                  }}
+                  className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                  title="Clear all completed tasks"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
               {completedItems.map((item) => (
                 <TodoItemComponent
                   key={item.id}

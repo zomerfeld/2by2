@@ -1,94 +1,28 @@
 {
   "todoItems": [
     {
-      "text": "Change Tires",
+      "id": 1,
+      "text": "Sample task 1",
       "number": 1,
-      "positionX": 0.6814621409921671,
-      "positionY": 0.5714285714285714,
-      "quadrant": "high-urgency-high-impact",
       "completed": false,
-      "id": 1
+      "positionX": 0.25,
+      "positionY": 0.25,
+      "quadrant": "low-urgency-low-impact",
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
     },
     {
-      "text": "Leah Application",
-      "number": 5,
-      "positionX": 0.85,
-      "positionY": 0.23444976076555024,
-      "quadrant": "high-urgency-high-impact",
-      "completed": false,
       "id": 2,
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
-    },
-    {
-      "text": "Fix camera",
-      "number": 3,
-      "positionX": 0.23300970873786409,
-      "positionY": 0.6796116504854369,
-      "quadrant": "low-urgency-low-impact",
-      "completed": false,
-      "id": 3
-    },
-    {
-      "text": "Email Ben",
-      "number": 4,
-      "positionX": 0.5242718446601942,
-      "positionY": 0.49707602339181284,
-      "quadrant": "low-urgency-low-impact",
-      "completed": false,
-      "id": 4,
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
-    },
-    {
-      "id": 5,
-      "text": "Check in with Nayoung",
-      "number": 8,
-      "completed": true,
-      "positionX": null,
-      "positionY": null,
-      "quadrant": null,
-      "lastPositionX": 0.1650485436893204,
-      "lastPositionY": 0.7251461988304093,
-      "lastQuadrant": "high-urgency-low-impact"
-    },
-    {
-      "id": 6,
-      "text": "Learn about Replit Figma Integration",
-      "number": 6,
-      "completed": false,
-      "positionX": 0.7963340122199593,
-      "positionY": 0.8044806517311609,
-      "quadrant": "high-urgency-low-impact",
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
-    },
-    {
-      "id": 7,
-      "text": "Portfolio Home Page Draft",
-      "number": 7,
-      "completed": false,
-      "positionX": 0.6272912423625254,
-      "positionY": 0.18329938900203666,
-      "quadrant": "low-urgency-high-impact",
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
-    },
-    {
-      "id": 8,
-      "text": "oy",
+      "text": "Sample task 2",
       "number": 2,
       "completed": true,
       "positionX": null,
       "positionY": null,
       "quadrant": null,
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
+      "lastPositionX": 0.75,
+      "lastPositionY": 0.75,
+      "lastQuadrant": "high-urgency-high-impact"
     }
   ],
   "matrixSettings": {
@@ -96,5 +30,5 @@
     "xAxisLabel": "Impact",
     "yAxisLabel": "Urgency"
   },
-  "nextId": 9
+  "nextId": 3
 }

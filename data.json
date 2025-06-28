@@ -30,11 +30,26 @@
     {
       "text": "Email Ben",
       "number": 4,
-      "positionX": null,
-      "positionY": null,
-      "quadrant": null,
+      "positionX": 0.5242718446601942,
+      "positionY": 0.49707602339181284,
+      "quadrant": "low-urgency-low-impact",
       "completed": false,
-      "id": 4
+      "id": 4,
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
+    },
+    {
+      "id": 5,
+      "text": "Check in with Nayoung",
+      "number": 5,
+      "completed": false,
+      "positionX": 0.1650485436893204,
+      "positionY": 0.7251461988304093,
+      "quadrant": "high-urgency-low-impact",
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
     }
   ],
   "matrixSettings": {
@@ -42,5 +57,5 @@
     "xAxisLabel": "Impact",
     "yAxisLabel": "Urgency"
   },
-  "nextId": 5
+  "nextId": 6
 }

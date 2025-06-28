@@ -15,14 +15,6 @@ export default function MatrixPage() {
         {/* Header */}
         <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-2"
-            >
-              {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-            </Button>
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
               <Grid className="text-white text-sm" />
             </div>
@@ -32,7 +24,19 @@ export default function MatrixPage() {
 
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
-          {!sidebarCollapsed && <TodoSidebar />}
+          {sidebarCollapsed && (
+            <div className="p-2 border-r border-gray-200 bg-white flex items-start">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarCollapsed(false)}
+                className="p-2"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+          {!sidebarCollapsed && <TodoSidebar onToggleCollapse={() => setSidebarCollapsed(true)} />}
           <PriorityMatrix isFullWidth={sidebarCollapsed} />
         </div>
       </div>

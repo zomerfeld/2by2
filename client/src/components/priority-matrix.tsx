@@ -220,10 +220,10 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className={`${isFullWidth ? 'aspect-square max-h-[calc(100vh-200px)]' : 'flex-1'} relative p-8 mt-2`}>
+        <div className={`${isFullWidth ? 'w-full aspect-square' : 'flex-1 aspect-square max-h-full'} relative p-8 mt-2`}>
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
-            className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
             onDoubleClick={() => setEditingYAxis(true)}
             title="Double-click to edit"
           >
@@ -273,6 +273,23 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
             <div className="absolute inset-0 flex flex-col">
               <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
               <div className="w-full h-1/2"></div>
+            </div>
+
+            {/* Internal Low/High Labels */}
+            {/* Horizontal axis labels */}
+            <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-medium">
+              Low
+            </div>
+            <div className="absolute bottom-2 right-2 text-xs text-gray-500 font-medium">
+              High
+            </div>
+            
+            {/* Vertical axis labels */}
+            <div className="absolute top-2 right-2 text-xs text-gray-500 font-medium transform -translate-x-2">
+              High
+            </div>
+            <div className="absolute bottom-16 right-2 text-xs text-gray-500 font-medium transform -translate-x-2">
+              Low
             </div>
 
             {/* Quadrants */}

@@ -82,7 +82,7 @@
       "id": 8,
       "text": "oy",
       "number": 2,
-      "completed": false,
+      "completed": true,
       "positionX": null,
       "positionY": null,
       "quadrant": null,

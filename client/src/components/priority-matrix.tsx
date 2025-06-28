@@ -250,7 +250,7 @@ export function PriorityMatrix() {
         
         {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute right-0 -bottom-2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+          className="absolute right-0 -bottom-2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[32px] pr-[32px]"
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >

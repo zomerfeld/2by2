@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
+const TEMPLATE_FILE = path.join(process.cwd(), "data.template.json");
 
 interface StorageData {
   todoItems: TodoItem[];
@@ -29,18 +30,26 @@ export class FileStorage implements IStorage {
       const data = await fs.readFile(DATA_FILE, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
-      // Initialize with default data if file doesn't exist
-      const defaultData: StorageData = {
-        todoItems: [],
-        matrixSettings: {
-          id: 1,
-          xAxisLabel: "Impact",
-          yAxisLabel: "Urgency",
-        },
-        nextId: 1,
-      };
-      await this.saveData(defaultData);
-      return defaultData;
+      // Try to copy from template file, otherwise use default data
+      try {
+        const templateData = await fs.readFile(TEMPLATE_FILE, 'utf-8');
+        const parsedTemplate = JSON.parse(templateData);
+        await this.saveData(parsedTemplate);
+        return parsedTemplate;
+      } catch (templateError) {
+        // Fallback to default data if template doesn't exist
+        const defaultData: StorageData = {
+          todoItems: [],
+          matrixSettings: {
+            id: 1,
+            xAxisLabel: "Impact",
+            yAxisLabel: "Urgency",
+          },
+          nextId: 1,
+        };
+        await this.saveData(defaultData);
+        return defaultData;
+      }
     }
   }
 

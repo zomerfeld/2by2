@@ -17,9 +17,8 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon serverless PostgreSQL
-- **Session Management**: PostgreSQL session store
+- **Storage**: JSON file-based storage system (data.json)
+- **Schema**: Drizzle ORM types for data validation
 - **API Design**: RESTful JSON API
 
 ### Development Environment
@@ -37,6 +36,7 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - number: Display number (1-15)
 - positionX/positionY: Matrix coordinates (0-1 range)
 - quadrant: Categorization helper
+- completed: Boolean completion status
 
 // Matrix Settings - Customizable axis labels
 - xAxisLabel: Horizontal axis name (default: "Impact")
@@ -60,26 +60,25 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 
 ## Data Flow
 
-1. **Task Creation**: Users create tasks via sidebar modal → validated against schema → stored in database → UI updates via React Query cache invalidation
+1. **Task Creation**: Users create tasks via sidebar modal → validated against schema → stored in JSON file → UI updates via React Query cache invalidation
 
 2. **Matrix Interaction**: Users drag tasks onto matrix → position coordinates calculated → backend updated with new position/quadrant → real-time UI feedback
 
 3. **Task Management**: Edit/delete operations trigger optimistic updates → backend validation → cache synchronization
 
-4. **Settings Management**: Axis label changes update matrix settings → immediate UI reflection → persistent storage
+4. **Settings Management**: Axis label changes update matrix settings → immediate UI reflection → persistent file storage
 
 ## External Dependencies
 
 ### Core Dependencies
-- **@neondatabase/serverless**: Serverless PostgreSQL connection
-- **drizzle-orm**: Type-safe database operations
+- **drizzle-orm**: Type-safe schema definitions and validation
 - **@tanstack/react-query**: Server state management
 - **react-dnd**: Drag and drop functionality
 - **@radix-ui/***: Accessible UI primitives
 - **zod**: Runtime type validation
+- **framer-motion**: Animation and drag feedback
 
 ### Development Dependencies
-- **drizzle-kit**: Database migration management
 - **tsx**: TypeScript execution for development
 - **esbuild**: Production backend bundling
 
@@ -88,16 +87,16 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 ### Build Process
 1. **Frontend**: Vite builds React app to `dist/public`
 2. **Backend**: esbuild bundles Express server to `dist/index.js`
-3. **Database**: Drizzle migrations applied via `db:push` command
 
 ### Environment Requirements
-- `DATABASE_URL`: PostgreSQL connection string (required)
 - `NODE_ENV`: Environment flag (development/production)
+- No external database dependencies (uses local file storage)
 
 ### Production Setup
 - Single-process deployment with static file serving
 - Express serves built React app as static assets
-- Database migrations must be run before deployment
+- No database setup required (uses file-based storage)
+- Data persisted in `data.json` (excluded from Git for privacy)
 
 ### Development Workflow
 - `npm run dev`: Starts development server with hot reload
@@ -160,7 +159,6 @@ Preferred communication style: Simple, everyday language.
 ## Recent Updates
 
 ### Database Integration
-- Replaced MemStorage with DatabaseStorage using PostgreSQL
 - Added completed boolean field to todo items schema
 - Implemented persistent storage for all todo items and matrix settings
 
@@ -182,5 +180,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Storage Architecture
 - Migrated from PostgreSQL to JSON file storage for Replit free tier
-- Data persisted in `data.json` with automatic initialization
+- Data persisted in `data.json` with automatic initialization from template
+- Template file `data.template.json` provides structure for new installations
+- User data excluded from Git via `.gitignore` for privacy
 - Maintains all functionality without external database dependencies

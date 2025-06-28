@@ -48,6 +48,24 @@ export class FileStorage implements IStorage {
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
   }
 
+  private getNextAvailableNumber(todoItems: TodoItem[]): number {
+    // Get all active (non-completed) item numbers
+    const usedNumbers = todoItems
+      .filter(item => !item.completed)
+      .map(item => item.number)
+      .sort((a, b) => a - b);
+    
+    // Find the first available number from 1-15
+    for (let i = 1; i <= 15; i++) {
+      if (!usedNumbers.includes(i)) {
+        return i;
+      }
+    }
+    
+    // If all numbers 1-15 are used, return the next number
+    return Math.max(...usedNumbers) + 1;
+  }
+
   async getTodoItems(): Promise<TodoItem[]> {
     const data = await this.loadData();
     return data.todoItems.sort((a, b) => a.number - b.number);
@@ -61,10 +79,14 @@ export class FileStorage implements IStorage {
   async createTodoItem(insertItem: InsertTodoItem): Promise<TodoItem> {
     const data = await this.loadData();
     const id = data.nextId++;
+    
+    // Assign the next available number if not provided
+    const number = insertItem.number ?? this.getNextAvailableNumber(data.todoItems);
+    
     const item: TodoItem = {
       id,
       text: insertItem.text,
-      number: insertItem.number,
+      number,
       completed: insertItem.completed ?? false,
       positionX: insertItem.positionX ?? null,
       positionY: insertItem.positionY ?? null,
@@ -83,7 +105,30 @@ export class FileStorage implements IStorage {
     const itemIndex = data.todoItems.findIndex(item => item.id === id);
     if (itemIndex === -1) return undefined;
     
-    data.todoItems[itemIndex] = { ...data.todoItems[itemIndex], ...updates };
+    const currentItem = data.todoItems[itemIndex];
+    const wasCompleted = currentItem.completed;
+    const willBeCompleted = updates.completed ?? currentItem.completed;
+    
+    // Handle completion status changes
+    if (!wasCompleted && willBeCompleted) {
+      // Item is being completed - save current position and clear matrix position
+      updates.lastPositionX = currentItem.positionX;
+      updates.lastPositionY = currentItem.positionY;
+      updates.lastQuadrant = currentItem.quadrant;
+      updates.positionX = null;
+      updates.positionY = null;
+      updates.quadrant = null;
+    } else if (wasCompleted && !willBeCompleted) {
+      // Item is being uncompleted - assign next available number and restore position if available
+      updates.number = this.getNextAvailableNumber(data.todoItems);
+      if (currentItem.lastPositionX !== null && currentItem.lastPositionY !== null) {
+        updates.positionX = currentItem.lastPositionX;
+        updates.positionY = currentItem.lastPositionY;
+        updates.quadrant = currentItem.lastQuadrant;
+      }
+    }
+    
+    data.todoItems[itemIndex] = { ...currentItem, ...updates };
     await this.saveData(data);
     return data.todoItems[itemIndex];
   }

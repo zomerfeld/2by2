@@ -1,4 +1,4 @@
-# Priority Matrix - Task Prioritization Tool
+# Priority Matrix - Task Prioritization Tool (v1.0)
 
 ## Overview
 
@@ -138,6 +138,14 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Centered matrix chart to prevent cutoff in fullscreen mode
   - Adjusted horizontal high-low labels positioning (moved 2px lower)
   - Optimized vertical high-low labels placement (moved 20px right from center)
+- June 28, 2025. Version 1.0 Release:
+  - Repositioned Impact label to right-align with chart edge
+  - Moved Urgency label to top-right of chart with right-aligned text
+  - Implemented intelligent number reuse system for completed tasks
+  - Numbers are automatically released when tasks are completed
+  - Returning tasks receive next available number (1-15 priority)
+  - Removed manual number selection from add task dialog
+  - Enhanced position memory system for task completion workflow
 
 ## User Preferences
 

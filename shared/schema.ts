@@ -23,6 +23,8 @@ export const matrixSettings = pgTable("matrix_settings", {
 
 export const insertTodoItemSchema = createInsertSchema(todoItems).omit({
   id: true,
+}).partial({
+  number: true,
 });
 
 export const insertMatrixSettingsSchema = createInsertSchema(matrixSettings).omit({

@@ -16,7 +16,6 @@ interface AddTodoModalProps {
 
 export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalProps) {
   const [text, setText] = useState("");
-  const [number, setNumber] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -27,10 +26,6 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
-      toast({
-        title: "Success",
-        description: "Todo item created successfully",
-      });
       handleClose();
     },
     onError: () => {
@@ -41,15 +36,6 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
       });
     },
   });
-
-  const getNextAvailableNumber = () => {
-    for (let i = 1; i <= 15; i++) {
-      if (!existingNumbers.includes(i)) {
-        return i;
-      }
-    }
-    return 1;
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,20 +49,8 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
       return;
     }
 
-    const todoNumber = getNextAvailableNumber();
-    
-    if (existingNumbers.includes(todoNumber)) {
-      toast({
-        title: "Error",
-        description: "This number is already in use",
-        variant: "destructive",
-      });
-      return;
-    }
-
     createTodoMutation.mutate({
       text: text.trim(),
-      number: todoNumber,
       positionX: null,
       positionY: null,
       quadrant: null,
@@ -86,7 +60,6 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
 
   const handleClose = () => {
     setText("");
-    setNumber("");
     onClose();
   };
 

@@ -228,9 +228,9 @@ export function PriorityMatrix() {
   return (
     <div className="flex-1 p-6 overflow-hidden flex items-center justify-center">
       <div className="w-full h-full max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-400px)] relative p-8">
-        {/* Y-Axis Labels - centered vertically on left side */}
+        {/* Y-Axis Labels - right aligned at top of chart */}
         <div 
-          className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
+          className="absolute right-0 -top-8 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-right"
           onDoubleClick={() => setEditingYAxis(true)}
           title="Double-click to edit"
         >
@@ -240,7 +240,7 @@ export function PriorityMatrix() {
               onChange={(e) => handleAxisLabelChange('y', e.target.value)}
               onBlur={() => setEditingYAxis(false)}
               onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-              className="w-24 h-6 text-sm transform rotate-90"
+              className="w-24 h-6 text-sm text-right"
               autoFocus
             />
           ) : (
@@ -248,9 +248,9 @@ export function PriorityMatrix() {
           )}
         </div>
         
-        {/* X-Axis Labels - centered horizontally on bottom */}
+        {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+          className="absolute right-0 -bottom-2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >

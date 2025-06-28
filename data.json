@@ -11,12 +11,15 @@
     },
     {
       "text": "Leah Application",
-      "number": 2,
+      "number": 5,
       "positionX": 0.85,
       "positionY": 0.23444976076555024,
       "quadrant": "high-urgency-high-impact",
       "completed": false,
-      "id": 2
+      "id": 2,
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
     },
     {
       "text": "Fix camera",
@@ -43,10 +46,46 @@
       "id": 5,
       "text": "Check in with Nayoung",
       "number": 5,
+      "completed": true,
+      "positionX": null,
+      "positionY": null,
+      "quadrant": null,
+      "lastPositionX": 0.1650485436893204,
+      "lastPositionY": 0.7251461988304093,
+      "lastQuadrant": "high-urgency-low-impact"
+    },
+    {
+      "id": 6,
+      "text": "Learn about Replit Figma Integration",
+      "number": 6,
       "completed": false,
-      "positionX": 0.1650485436893204,
-      "positionY": 0.7251461988304093,
+      "positionX": 0.7963340122199593,
+      "positionY": 0.8044806517311609,
       "quadrant": "high-urgency-low-impact",
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
+    },
+    {
+      "id": 7,
+      "text": "Portfolio Home Page Draft",
+      "number": 7,
+      "completed": false,
+      "positionX": 0.6272912423625254,
+      "positionY": 0.18329938900203666,
+      "quadrant": "low-urgency-high-impact",
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
+    },
+    {
+      "id": 8,
+      "text": "oy",
+      "number": 2,
+      "completed": false,
+      "positionX": null,
+      "positionY": null,
+      "quadrant": null,
       "lastPositionX": null,
       "lastPositionY": null,
       "lastQuadrant": null
@@ -57,5 +96,5 @@
     "xAxisLabel": "Impact",
     "yAxisLabel": "Urgency"
   },
-  "nextId": 6
+  "nextId": 9
 }

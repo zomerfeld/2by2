@@ -47,18 +47,6 @@
       "lastPositionX": null,
       "lastPositionY": null,
       "lastQuadrant": null
-    },
-    {
-      "id": 10,
-      "text": "oy",
-      "number": 5,
-      "completed": false,
-      "positionX": 0.46875,
-      "positionY": 0.37890625,
-      "quadrant": "high-urgency-low-impact",
-      "lastPositionX": null,
-      "lastPositionY": null,
-      "lastQuadrant": null
     }
   ],
   "matrixSettings": {

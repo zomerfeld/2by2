@@ -206,7 +206,7 @@ export function TodoSidebar() {
   // Quadrant 4 = bottom-right (high urgency + low impact)
   const getQuadrant = (x: number, y: number): number => {
     const highUrgency = x >= 0.5;  // right half of chart
-    const highImpact = y <= 0.5;   // top half of chart
+    const highImpact = y < 0.5;    // top half of chart (changed from <= to < for clearer boundary)
     
     if (highUrgency && highImpact) return 1;   // top-right: high urgency, high impact
     if (!highUrgency && highImpact) return 2;  // top-left: low urgency, high impact
@@ -229,10 +229,7 @@ export function TodoSidebar() {
       // Both items are assigned - sort by quadrant priority
       const aQuadrant = getQuadrant(a.positionX!, a.positionY!);
       const bQuadrant = getQuadrant(b.positionX!, b.positionY!);
-      
-
-      
-      // Quadrant priority order: 1, 2, 4, 3
+      // Quadrant priority order: 1, 2, 4, 3 (as specified by user)
       const quadrantOrder = [1, 2, 4, 3];
       const aQuadrantPriority = quadrantOrder.indexOf(aQuadrant);
       const bQuadrantPriority = quadrantOrder.indexOf(bQuadrant);

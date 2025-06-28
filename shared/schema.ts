@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, real } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, real, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -9,6 +9,7 @@ export const todoItems = pgTable("todo_items", {
   positionX: real("position_x"),
   positionY: real("position_y"),
   quadrant: text("quadrant"),
+  completed: boolean("completed").notNull().default(false),
 });
 
 export const matrixSettings = pgTable("matrix_settings", {

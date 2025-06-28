@@ -107,7 +107,37 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 
 ## Changelog
 - June 28, 2025. Initial setup
+- June 28, 2025. Major feature expansion:
+  - Migrated from in-memory to PostgreSQL database storage
+  - Added completion tracking with completed/uncompleted item separation
+  - Implemented 15-color harmonious color scheme for todo numbers
+  - Enhanced drag-and-drop with visual feedback (red borders for unassigned items)
+  - Simplified matrix display to show only colored number circles
+  - Moved axis labeling controls to bottom of interface
+  - Added double-click to remove items from matrix
+  - Implemented automatic matrix removal when items are completed
+  - Added memory for item positions when toggling completion status
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Updates
+
+### Database Integration
+- Replaced MemStorage with DatabaseStorage using PostgreSQL
+- Added completed boolean field to todo items schema
+- Implemented persistent storage for all todo items and matrix settings
+
+### Visual Enhancements
+- Each todo number displays in unique harmonious color (15-color palette)
+- Matrix items show only colored number circles for clean appearance
+- Unassigned items have red borders and background for visual distinction
+- Improved drag feedback with rotation and scaling effects
+
+### Functional Improvements
+- Separate completed items section with toggle functionality
+- Items automatically removed from matrix when marked complete
+- Position memory preserved when uncompleting items
+- Double-click matrix items to move back to sidebar
+- Axis controls relocated to bottom for better workflow

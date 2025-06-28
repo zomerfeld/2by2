@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Edit2, Trash2, GripVertical } from "lucide-react";
+import { Plus, Edit2, Trash2, GripVertical, Check, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { AddTodoModal } from "./add-todo-modal";
 import { type TodoItem } from "@shared/schema";
 import { useTodoDrag } from "@/hooks/use-drag-drop";
+import { getColorForNumber } from "@/lib/colors";
 
 interface TodoItemComponentProps {
   item: TodoItem;
   onEdit: (id: number, text: string) => void;
   onDelete: (id: number) => void;
+  onToggleComplete: (id: number, completed: boolean) => void;
+  isCompleted?: boolean;
 }
 
-function TodoItemComponent({ item, onEdit, onDelete }: TodoItemComponentProps) {
+function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isCompleted = false }: TodoItemComponentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
   const { isDragging, drag } = useTodoDrag(item);
@@ -36,16 +40,26 @@ function TodoItemComponent({ item, onEdit, onDelete }: TodoItemComponentProps) {
     }
   };
 
+  const itemColor = getColorForNumber(item.number);
+  const isOnMatrix = item.quadrant !== null;
+
   return (
     <div
-      ref={drag}
-      className={`mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-move hover:shadow-md transition-shadow ${
-        isDragging ? "opacity-50" : ""
-      }`}
+      ref={isCompleted ? undefined : drag}
+      className={`mb-3 p-3 rounded-lg border transition-all ${
+        isCompleted 
+          ? "bg-gray-100 border-gray-300 opacity-75" 
+          : isOnMatrix
+            ? "bg-gray-50 border-gray-200 cursor-move hover:shadow-md"
+            : "bg-red-50 border-red-200 border-2 cursor-move hover:shadow-md"
+      } ${isDragging ? "opacity-50 transform rotate-1" : ""}`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 flex-1">
-          <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-medium">
+          <div 
+            className="w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium"
+            style={{ backgroundColor: itemColor }}
+          >
             {item.number}
           </div>
           {isEditing ? (
@@ -59,8 +73,10 @@ function TodoItemComponent({ item, onEdit, onDelete }: TodoItemComponentProps) {
             />
           ) : (
             <span 
-              className="flex-1 text-gray-900 font-medium cursor-text"
-              onClick={() => setIsEditing(true)}
+              className={`flex-1 font-medium cursor-text ${
+                isCompleted ? "text-gray-500 line-through" : "text-gray-900"
+              }`}
+              onClick={() => !isCompleted && setIsEditing(true)}
             >
               {item.text}
             </span>
@@ -70,11 +86,25 @@ function TodoItemComponent({ item, onEdit, onDelete }: TodoItemComponentProps) {
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => setIsEditing(true)}
-            className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+            onClick={() => onToggleComplete(item.id, !isCompleted)}
+            className={`h-6 w-6 p-0 ${
+              isCompleted 
+                ? "text-green-600 hover:text-green-700" 
+                : "text-gray-400 hover:text-green-600"
+            }`}
           >
-            <Edit2 className="h-3 w-3" />
+            {isCompleted ? <Undo className="h-3 w-3" /> : <Check className="h-3 w-3" />}
           </Button>
+          {!isCompleted && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsEditing(true)}
+              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+            >
+              <Edit2 className="h-3 w-3" />
+            </Button>
+          )}
           <Button
             size="sm"
             variant="ghost"
@@ -83,9 +113,11 @@ function TodoItemComponent({ item, onEdit, onDelete }: TodoItemComponentProps) {
           >
             <Trash2 className="h-3 w-3" />
           </Button>
-          <div className="text-gray-400 cursor-move">
-            <GripVertical className="h-4 w-4" />
-          </div>
+          {!isCompleted && (
+            <div className="text-gray-400 cursor-move">
+              <GripVertical className="h-4 w-4" />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -150,7 +182,23 @@ export function TodoSidebar() {
     deleteMutation.mutate(id);
   };
 
-  const unpositionedItems = todoItems.filter(item => !item.quadrant);
+  const handleToggleComplete = (id: number, completed: boolean) => {
+    const item = todoItems.find(item => item.id === id);
+    const updates: Partial<TodoItem> = { completed };
+    
+    // If completing an item that's on the matrix, remove it from matrix
+    if (completed && item?.quadrant) {
+      updates.positionX = null;
+      updates.positionY = null;
+      updates.quadrant = null;
+    }
+    
+    updateMutation.mutate({ id, updates });
+  };
+
+  const activeItems = todoItems.filter(item => !item.completed);
+  const completedItems = todoItems.filter(item => item.completed);
+  const unpositionedActiveItems = activeItems.filter(item => !item.quadrant);
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
@@ -167,28 +215,53 @@ export function TodoSidebar() {
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
-        {isLoading ? (
-          <div className="text-center text-gray-500">Loading...</div>
-        ) : unpositionedItems.length === 0 ? (
-          <div className="text-center text-gray-500">
-            {todoItems.length === 0 ? "No todo items yet" : "All items are positioned in the matrix"}
-          </div>
-        ) : (
-          unpositionedItems.map((item) => (
-            <TodoItemComponent
-              key={item.id}
-              item={item}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))
+      <div className="flex-1 overflow-y-auto">
+        {/* Active Items */}
+        <div className="p-6">
+          {isLoading ? (
+            <div className="text-center text-gray-500">Loading...</div>
+          ) : unpositionedActiveItems.length === 0 ? (
+            <div className="text-center text-gray-500">
+              {activeItems.length === 0 ? "No active items" : "All items are positioned in the matrix"}
+            </div>
+          ) : (
+            unpositionedActiveItems.map((item) => (
+              <TodoItemComponent
+                key={item.id}
+                item={item}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onToggleComplete={handleToggleComplete}
+                isCompleted={false}
+              />
+            ))
+          )}
+        </div>
+
+        {/* Completed Items Section */}
+        {completedItems.length > 0 && (
+          <>
+            <Separator className="mx-6" />
+            <div className="p-6">
+              <h3 className="text-sm font-medium text-gray-600 mb-4">Completed ({completedItems.length})</h3>
+              {completedItems.map((item) => (
+                <TodoItemComponent
+                  key={item.id}
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onToggleComplete={handleToggleComplete}
+                  isCompleted={true}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
       <div className="p-6 border-t border-gray-200">
         <div className="text-sm text-gray-500 text-center">
-          {todoItems.length} of 15 items created
+          {activeItems.length} active, {completedItems.length} completed
         </div>
       </div>
 

@@ -80,6 +80,7 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
       positionX: null,
       positionY: null,
       quadrant: null,
+      completed: false,
     });
   };
 

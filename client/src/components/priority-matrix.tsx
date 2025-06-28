@@ -152,7 +152,7 @@ export function PriorityMatrix() {
   };
 
   const getQuadrantItems = (quadrant: QuadrantType) => {
-    return todoItems.filter(item => item.quadrant === quadrant);
+    return todoItems.filter(item => item.quadrant === quadrant && !item.completed);
   };
 
   const getQuadrantLabel = (xHigh: boolean, yHigh: boolean) => {
@@ -164,32 +164,8 @@ export function PriorityMatrix() {
   return (
     <div className="flex-1 p-6 overflow-hidden">
       <div className="h-full flex flex-col">
-        {/* Matrix Controls */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">
-                Y-Axis:
-              </Label>
-              <Input
-                id="y-axis"
-                value={yAxisLabel}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                className="w-24 h-8 text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="x-axis" className="text-sm font-medium text-gray-700">
-                X-Axis:
-              </Label>
-              <Input
-                id="x-axis"
-                value={xAxisLabel}
-                onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-                className="w-24 h-8 text-sm"
-              />
-            </div>
-          </div>
+        {/* Export Controls */}
+        <div className="mb-6 flex items-center justify-end">
           <div className="flex items-center space-x-2">
             <Button variant="outline" onClick={handleExport}>
               <Download className="mr-2 h-4 w-4" />
@@ -279,6 +255,34 @@ export function PriorityMatrix() {
                 bgColor="bg-green-50/30 hover:bg-green-50/50"
                 onDrop={handleDrop}
               />
+            </div>
+          </div>
+
+          {/* Axis Label Controls - Moved to Bottom */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-center space-x-8">
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">
+                  Y-Axis Label:
+                </Label>
+                <Input
+                  id="y-axis"
+                  value={yAxisLabel}
+                  onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+                  className="w-32 h-8 text-sm"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="x-axis" className="text-sm font-medium text-gray-700">
+                  X-Axis Label:
+                </Label>
+                <Input
+                  id="x-axis"
+                  value={xAxisLabel}
+                  onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+                  className="w-32 h-8 text-sm"
+                />
+              </div>
             </div>
           </div>
         </div>

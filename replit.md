@@ -151,6 +151,12 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Moved horizontal high-low labels 4px lower for better spacing
   - Adjusted horizontal label positioning: "Low" moved 2px right, "High" moved 2px left
   - Optimized visual balance and readability of all chart labels
+- June 28, 2025. Version 1.2 Release:
+  - Swapped axis label positions: Impact now vertical (left), Urgency now horizontal (bottom)
+  - Implemented quadrant-based sorting system with counter-clockwise numbering from top-right
+  - Priority order: unassigned items, then quadrants 1→2→4→3 based on strategic importance
+  - Within quadrants: height priority (higher items first), then x-axis priority (rightward items first)
+  - Fixed item limit validation to allow full 100-item capacity
 
 ## User Preferences
 

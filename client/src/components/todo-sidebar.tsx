@@ -197,7 +197,15 @@ export function TodoSidebar() {
     updateMutation.mutate({ id, updates });
   };
 
-  // Sort active items: unassigned first, then by distance to top-right corner (high urgency + high impact)
+  // Helper function to determine quadrant (1=top-right, 2=top-left, 3=bottom-left, 4=bottom-right)
+  const getQuadrant = (x: number, y: number): number => {
+    if (x >= 0.5 && y < 0.5) return 1; // top-right
+    if (x < 0.5 && y < 0.5) return 2;  // top-left
+    if (x < 0.5 && y >= 0.5) return 3; // bottom-left
+    return 4; // bottom-right (x >= 0.5 && y >= 0.5)
+  };
+
+  // Sort active items: unassigned first, then by quadrant (1,2,4,3), then by height (lower y = higher), then by x position (higher x = higher priority)
   const activeItems = todoItems
     .filter(item => !item.completed)
     .sort((a, b) => {
@@ -209,12 +217,26 @@ export function TodoSidebar() {
       if (!aUnassigned && bUnassigned) return 1;
       if (aUnassigned && bUnassigned) return a.number - b.number; // Sort unassigned by number
       
-      // For assigned items, calculate distance to top-right corner (1, 0)
-      // Closer to top-right = higher priority (lower distance)
-      const aDistance = Math.sqrt(Math.pow(1 - a.positionX!, 2) + Math.pow(0 - (1 - a.positionY!), 2));
-      const bDistance = Math.sqrt(Math.pow(1 - b.positionX!, 2) + Math.pow(0 - (1 - b.positionY!), 2));
+      // Both items are assigned - sort by quadrant priority
+      const aQuadrant = getQuadrant(a.positionX!, a.positionY!);
+      const bQuadrant = getQuadrant(b.positionX!, b.positionY!);
       
-      return aDistance - bDistance;
+      // Quadrant priority order: 1, 2, 4, 3
+      const quadrantOrder = [1, 2, 4, 3];
+      const aQuadrantPriority = quadrantOrder.indexOf(aQuadrant);
+      const bQuadrantPriority = quadrantOrder.indexOf(bQuadrant);
+      
+      if (aQuadrantPriority !== bQuadrantPriority) {
+        return aQuadrantPriority - bQuadrantPriority;
+      }
+      
+      // Same quadrant - sort by height (lower y = higher on screen = higher priority)
+      if (a.positionY! !== b.positionY!) {
+        return a.positionY! - b.positionY!;
+      }
+      
+      // Same height - sort by x position (higher x = more right = higher priority)
+      return b.positionX! - a.positionX!;
     });
   
   const completedItems = todoItems.filter(item => item.completed);

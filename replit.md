@@ -133,6 +133,11 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Simplified add item dialog by removing manual number selection
   - Removed success toast notifications for smoother workflow
   - Added position memory system to restore item locations after completion toggle
+- June 28, 2025. Layout and positioning improvements:
+  - Moved Export and Clear controls to header for cleaner interface
+  - Centered matrix chart to prevent cutoff in fullscreen mode
+  - Adjusted horizontal high-low labels positioning (moved 2px lower)
+  - Optimized vertical high-low labels placement (moved 20px right from center)
 
 ## User Preferences
 

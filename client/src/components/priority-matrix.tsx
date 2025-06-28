@@ -204,8 +204,8 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
   };
 
   return (
-    <div className={`flex-1 p-6 overflow-hidden ${isFullWidth ? 'flex items-center justify-center' : ''}`}>
-      <div className={`${isFullWidth ? 'w-full max-w-4xl' : 'h-full'} flex flex-col`}>
+    <div className={`flex-1 overflow-hidden ${isFullWidth ? 'flex items-center justify-center p-6' : 'p-6'}`}>
+      <div className={`${isFullWidth ? 'w-full h-full max-w-[calc(100vh-120px)] max-h-[calc(100vh-120px)]' : 'h-full'} flex flex-col`}>
         {/* Export Controls */}
         <div className="mb-6 flex items-center justify-end">
           <div className="flex items-center space-x-2">
@@ -220,7 +220,7 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className={`${isFullWidth ? 'w-full aspect-square' : 'flex-1 aspect-square max-h-full'} relative p-8 mt-2`}>
+        <div className={`${isFullWidth ? 'aspect-square w-full' : 'flex-1 aspect-square max-h-full'} relative p-8 mt-2`}>
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
             className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
@@ -276,19 +276,19 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
             </div>
 
             {/* Internal Low/High Labels */}
-            {/* Horizontal axis labels */}
-            <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-medium">
+            {/* Horizontal axis labels - below center line */}
+            <div className="absolute left-1/4 top-1/2 transform -translate-x-1/2 translate-y-2 text-xs text-gray-500 font-medium">
               Low
             </div>
-            <div className="absolute bottom-2 right-2 text-xs text-gray-500 font-medium">
+            <div className="absolute right-1/4 top-1/2 transform translate-x-1/2 translate-y-2 text-xs text-gray-500 font-medium">
               High
             </div>
             
-            {/* Vertical axis labels */}
-            <div className="absolute top-2 right-2 text-xs text-gray-500 font-medium transform -translate-x-2">
+            {/* Vertical axis labels - right of center line */}
+            <div className="absolute left-1/2 top-1/4 transform translate-x-2 -translate-y-1/2 text-xs text-gray-500 font-medium">
               High
             </div>
-            <div className="absolute bottom-16 right-2 text-xs text-gray-500 font-medium transform -translate-x-2">
+            <div className="absolute left-1/2 bottom-1/4 transform translate-x-2 translate-y-1/2 text-xs text-gray-500 font-medium">
               Low
             </div>
 

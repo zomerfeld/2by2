@@ -289,13 +289,13 @@ export function PriorityMatrix() {
           {/* Horizontal axis labels */}
           <div 
             className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 16px)` }}
+            style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 20px)` }}
           >
             Low
           </div>
           <div 
             className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 16px)` }}
+            style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 20px)` }}
           >
             High
           </div>

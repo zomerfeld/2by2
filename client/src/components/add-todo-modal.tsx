@@ -63,7 +63,7 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
       return;
     }
 
-    const todoNumber = number ? parseInt(number) : getNextAvailableNumber();
+    const todoNumber = getNextAvailableNumber();
     
     if (existingNumbers.includes(todoNumber)) {
       toast({
@@ -107,19 +107,7 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
               className="mt-1"
             />
           </div>
-          <div>
-            <Label htmlFor="number">Item Number</Label>
-            <Input
-              id="number"
-              type="number"
-              min="1"
-              max="15"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-              placeholder={`Auto-assigned (${getNextAvailableNumber()})`}
-              className="mt-1"
-            />
-          </div>
+
           <div className="flex space-x-3">
             <Button
               type="button"

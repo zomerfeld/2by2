@@ -125,6 +125,14 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Repositioned matrix higher in container for better visual balance
   - Replaced bottom axis controls with inline double-click editing
   - Axis labels now editable via double-click with immediate visual feedback
+- June 28, 2025. Final UX refinements:
+  - Removed quadrant background colors and labels for minimalist design
+  - Removed drag handle affordance from todo items (drag behavior is intuitive)
+  - Added collapsible sidebar with toggle button in header
+  - Matrix becomes centered and square when sidebar is collapsed
+  - Simplified add item dialog by removing manual number selection
+  - Removed success toast notifications for smoother workflow
+  - Added position memory system to restore item locations after completion toggle
 
 ## User Preferences
 

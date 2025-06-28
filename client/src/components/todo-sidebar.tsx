@@ -113,11 +113,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           >
             <Trash2 className="h-3 w-3" />
           </Button>
-          {!isCompleted && (
-            <div className="text-gray-400 cursor-move">
-              <GripVertical className="h-4 w-4" />
-            </div>
-          )}
+
         </div>
       </div>
     </div>

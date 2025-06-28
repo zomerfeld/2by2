@@ -51,7 +51,7 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
   );
 }
 
-export function PriorityMatrix() {
+export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -204,8 +204,8 @@ export function PriorityMatrix() {
   };
 
   return (
-    <div className="flex-1 p-6 overflow-hidden">
-      <div className="h-full flex flex-col">
+    <div className={`flex-1 p-6 overflow-hidden ${isFullWidth ? 'flex items-center justify-center' : ''}`}>
+      <div className={`${isFullWidth ? 'w-full max-w-4xl' : 'h-full'} flex flex-col`}>
         {/* Export Controls */}
         <div className="mb-6 flex items-center justify-end">
           <div className="flex items-center space-x-2">
@@ -220,7 +220,7 @@ export function PriorityMatrix() {
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className="flex-1 relative p-8 mt-2">
+        <div className={`${isFullWidth ? 'aspect-square max-h-[calc(100vh-200px)]' : 'flex-1'} relative p-8 mt-2`}>
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
             className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
@@ -282,8 +282,8 @@ export function PriorityMatrix() {
                 <Quadrant
                   type="high-urgency-low-impact"
                   items={getQuadrantItems("high-urgency-low-impact")}
-                  label={getQuadrantLabel(false, true)}
-                  bgColor="bg-red-50/30 hover:bg-red-50/50"
+                  label=""
+                  bgColor=""
                   onDrop={handleDrop}
                 />
 
@@ -291,8 +291,8 @@ export function PriorityMatrix() {
                 <Quadrant
                   type="high-urgency-high-impact"
                   items={getQuadrantItems("high-urgency-high-impact")}
-                  label={getQuadrantLabel(true, true)}
-                  bgColor="bg-red-100/30 hover:bg-red-100/50"
+                  label=""
+                  bgColor=""
                   onDrop={handleDrop}
                 />
 
@@ -300,8 +300,8 @@ export function PriorityMatrix() {
                 <Quadrant
                   type="low-urgency-low-impact"
                   items={getQuadrantItems("low-urgency-low-impact")}
-                  label={getQuadrantLabel(false, false)}
-                  bgColor="bg-yellow-50/30 hover:bg-yellow-50/50"
+                  label=""
+                  bgColor=""
                   onDrop={handleDrop}
                 />
 
@@ -309,8 +309,8 @@ export function PriorityMatrix() {
                 <Quadrant
                   type="low-urgency-high-impact"
                   items={getQuadrantItems("low-urgency-high-impact")}
-                  label={getQuadrantLabel(true, false)}
-                  bgColor="bg-green-50/30 hover:bg-green-50/50"
+                  label=""
+                  bgColor=""
                   onDrop={handleDrop}
                 />
               </div>

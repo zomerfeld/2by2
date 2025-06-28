@@ -98,7 +98,7 @@ export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalPro
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="text">Task Description</Label>
+            <Label htmlFor="text">Task</Label>
             <Input
               id="text"
               value={text}

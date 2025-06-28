@@ -197,12 +197,23 @@ export function TodoSidebar() {
     updateMutation.mutate({ id, updates });
   };
 
-  // Helper function to determine quadrant (1=top-right, 2=top-left, 3=bottom-left, 4=bottom-right)
+  // Helper function to determine quadrant based on VISUAL position
+  // Quadrant 1 = top-right (high urgency + high impact)
+  // Quadrant 2 = top-left (low urgency + high impact)  
+  // Quadrant 3 = bottom-left (low urgency + low impact)
+  // Quadrant 4 = bottom-right (high urgency + low impact)
   const getQuadrant = (x: number, y: number): number => {
-    if (x >= 0.5 && y < 0.5) return 1; // top-right
-    if (x < 0.5 && y < 0.5) return 2;  // top-left
-    if (x < 0.5 && y >= 0.5) return 3; // bottom-left
-    return 4; // bottom-right (x >= 0.5 && y >= 0.5)
+    // In our swapped coordinate system:
+    // Impact is vertical: y < 0.5 = high impact (top), y >= 0.5 = low impact (bottom)
+    // Urgency is horizontal: x >= 0.5 = high urgency (right), x < 0.5 = low urgency (left)
+    
+    const highUrgency = x >= 0.5;  // right side of matrix
+    const highImpact = y < 0.5;    // top side of matrix
+    
+    if (highUrgency && highImpact) return 1;   // top-right
+    if (!highUrgency && highImpact) return 2;  // top-left
+    if (!highUrgency && !highImpact) return 3; // bottom-left  
+    return 4; // bottom-right
   };
 
   // Sort active items: unassigned first, then by quadrant (1,2,4,3), then by height (lower y = higher), then by x position (higher x = higher priority)
@@ -220,6 +231,8 @@ export function TodoSidebar() {
       // Both items are assigned - sort by quadrant priority
       const aQuadrant = getQuadrant(a.positionX!, a.positionY!);
       const bQuadrant = getQuadrant(b.positionX!, b.positionY!);
+      
+
       
       // Quadrant priority order: 1, 2, 4, 3
       const quadrantOrder = [1, 2, 4, 3];

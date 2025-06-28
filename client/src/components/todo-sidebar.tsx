@@ -198,7 +198,6 @@ export function TodoSidebar() {
 
   const activeItems = todoItems.filter(item => !item.completed);
   const completedItems = todoItems.filter(item => item.completed);
-  const unpositionedActiveItems = activeItems.filter(item => !item.quadrant);
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
@@ -220,12 +219,10 @@ export function TodoSidebar() {
         <div className="p-6">
           {isLoading ? (
             <div className="text-center text-gray-500">Loading...</div>
-          ) : unpositionedActiveItems.length === 0 ? (
-            <div className="text-center text-gray-500">
-              {activeItems.length === 0 ? "No active items" : "All items are positioned in the matrix"}
-            </div>
+          ) : activeItems.length === 0 ? (
+            <div className="text-center text-gray-500">No active items</div>
           ) : (
-            unpositionedActiveItems.map((item) => (
+            activeItems.map((item) => (
               <TodoItemComponent
                 key={item.id}
                 item={item}

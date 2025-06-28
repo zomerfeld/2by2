@@ -4,6 +4,12 @@ import { apiRequest } from "@/lib/queryClient";
 import { type TodoItem } from "@shared/schema";
 import { useTodoDrag } from "@/hooks/use-drag-drop";
 import { getColorForNumber } from "@/lib/colors";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MatrixItemProps {
   item: TodoItem;
@@ -39,21 +45,28 @@ export function MatrixItem({ item, style }: MatrixItemProps) {
   const itemColor = getColorForNumber(item.number);
 
   return (
-    <div
-      ref={drag}
-      style={style}
-      onDoubleClick={handleDoubleClick}
-      className={`absolute cursor-move hover:scale-110 transition-transform group ${
-        isDragging ? "opacity-50 transform rotate-12 scale-110" : ""
-      }`}
-      title={`${item.number}: ${item.text} (Double-click to remove from matrix)`}
-    >
-      <div 
-        className="w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
-        style={{ backgroundColor: itemColor }}
-      >
-        {item.number}
-      </div>
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          ref={drag}
+          style={style}
+          onDoubleClick={handleDoubleClick}
+          className={`absolute cursor-move hover:scale-110 transition-transform group ${
+            isDragging ? "opacity-50 transform rotate-12 scale-110" : ""
+          }`}
+        >
+          <div 
+            className="w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
+            style={{ backgroundColor: itemColor }}
+          >
+            {item.number}
+          </div>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p className="font-medium">{item.text}</p>
+        <p className="text-xs text-gray-400">Double-click to remove from matrix</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }

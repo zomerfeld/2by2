@@ -141,3 +141,11 @@ Preferred communication style: Simple, everyday language.
 - Position memory preserved when uncompleting items
 - Double-click matrix items to move back to sidebar
 - Axis controls relocated to bottom for better workflow
+- All todo items remain visible in sidebar regardless of matrix placement
+- Hover tooltips on matrix circles show full task descriptions
+- File-based storage system for free-tier compatibility
+
+### Storage Architecture
+- Migrated from PostgreSQL to JSON file storage for Replit free tier
+- Data persisted in `data.json` with automatic initialization
+- Maintains all functionality without external database dependencies

@@ -10,6 +10,7 @@ import { MatrixItem } from "./matrix-item";
 import { useQuadrantDrop } from "@/hooks/use-drag-drop";
 import { type DragItem, type Position, type QuadrantType } from "@/lib/types";
 import { type TodoItem, type MatrixSettings } from "@shared/schema";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface QuadrantProps {
   type: QuadrantType;
@@ -219,47 +220,52 @@ export function PriorityMatrix() {
             </div>
 
             {/* Quadrants */}
-            <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0">
-              {/* Top Left: High Y / Low X */}
-              <Quadrant
-                type="high-urgency-low-impact"
-                items={getQuadrantItems("high-urgency-low-impact")}
-                label={getQuadrantLabel(false, true)}
-                bgColor="bg-red-50/30 hover:bg-red-50/50"
-                onDrop={handleDrop}
-              />
+            <TooltipProvider>
+              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0">
+                {/* Top Left: High Y / Low X */}
+                <Quadrant
+                  type="high-urgency-low-impact"
+                  items={getQuadrantItems("high-urgency-low-impact")}
+                  label={getQuadrantLabel(false, true)}
+                  bgColor="bg-red-50/30 hover:bg-red-50/50"
+                  onDrop={handleDrop}
+                />
 
-              {/* Top Right: High Y / High X */}
-              <Quadrant
-                type="high-urgency-high-impact"
-                items={getQuadrantItems("high-urgency-high-impact")}
-                label={getQuadrantLabel(true, true)}
-                bgColor="bg-red-100/30 hover:bg-red-100/50"
-                onDrop={handleDrop}
-              />
+                {/* Top Right: High Y / High X */}
+                <Quadrant
+                  type="high-urgency-high-impact"
+                  items={getQuadrantItems("high-urgency-high-impact")}
+                  label={getQuadrantLabel(true, true)}
+                  bgColor="bg-red-100/30 hover:bg-red-100/50"
+                  onDrop={handleDrop}
+                />
 
-              {/* Bottom Left: Low Y / Low X */}
-              <Quadrant
-                type="low-urgency-low-impact"
-                items={getQuadrantItems("low-urgency-low-impact")}
-                label={getQuadrantLabel(false, false)}
-                bgColor="bg-yellow-50/30 hover:bg-yellow-50/50"
-                onDrop={handleDrop}
-              />
+                {/* Bottom Left: Low Y / Low X */}
+                <Quadrant
+                  type="low-urgency-low-impact"
+                  items={getQuadrantItems("low-urgency-low-impact")}
+                  label={getQuadrantLabel(false, false)}
+                  bgColor="bg-yellow-50/30 hover:bg-yellow-50/50"
+                  onDrop={handleDrop}
+                />
 
-              {/* Bottom Right: Low Y / High X */}
-              <Quadrant
-                type="low-urgency-high-impact"
-                items={getQuadrantItems("low-urgency-high-impact")}
-                label={getQuadrantLabel(true, false)}
-                bgColor="bg-green-50/30 hover:bg-green-50/50"
-                onDrop={handleDrop}
-              />
-            </div>
+                {/* Bottom Right: Low Y / High X */}
+                <Quadrant
+                  type="low-urgency-high-impact"
+                  items={getQuadrantItems("low-urgency-high-impact")}
+                  label={getQuadrantLabel(true, false)}
+                  bgColor="bg-green-50/30 hover:bg-green-50/50"
+                  onDrop={handleDrop}
+                />
+              </div>
+            </TooltipProvider>
           </div>
 
-          {/* Axis Label Controls - Moved to Bottom */}
+          {/* Impact Label and Axis Controls */}
           <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="text-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">Impact vs {yAxisLabel} Matrix</h2>
+            </div>
             <div className="flex items-center justify-center space-x-8">
               <div className="flex items-center space-x-2">
                 <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">

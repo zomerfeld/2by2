@@ -1,6 +1,14 @@
-import { todoItems, matrixSettings, type TodoItem, type InsertTodoItem, type MatrixSettings, type InsertMatrixSettings } from "@shared/schema";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { type TodoItem, type InsertTodoItem, type MatrixSettings, type InsertMatrixSettings } from "@shared/schema";
+import fs from "fs/promises";
+import path from "path";
+
+const DATA_FILE = path.join(process.cwd(), "data.json");
+
+interface StorageData {
+  todoItems: TodoItem[];
+  matrixSettings: MatrixSettings;
+  nextId: number;
+}
 
 export interface IStorage {
   // Todo Items
@@ -15,81 +23,86 @@ export interface IStorage {
   updateMatrixSettings(settings: Partial<InsertMatrixSettings>): Promise<MatrixSettings>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class FileStorage implements IStorage {
+  private async loadData(): Promise<StorageData> {
+    try {
+      const data = await fs.readFile(DATA_FILE, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      // Initialize with default data if file doesn't exist
+      const defaultData: StorageData = {
+        todoItems: [],
+        matrixSettings: {
+          id: 1,
+          xAxisLabel: "Impact",
+          yAxisLabel: "Urgency",
+        },
+        nextId: 1,
+      };
+      await this.saveData(defaultData);
+      return defaultData;
+    }
+  }
+
+  private async saveData(data: StorageData): Promise<void> {
+    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+  }
+
   async getTodoItems(): Promise<TodoItem[]> {
-    const items = await db.select().from(todoItems).orderBy(todoItems.number);
-    return items;
+    const data = await this.loadData();
+    return data.todoItems.sort((a, b) => a.number - b.number);
   }
 
   async getTodoItem(id: number): Promise<TodoItem | undefined> {
-    const [item] = await db.select().from(todoItems).where(eq(todoItems.id, id));
-    return item || undefined;
+    const data = await this.loadData();
+    return data.todoItems.find(item => item.id === id);
   }
 
   async createTodoItem(insertItem: InsertTodoItem): Promise<TodoItem> {
-    const [item] = await db
-      .insert(todoItems)
-      .values({
-        ...insertItem,
-        completed: insertItem.completed ?? false,
-      })
-      .returning();
+    const data = await this.loadData();
+    const id = data.nextId++;
+    const item: TodoItem = {
+      ...insertItem,
+      id,
+      completed: insertItem.completed ?? false,
+      positionX: insertItem.positionX ?? null,
+      positionY: insertItem.positionY ?? null,
+      quadrant: insertItem.quadrant ?? null,
+    };
+    data.todoItems.push(item);
+    await this.saveData(data);
     return item;
   }
 
   async updateTodoItem(id: number, updates: Partial<InsertTodoItem>): Promise<TodoItem | undefined> {
-    const [updatedItem] = await db
-      .update(todoItems)
-      .set(updates)
-      .where(eq(todoItems.id, id))
-      .returning();
-    return updatedItem || undefined;
+    const data = await this.loadData();
+    const itemIndex = data.todoItems.findIndex(item => item.id === id);
+    if (itemIndex === -1) return undefined;
+    
+    data.todoItems[itemIndex] = { ...data.todoItems[itemIndex], ...updates };
+    await this.saveData(data);
+    return data.todoItems[itemIndex];
   }
 
   async deleteTodoItem(id: number): Promise<boolean> {
-    const result = await db.delete(todoItems).where(eq(todoItems.id, id));
-    return (result.rowCount || 0) > 0;
+    const data = await this.loadData();
+    const initialLength = data.todoItems.length;
+    data.todoItems = data.todoItems.filter(item => item.id !== id);
+    await this.saveData(data);
+    return data.todoItems.length < initialLength;
   }
 
   async getMatrixSettings(): Promise<MatrixSettings> {
-    const [settings] = await db.select().from(matrixSettings).limit(1);
-    if (!settings) {
-      // Create default settings if none exist
-      const [newSettings] = await db
-        .insert(matrixSettings)
-        .values({
-          xAxisLabel: "Impact",
-          yAxisLabel: "Urgency",
-        })
-        .returning();
-      return newSettings;
-    }
-    return settings;
+    const data = await this.loadData();
+    return data.matrixSettings;
   }
 
   async updateMatrixSettings(updates: Partial<InsertMatrixSettings>): Promise<MatrixSettings> {
-    let [settings] = await db.select().from(matrixSettings).limit(1);
-    
-    if (!settings) {
-      // Create if doesn't exist
-      [settings] = await db
-        .insert(matrixSettings)
-        .values({
-          xAxisLabel: updates.xAxisLabel || "Impact",
-          yAxisLabel: updates.yAxisLabel || "Urgency",
-        })
-        .returning();
-    } else {
-      // Update existing
-      [settings] = await db
-        .update(matrixSettings)
-        .set(updates)
-        .where(eq(matrixSettings.id, settings.id))
-        .returning();
-    }
-    
-    return settings;
+    const data = await this.loadData();
+    data.matrixSettings = { ...data.matrixSettings, ...updates };
+    await this.saveData(data);
+    return data.matrixSettings;
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new FileStorage();

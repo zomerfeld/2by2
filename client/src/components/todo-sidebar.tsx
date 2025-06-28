@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Edit2, Trash2, ChevronLeft, Check, Undo } from "lucide-react";
+import { Plus, Edit2, Trash2, Check, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -120,7 +120,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   );
 }
 
-export function TodoSidebar({ onToggleCollapse }: { onToggleCollapse: () => void }) {
+export function TodoSidebar() {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -204,17 +204,7 @@ export function TodoSidebar({ onToggleCollapse }: { onToggleCollapse: () => void
   return (
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">To-Do Items</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleCollapse}
-            className="p-2"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-        </div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">To-Do Items</h2>
         <Button
           onClick={() => setShowModal(true)}
           className="w-full"

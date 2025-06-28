@@ -51,7 +51,7 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
   );
 }
 
-export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean }) {
+export function PriorityMatrix() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -203,9 +203,13 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
     return `${yLevel} ${yAxisLabel} / ${xLevel} ${xAxisLabel}`;
   };
 
+  // Label positioning variables
+  const labelVerticalDistance = 2; // px from top/bottom edges
+  const labelHorizontalDistance = 2; // px from left/right edges
+
   return (
-    <div className={`flex-1 overflow-hidden ${isFullWidth ? 'flex items-center justify-center p-6' : 'p-6'}`}>
-      <div className={`${isFullWidth ? 'w-full h-full max-w-[calc(100vh-120px)] max-h-[calc(100vh-120px)]' : 'h-full'} flex flex-col`}>
+    <div className="flex-1 p-6 overflow-hidden">
+      <div className="h-full flex flex-col">{/* Space for buttons and matrix */}
         {/* Export Controls */}
         <div className="mb-6 flex items-center justify-end">
           <div className="flex items-center space-x-2">
@@ -220,7 +224,7 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className={`${isFullWidth ? 'aspect-square w-full' : 'flex-1 aspect-square max-h-full'} relative p-8 mt-2`}>
+        <div className="flex-1 relative p-8 pb-12">{/* Added bottom padding to prevent cutoff */}
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
             className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
@@ -264,7 +268,7 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
 
 
           {/* Matrix Container */}
-          <div className="h-full w-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
+          <div className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
             {/* Grid Lines with axis markers */}
             <div className="absolute inset-0 flex">
               <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
@@ -276,19 +280,31 @@ export function PriorityMatrix({ isFullWidth = false }: { isFullWidth?: boolean 
             </div>
 
             {/* Internal Low/High Labels */}
-            {/* Horizontal axis labels - below center line */}
-            <div className="absolute left-1/4 top-1/2 transform -translate-x-1/2 translate-y-2 text-xs text-gray-500 font-medium">
+            {/* Horizontal axis labels */}
+            <div 
+              className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
+              style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 10px)` }}
+            >
               Low
             </div>
-            <div className="absolute right-1/4 top-1/2 transform translate-x-1/2 translate-y-2 text-xs text-gray-500 font-medium">
+            <div 
+              className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
+              style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 10px)` }}
+            >
               High
             </div>
             
-            {/* Vertical axis labels - right of center line */}
-            <div className="absolute left-1/2 top-1/4 transform translate-x-2 -translate-y-1/2 text-xs text-gray-500 font-medium">
+            {/* Vertical axis labels */}
+            <div 
+              className="absolute top-0 left-1/2 text-xs text-gray-500 font-medium transform translate-x-2"
+              style={{ top: `${labelVerticalDistance}px` }}
+            >
               High
             </div>
-            <div className="absolute left-1/2 bottom-1/4 transform translate-x-2 translate-y-1/2 text-xs text-gray-500 font-medium">
+            <div 
+              className="absolute bottom-0 left-1/2 text-xs text-gray-500 font-medium transform translate-x-2"
+              style={{ bottom: `${labelVerticalDistance}px` }}
+            >
               Low
             </div>
 

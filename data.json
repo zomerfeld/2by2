@@ -13,16 +13,16 @@
       "lastQuadrant": null
     },
     {
-      "id": 2,
-      "text": "Sample task 2",
+      "id": 3,
+      "text": "kjhkjh",
       "number": 2,
-      "completed": true,
+      "completed": false,
       "positionX": null,
       "positionY": null,
       "quadrant": null,
-      "lastPositionX": 0.75,
-      "lastPositionY": 0.75,
-      "lastQuadrant": "high-urgency-high-impact"
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
     }
   ],
   "matrixSettings": {
@@ -30,5 +30,5 @@
     "xAxisLabel": "Impact",
     "yAxisLabel": "Urgency"
   },
-  "nextId": 3
+  "nextId": 4
 }

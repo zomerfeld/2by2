@@ -10,6 +10,9 @@ export const todoItems = pgTable("todo_items", {
   positionY: real("position_y"),
   quadrant: text("quadrant"),
   completed: boolean("completed").notNull().default(false),
+  lastPositionX: real("last_position_x"),
+  lastPositionY: real("last_position_y"),
+  lastQuadrant: text("last_quadrant"),
 });
 
 export const matrixSettings = pgTable("matrix_settings", {

@@ -30,9 +30,9 @@
     {
       "text": "Email Ben",
       "number": 4,
-      "positionX": 0.6422976501305483,
-      "positionY": 0.43317972350230416,
-      "quadrant": "low-urgency-low-impact",
+      "positionX": null,
+      "positionY": null,
+      "quadrant": null,
       "completed": false,
       "id": 4
     }

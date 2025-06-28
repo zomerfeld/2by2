@@ -62,12 +62,16 @@ export class FileStorage implements IStorage {
     const data = await this.loadData();
     const id = data.nextId++;
     const item: TodoItem = {
-      ...insertItem,
       id,
+      text: insertItem.text,
+      number: insertItem.number,
       completed: insertItem.completed ?? false,
       positionX: insertItem.positionX ?? null,
       positionY: insertItem.positionY ?? null,
       quadrant: insertItem.quadrant ?? null,
+      lastPositionX: null,
+      lastPositionY: null,
+      lastQuadrant: null,
     };
     data.todoItems.push(item);
     await this.saveData(data);

@@ -103,10 +103,6 @@ export function PriorityMatrix() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
-      toast({
-        title: "Success",
-        description: "Matrix cleared successfully",
-      });
     },
   });
 
@@ -218,7 +214,7 @@ export function PriorityMatrix() {
             </Button>
             <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
               <RotateCcw className="mr-2 h-4 w-4" />
-              Clear Matrix
+              Clear
             </Button>
           </div>
         </div>
@@ -227,7 +223,7 @@ export function PriorityMatrix() {
         <div className="flex-1 relative p-8 mt-2">
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
-            className="absolute -left-6 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
             onDoubleClick={() => setEditingYAxis(true)}
             title="Double-click to edit"
           >
@@ -243,14 +239,6 @@ export function PriorityMatrix() {
             ) : (
               yAxisLabel
             )}
-          </div>
-          
-          {/* Y-Axis Value Labels */}
-          <div className="absolute -left-12 top-4 text-sm font-medium text-gray-600 transform -rotate-90 origin-center">
-            High
-          </div>
-          <div className="absolute -left-12 bottom-4 text-sm font-medium text-gray-600 transform -rotate-90 origin-center">
-            Low
           </div>
           
           {/* X-Axis Labels - centered horizontally on bottom */}
@@ -273,13 +261,7 @@ export function PriorityMatrix() {
             )}
           </div>
           
-          {/* X-Axis Value Labels */}
-          <div className="absolute left-4 -bottom-8 text-sm font-medium text-gray-600">
-            Low
-          </div>
-          <div className="absolute right-4 -bottom-8 text-sm font-medium text-gray-600">
-            High
-          </div>
+
 
           {/* Matrix Container */}
           <div className="h-full w-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">

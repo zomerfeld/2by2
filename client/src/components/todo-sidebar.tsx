@@ -140,10 +140,6 @@ export function TodoSidebar() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
-      toast({
-        title: "Success",
-        description: "Todo item updated successfully",
-      });
     },
     onError: () => {
       toast({
@@ -160,10 +156,6 @@ export function TodoSidebar() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
-      toast({
-        title: "Success",
-        description: "Todo item deleted successfully",
-      });
     },
     onError: () => {
       toast({
@@ -184,13 +176,26 @@ export function TodoSidebar() {
 
   const handleToggleComplete = (id: number, completed: boolean) => {
     const item = todoItems.find(item => item.id === id);
+    if (!item) return;
+    
     const updates: Partial<TodoItem> = { completed };
     
-    // If completing an item that's on the matrix, remove it from matrix
     if (completed && item?.quadrant) {
+      // Item is being completed and is on matrix - store position in memory fields
       updates.positionX = null;
       updates.positionY = null;
       updates.quadrant = null;
+      updates.lastPositionX = item.positionX;
+      updates.lastPositionY = item.positionY;
+      updates.lastQuadrant = item.quadrant;
+    } else if (!completed && item.lastPositionX !== null && item.lastPositionY !== null && item.lastQuadrant) {
+      // Item is being uncompleted and has stored position - restore it
+      updates.positionX = item.lastPositionX;
+      updates.positionY = item.lastPositionY;
+      updates.quadrant = item.lastQuadrant;
+      updates.lastPositionX = null;
+      updates.lastPositionY = null;
+      updates.lastQuadrant = null;
     }
     
     updateMutation.mutate({ id, updates });

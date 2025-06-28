@@ -229,6 +229,8 @@ export function TodoSidebar() {
       // Both items are assigned - sort by quadrant priority
       const aQuadrant = getQuadrant(a.positionX!, a.positionY!);
       const bQuadrant = getQuadrant(b.positionX!, b.positionY!);
+      
+
       // Quadrant priority order: 1, 2, 4, 3 (as specified by user)
       const quadrantOrder = [1, 2, 4, 3];
       const aQuadrantPriority = quadrantOrder.indexOf(aQuadrant);

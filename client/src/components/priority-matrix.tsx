@@ -284,13 +284,13 @@ export function PriorityMatrix() {
           {/* Horizontal axis labels */}
           <div 
             className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 14px)` }}
+            style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 16px)` }}
           >
             Low
           </div>
           <div 
             className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 14px)` }}
+            style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 16px)` }}
           >
             High
           </div>
@@ -298,13 +298,13 @@ export function PriorityMatrix() {
           {/* Vertical axis labels */}
           <div 
             className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ top: `${labelVerticalDistance}px` }}
+            style={{ top: `${labelVerticalDistance}px`, left: `calc(50% + 8px)` }}
           >
             High
           </div>
           <div 
             className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ bottom: `${labelVerticalDistance}px` }}
+            style={{ bottom: `${labelVerticalDistance}px`, left: `calc(50% + 8px)` }}
           >
             Low
           </div>

@@ -2,7 +2,7 @@ import { Grid } from "lucide-react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoSidebar } from "@/components/todo-sidebar";
-import { PriorityMatrix } from "@/components/priority-matrix";
+import { PriorityMatrix, PriorityMatrixControls } from "@/components/priority-matrix";
 
 export default function MatrixPage() {
   return (
@@ -16,6 +16,7 @@ export default function MatrixPage() {
             </div>
             <h1 className="text-xl font-semibold text-gray-900">Priority Matrix</h1>
           </div>
+          <PriorityMatrixControls />
         </header>
 
         {/* Main Content */}

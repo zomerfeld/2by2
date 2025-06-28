@@ -13,45 +13,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-interface QuadrantProps {
-  type: QuadrantType;
-  items: TodoItem[];
-  label: string;
-  bgColor: string;
-  onDrop: (item: DragItem, position: Position, quadrant: QuadrantType) => void;
-}
-
-function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
-  const { isOver, canDrop, drop } = useQuadrantDrop(type, onDrop);
-
-  return (
-    <div
-      ref={drop}
-      className={`relative ${bgColor} ${
-        isOver ? "bg-blue-100/50" : ""
-      } ${canDrop ? "border-2 border-dashed border-blue-400" : ""} transition-colors h-full w-full`}
-    >
-      <div className="absolute top-4 left-4 text-xs font-medium text-gray-500 bg-white/80 px-2 py-1 rounded z-10">
-        {label}
-      </div>
-      
-      {items.map((item) => (
-        <MatrixItem
-          key={item.id}
-          item={item}
-          style={{
-            left: `${(item.positionX || 0.5) * 100}%`,
-            top: `${(item.positionY || 0.5) * 100}%`,
-            transform: 'translate(-50%, -50%)',
-            zIndex: 20,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-export function PriorityMatrix() {
+export function PriorityMatrixControls() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -65,28 +27,6 @@ export function PriorityMatrix() {
 
   const [xAxisLabel, setXAxisLabel] = useState(settings?.xAxisLabel || "Impact");
   const [yAxisLabel, setYAxisLabel] = useState(settings?.yAxisLabel || "Urgency");
-  const [editingXAxis, setEditingXAxis] = useState(false);
-  const [editingYAxis, setEditingYAxis] = useState(false);
-
-  const updateItemMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: number; updates: Partial<TodoItem> }) => {
-      const response = await apiRequest("PATCH", `/api/todo-items/${id}`, updates);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
-    },
-  });
-
-  const updateSettingsMutation = useMutation({
-    mutationFn: async (updates: Partial<MatrixSettings>) => {
-      const response = await apiRequest("PATCH", "/api/matrix-settings", updates);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/matrix-settings"] });
-    },
-  });
 
   const clearMatrixMutation = useMutation({
     mutationFn: async () => {
@@ -105,27 +45,6 @@ export function PriorityMatrix() {
       queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
     },
   });
-
-  const handleDrop = (item: DragItem, position: Position, quadrant: QuadrantType) => {
-    updateItemMutation.mutate({
-      id: item.id,
-      updates: {
-        positionX: position.x,
-        positionY: position.y,
-        quadrant,
-      },
-    });
-  };
-
-  const handleAxisLabelChange = (axis: 'x' | 'y', value: string) => {
-    if (axis === 'x') {
-      setXAxisLabel(value);
-      updateSettingsMutation.mutate({ xAxisLabel: value });
-    } else {
-      setYAxisLabel(value);
-      updateSettingsMutation.mutate({ yAxisLabel: value });
-    }
-  };
 
   const handleExport = async () => {
     const timestamp = new Date().toISOString().split('T')[0];
@@ -193,14 +112,113 @@ export function PriorityMatrix() {
     }
   };
 
-  const getQuadrantItems = (quadrant: QuadrantType) => {
-    return todoItems.filter(item => item.quadrant === quadrant && !item.completed);
+  return (
+    <div className="flex items-center space-x-2">
+      <Button variant="outline" onClick={handleExport} title="Export data">
+        <Download className="h-4 w-4" />
+      </Button>
+      <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
+        <RotateCcw className="mr-2 h-4 w-4" />
+        Clear
+      </Button>
+    </div>
+  );
+}
+
+interface QuadrantProps {
+  type: QuadrantType;
+  items: TodoItem[];
+  label: string;
+  bgColor: string;
+  onDrop: (item: DragItem, position: Position, quadrant: QuadrantType) => void;
+}
+
+function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
+  const { isOver, drop } = useQuadrantDrop(type, onDrop);
+
+  return (
+    <div
+      ref={drop}
+      className={`relative border-gray-300 transition-colors duration-200 ${
+        isOver ? "bg-blue-50" : bgColor
+      }`}
+    >
+      {items.map((item) => (
+        <MatrixItem
+          key={item.id}
+          item={item}
+          style={{
+            position: "absolute",
+            left: `${item.positionX! * 100}%`,
+            top: `${item.positionY! * 100}%`,
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function PriorityMatrix() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [editingXAxis, setEditingXAxis] = useState(false);
+  const [editingYAxis, setEditingYAxis] = useState(false);
+
+  const { data: todoItems = [] } = useQuery<TodoItem[]>({
+    queryKey: ["/api/todo-items"],
+  });
+
+  const { data: settings } = useQuery<MatrixSettings>({
+    queryKey: ["/api/matrix-settings"],
+  });
+
+  const [xAxisLabel, setXAxisLabel] = useState(settings?.xAxisLabel || "Impact");
+  const [yAxisLabel, setYAxisLabel] = useState(settings?.yAxisLabel || "Urgency");
+
+  const updateMatrixSettingsMutation = useMutation({
+    mutationFn: async (data: { xAxisLabel?: string; yAxisLabel?: string }) => {
+      return apiRequest("PATCH", "/api/matrix-settings", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/matrix-settings"] });
+    },
+  });
+
+  const updateTodoItemMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number } & Partial<TodoItem>) => {
+      return apiRequest("PATCH", `/api/todo-items/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+    },
+  });
+
+  const handleAxisLabelChange = (axis: 'x' | 'y', value: string) => {
+    if (axis === 'x') {
+      setXAxisLabel(value);
+      updateMatrixSettingsMutation.mutate({ xAxisLabel: value });
+    } else {
+      setYAxisLabel(value);
+      updateMatrixSettingsMutation.mutate({ yAxisLabel: value });
+    }
   };
 
-  const getQuadrantLabel = (xHigh: boolean, yHigh: boolean) => {
-    const yLevel = yHigh ? "High" : "Low";
-    const xLevel = xHigh ? "High" : "Low";
-    return `${yLevel} ${yAxisLabel} / ${xLevel} ${xAxisLabel}`;
+  const handleDrop = (item: DragItem, position: Position, quadrant: QuadrantType) => {
+    const relativeX = Math.max(0.05, Math.min(0.95, position.x));
+    const relativeY = Math.max(0.05, Math.min(0.95, position.y));
+
+    updateTodoItemMutation.mutate({
+      id: item.id,
+      positionX: relativeX,
+      positionY: relativeY,
+      quadrant: quadrant,
+    });
+  };
+
+  const getQuadrantItems = (quadrant: QuadrantType) => {
+    return todoItems.filter((item) => item.quadrant === quadrant);
   };
 
   // Label positioning variables
@@ -208,147 +226,128 @@ export function PriorityMatrix() {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-6 overflow-hidden">
-      <div className="h-full flex flex-col">{/* Space for buttons and matrix */}
-        {/* Export Controls */}
-        <div className="mb-6 flex items-center justify-end">
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={handleExport} title="Export data">
-              <Download className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
-              <RotateCcw className="mr-2 h-4 w-4" />
-              Clear
-            </Button>
-          </div>
+    <div className="flex-1 p-6 overflow-hidden flex items-center justify-center">
+      <div className="w-full h-full max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-400px)] relative p-8">
+        {/* Y-Axis Labels - centered vertically on left side */}
+        <div 
+          className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
+          onDoubleClick={() => setEditingYAxis(true)}
+          title="Double-click to edit"
+        >
+          {editingYAxis ? (
+            <Input
+              value={yAxisLabel}
+              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+              onBlur={() => setEditingYAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
+              className="w-24 h-6 text-sm transform rotate-90"
+              autoFocus
+            />
+          ) : (
+            yAxisLabel
+          )}
+        </div>
+        
+        {/* X-Axis Labels - centered horizontally on bottom */}
+        <div 
+          className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+          onDoubleClick={() => setEditingXAxis(true)}
+          title="Double-click to edit"
+        >
+          {editingXAxis ? (
+            <Input
+              value={xAxisLabel}
+              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+              onBlur={() => setEditingXAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
+              className="w-24 h-6 text-sm"
+              autoFocus
+            />
+          ) : (
+            xAxisLabel
+          )}
         </div>
 
-        {/* Matrix Grid with Axis Labels */}
-        <div className="flex-1 relative p-8 pb-12">{/* Added bottom padding to prevent cutoff */}
-          {/* Y-Axis Labels - centered vertically on left side */}
+        {/* Matrix Container */}
+        <div className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
+          {/* Grid Lines with axis markers */}
+          <div className="absolute inset-0 flex">
+            <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
+            <div className="w-1/2 h-full"></div>
+          </div>
+          <div className="absolute inset-0 flex flex-col">
+            <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
+            <div className="w-full h-1/2"></div>
+          </div>
+
+          {/* Internal Low/High Labels */}
+          {/* Horizontal axis labels */}
           <div 
-            className="absolute -left-8 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded ml-[0px] mr-[0px] pl-[0px] pr-[0px]"
-            onDoubleClick={() => setEditingYAxis(true)}
-            title="Double-click to edit"
+            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 14px)` }}
           >
-            {editingYAxis ? (
-              <Input
-                value={yAxisLabel}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                onBlur={() => setEditingYAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-                className="w-24 h-6 text-sm transform rotate-90"
-                autoFocus
-              />
-            ) : (
-              yAxisLabel
-            )}
+            Low
           </div>
-          
-          {/* X-Axis Labels - centered horizontally on bottom */}
           <div 
-            className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onDoubleClick={() => setEditingXAxis(true)}
-            title="Double-click to edit"
+            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 14px)` }}
           >
-            {editingXAxis ? (
-              <Input
-                value={xAxisLabel}
-                onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-                onBlur={() => setEditingXAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
+            High
+          </div>
+
+          {/* Vertical axis labels */}
+          <div 
+            className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
+            style={{ top: `${labelVerticalDistance}px` }}
+          >
+            High
+          </div>
+          <div 
+            className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
+            style={{ bottom: `${labelVerticalDistance}px` }}
+          >
+            Low
+          </div>
+
+          <TooltipProvider>
+            <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
+              {/* Top-left: High Urgency, Low Impact */}
+              <Quadrant
+                type="high-urgency-low-impact"
+                items={getQuadrantItems("high-urgency-low-impact")}
+                label=""
+                bgColor=""
+                onDrop={handleDrop}
               />
-            ) : (
-              xAxisLabel
-            )}
-          </div>
-          
-
-
-          {/* Matrix Container */}
-          <div className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
-            {/* Grid Lines with axis markers */}
-            <div className="absolute inset-0 flex">
-              <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
-              <div className="w-1/2 h-full"></div>
+              
+              {/* Top-right: High Urgency, High Impact */}
+              <Quadrant
+                type="high-urgency-high-impact"
+                items={getQuadrantItems("high-urgency-high-impact")}
+                label=""
+                bgColor=""
+                onDrop={handleDrop}
+              />
+              
+              {/* Bottom-left: Low Urgency, Low Impact */}
+              <Quadrant
+                type="low-urgency-low-impact"
+                items={getQuadrantItems("low-urgency-low-impact")}
+                label=""
+                bgColor=""
+                onDrop={handleDrop}
+              />
+              
+              {/* Bottom-right: Low Urgency, High Impact */}
+              <Quadrant
+                type="low-urgency-high-impact"
+                items={getQuadrantItems("low-urgency-high-impact")}
+                label=""
+                bgColor=""
+                onDrop={handleDrop}
+              />
             </div>
-            <div className="absolute inset-0 flex flex-col">
-              <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
-              <div className="w-full h-1/2"></div>
-            </div>
-
-            {/* Internal Low/High Labels */}
-            {/* Horizontal axis labels */}
-            <div 
-              className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
-              style={{ left: `${labelHorizontalDistance}px`, bottom: `calc(50% - 10px)` }}
-            >
-              Low
-            </div>
-            <div 
-              className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
-              style={{ right: `${labelHorizontalDistance}px`, bottom: `calc(50% - 10px)` }}
-            >
-              High
-            </div>
-            
-            {/* Vertical axis labels */}
-            <div 
-              className="absolute top-0 left-1/2 text-xs text-gray-500 font-medium transform translate-x-2"
-              style={{ top: `${labelVerticalDistance}px` }}
-            >
-              High
-            </div>
-            <div 
-              className="absolute bottom-0 left-1/2 text-xs text-gray-500 font-medium transform translate-x-2"
-              style={{ bottom: `${labelVerticalDistance}px` }}
-            >
-              Low
-            </div>
-
-            {/* Quadrants */}
-            <TooltipProvider>
-              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0">
-                {/* Top Left: High Y / Low X */}
-                <Quadrant
-                  type="high-urgency-low-impact"
-                  items={getQuadrantItems("high-urgency-low-impact")}
-                  label=""
-                  bgColor=""
-                  onDrop={handleDrop}
-                />
-
-                {/* Top Right: High Y / High X */}
-                <Quadrant
-                  type="high-urgency-high-impact"
-                  items={getQuadrantItems("high-urgency-high-impact")}
-                  label=""
-                  bgColor=""
-                  onDrop={handleDrop}
-                />
-
-                {/* Bottom Left: Low Y / Low X */}
-                <Quadrant
-                  type="low-urgency-low-impact"
-                  items={getQuadrantItems("low-urgency-low-impact")}
-                  label=""
-                  bgColor=""
-                  onDrop={handleDrop}
-                />
-
-                {/* Bottom Right: Low Y / High X */}
-                <Quadrant
-                  type="low-urgency-high-impact"
-                  items={getQuadrantItems("low-urgency-high-impact")}
-                  label=""
-                  bgColor=""
-                  onDrop={handleDrop}
-                />
-              </div>
-            </TooltipProvider>
-          </div>
+          </TooltipProvider>
         </div>
       </div>
     </div>

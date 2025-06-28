@@ -224,7 +224,7 @@ export function PriorityMatrix() {
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className="flex-1 relative p-16 mt-4">
+        <div className="flex-1 relative p-8 mt-2">
           {/* Y-Axis Labels - centered vertically on left side */}
           <div 
             className="absolute -left-6 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
@@ -255,7 +255,7 @@ export function PriorityMatrix() {
           
           {/* X-Axis Labels - centered horizontally on bottom */}
           <div 
-            className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            className="absolute left-1/2 bottom-4 transform -translate-x-1/2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
             onDoubleClick={() => setEditingXAxis(true)}
             title="Double-click to edit"
           >
@@ -274,10 +274,10 @@ export function PriorityMatrix() {
           </div>
           
           {/* X-Axis Value Labels */}
-          <div className="absolute left-4 -bottom-12 text-sm font-medium text-gray-600">
+          <div className="absolute left-4 bottom-10 text-sm font-medium text-gray-600">
             Low
           </div>
-          <div className="absolute right-4 -bottom-12 text-sm font-medium text-gray-600">
+          <div className="absolute right-4 bottom-10 text-sm font-medium text-gray-600">
             High
           </div>
 

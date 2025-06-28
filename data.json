@@ -3,8 +3,8 @@
     {
       "text": "Change Tires",
       "number": 1,
-      "positionX": 0.6525,
-      "positionY": 0.631578947368421,
+      "positionX": 0.6814621409921671,
+      "positionY": 0.5714285714285714,
       "quadrant": "high-urgency-high-impact",
       "completed": false,
       "id": 1
@@ -30,9 +30,9 @@
     {
       "text": "Email Ben",
       "number": 4,
-      "positionX": null,
-      "positionY": null,
-      "quadrant": null,
+      "positionX": 0.6422976501305483,
+      "positionY": 0.43317972350230416,
+      "quadrant": "low-urgency-low-impact",
       "completed": false,
       "id": 4
     }

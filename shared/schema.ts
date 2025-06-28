@@ -25,6 +25,8 @@ export const insertTodoItemSchema = createInsertSchema(todoItems).omit({
   id: true,
 }).partial({
   number: true,
+}).extend({
+  text: z.string().max(128, "Task description must be 128 characters or less"),
 });
 
 export const insertMatrixSettingsSchema = createInsertSchema(matrixSettings).omit({

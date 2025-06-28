@@ -2,7 +2,7 @@
 
 ## Overview
 
-Priority Matrix is a full-stack web application that helps users organize and prioritize tasks using a visual 2x2 matrix interface. Users can create up to 15 todo items and drag them across customizable urgency and impact axes to effectively categorize their work priorities.
+Priority Matrix is a full-stack web application that helps users organize and prioritize tasks using a visual 2x2 matrix interface. Users can create tasks and drag them across customizable urgency and impact axes to effectively categorize their work priorities.
 
 ## System Architecture
 
@@ -33,7 +33,7 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 // Todo Items - Core task entities
 - id: Primary key
 - text: Task description
-- number: Display number (1-15)
+- number: Display number
 - positionX/positionY: Matrix coordinates (0-1 range)
 - quadrant: Categorization helper
 - completed: Boolean completion status
@@ -142,7 +142,7 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Moved Urgency label to top-right of chart with right-aligned text
   - Implemented intelligent number reuse system for completed tasks
   - Numbers are automatically released when tasks are completed
-  - Returning tasks receive next available number (1-15 priority)
+  - Returning tasks receive next available number
   - Removed manual number selection from add task dialog
   - Enhanced position memory system for task completion workflow
 - June 28, 2025. Version 1.1 Release:
@@ -163,7 +163,7 @@ Preferred communication style: Simple, everyday language.
 - Implemented persistent storage for all todo items and matrix settings
 
 ### Visual Enhancements
-- Each todo number displays in unique harmonious color (15-color palette)
+- Each todo number displays in unique harmonious color (expanded color palette)
 - Matrix items show only colored number circles for clean appearance
 - Unassigned items have red borders and background for visual distinction
 - Improved drag feedback with rotation and scaling effects

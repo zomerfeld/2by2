@@ -64,14 +64,14 @@ export class FileStorage implements IStorage {
       .map(item => item.number)
       .sort((a, b) => a - b);
     
-    // Find the first available number from 1-15
-    for (let i = 1; i <= 15; i++) {
+    // Find the first available number from 1-100
+    for (let i = 1; i <= 100; i++) {
       if (!usedNumbers.includes(i)) {
         return i;
       }
     }
     
-    // If all numbers 1-15 are used, return the next number
+    // If all numbers 1-100 are used, return the next number
     return Math.max(...usedNumbers) + 1;
   }
 

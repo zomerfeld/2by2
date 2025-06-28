@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { Download, Save, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,119 +161,117 @@ export function PriorityMatrix() {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="flex-1 p-6 overflow-hidden">
-        <div className="h-full flex flex-col">
-          {/* Matrix Controls */}
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">
-                  Y-Axis:
-                </Label>
-                <Input
-                  id="y-axis"
-                  value={yAxisLabel}
-                  onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                  className="w-24 h-8 text-sm"
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="x-axis" className="text-sm font-medium text-gray-700">
-                  X-Axis:
-                </Label>
-                <Input
-                  id="x-axis"
-                  value={xAxisLabel}
-                  onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-                  className="w-24 h-8 text-sm"
-                />
-              </div>
+    <div className="flex-1 p-6 overflow-hidden">
+      <div className="h-full flex flex-col">
+        {/* Matrix Controls */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="y-axis" className="text-sm font-medium text-gray-700">
+                Y-Axis:
+              </Label>
+              <Input
+                id="y-axis"
+                value={yAxisLabel}
+                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+                className="w-24 h-8 text-sm"
+              />
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" onClick={handleExport}>
-                <Download className="mr-2 h-4 w-4" />
-                Export
-              </Button>
-              <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
-                <RotateCcw className="mr-2 h-4 w-4" />
-                Clear Matrix
-              </Button>
+              <Label htmlFor="x-axis" className="text-sm font-medium text-gray-700">
+                X-Axis:
+              </Label>
+              <Input
+                id="x-axis"
+                value={xAxisLabel}
+                onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+                className="w-24 h-8 text-sm"
+              />
             </div>
           </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" onClick={handleExport}>
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+            <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
+              <RotateCcw className="mr-2 h-4 w-4" />
+              Clear Matrix
+            </Button>
+          </div>
+        </div>
 
-          {/* Matrix Grid */}
-          <div className="flex-1 relative">
-            {/* Y-Axis Label */}
-            <div className="absolute -left-8 top-1/2 transform -rotate-90 -translate-y-1/2">
-              <span className="text-lg font-semibold text-gray-700">{yAxisLabel}</span>
+        {/* Matrix Grid with Axis Labels */}
+        <div className="flex-1 relative p-16">
+          {/* Y-Axis Labels positioned on the left side */}
+          <div className="absolute -left-4 top-8 text-sm font-semibold text-gray-700 -rotate-90 origin-center">
+            High {yAxisLabel}
+          </div>
+          <div className="absolute -left-4 bottom-8 text-sm font-semibold text-gray-700 -rotate-90 origin-center">
+            Low {yAxisLabel}
+          </div>
+          
+          {/* X-Axis Labels positioned on the bottom */}
+          <div className="absolute left-8 -bottom-4 text-sm font-semibold text-gray-700">
+            Low {xAxisLabel}
+          </div>
+          <div className="absolute right-8 -bottom-4 text-sm font-semibold text-gray-700">
+            High {xAxisLabel}
+          </div>
+
+          {/* Matrix Container */}
+          <div className="h-full w-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
+            {/* Grid Lines with axis markers */}
+            <div className="absolute inset-0 flex">
+              <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
+              <div className="w-1/2 h-full"></div>
+            </div>
+            <div className="absolute inset-0 flex flex-col">
+              <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
+              <div className="w-full h-1/2"></div>
             </div>
 
-            {/* Matrix Container */}
-            <div className="h-full w-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
-              {/* Grid Lines */}
-              <div className="absolute inset-0 flex">
-                <div className="w-1/2 h-full border-r border-gray-300"></div>
-                <div className="w-1/2 h-full"></div>
-              </div>
-              <div className="absolute inset-0 flex flex-col">
-                <div className="w-full h-1/2 border-b border-gray-300"></div>
-                <div className="w-full h-1/2"></div>
-              </div>
+            {/* Quadrants */}
+            <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0">
+              {/* Top Left: High Y / Low X */}
+              <Quadrant
+                type="high-urgency-low-impact"
+                items={getQuadrantItems("high-urgency-low-impact")}
+                label={getQuadrantLabel(false, true)}
+                bgColor="bg-red-50/30 hover:bg-red-50/50"
+                onDrop={handleDrop}
+              />
 
-              {/* Quadrants */}
-              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0">
-                {/* Top Left: High Y / Low X */}
-                <Quadrant
-                  type="high-urgency-low-impact"
-                  items={getQuadrantItems("high-urgency-low-impact")}
-                  label={getQuadrantLabel(false, true)}
-                  bgColor="bg-red-50/30 hover:bg-red-50/50"
-                  onDrop={handleDrop}
-                />
+              {/* Top Right: High Y / High X */}
+              <Quadrant
+                type="high-urgency-high-impact"
+                items={getQuadrantItems("high-urgency-high-impact")}
+                label={getQuadrantLabel(true, true)}
+                bgColor="bg-red-100/30 hover:bg-red-100/50"
+                onDrop={handleDrop}
+              />
 
-                {/* Top Right: High Y / High X */}
-                <Quadrant
-                  type="high-urgency-high-impact"
-                  items={getQuadrantItems("high-urgency-high-impact")}
-                  label={getQuadrantLabel(true, true)}
-                  bgColor="bg-red-100/30 hover:bg-red-100/50"
-                  onDrop={handleDrop}
-                />
+              {/* Bottom Left: Low Y / Low X */}
+              <Quadrant
+                type="low-urgency-low-impact"
+                items={getQuadrantItems("low-urgency-low-impact")}
+                label={getQuadrantLabel(false, false)}
+                bgColor="bg-yellow-50/30 hover:bg-yellow-50/50"
+                onDrop={handleDrop}
+              />
 
-                {/* Bottom Left: Low Y / Low X */}
-                <Quadrant
-                  type="low-urgency-low-impact"
-                  items={getQuadrantItems("low-urgency-low-impact")}
-                  label={getQuadrantLabel(false, false)}
-                  bgColor="bg-yellow-50/30 hover:bg-yellow-50/50"
-                  onDrop={handleDrop}
-                />
-
-                {/* Bottom Right: Low Y / High X */}
-                <Quadrant
-                  type="low-urgency-high-impact"
-                  items={getQuadrantItems("low-urgency-high-impact")}
-                  label={getQuadrantLabel(true, false)}
-                  bgColor="bg-green-50/30 hover:bg-green-50/50"
-                  onDrop={handleDrop}
-                />
-              </div>
+              {/* Bottom Right: Low Y / High X */}
+              <Quadrant
+                type="low-urgency-high-impact"
+                items={getQuadrantItems("low-urgency-high-impact")}
+                label={getQuadrantLabel(true, false)}
+                bgColor="bg-green-50/30 hover:bg-green-50/50"
+                onDrop={handleDrop}
+              />
             </div>
-
-            {/* X-Axis Label */}
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-              <span className="text-lg font-semibold text-gray-700">{xAxisLabel}</span>
-            </div>
-
-            {/* Axis Value Labels */}
-            <div className="absolute -left-16 top-4 text-sm font-medium text-gray-600">High</div>
-            <div className="absolute -left-16 bottom-4 text-sm font-medium text-gray-600">Low</div>
-            <div className="absolute left-4 -bottom-16 text-sm font-medium text-gray-600">Low</div>
-            <div className="absolute right-4 -bottom-16 text-sm font-medium text-gray-600">High</div>
           </div>
         </div>
       </div>
-    </DndProvider>
+    </div>
   );
 }

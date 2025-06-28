@@ -38,7 +38,13 @@ export class MemStorage implements IStorage {
 
   async createTodoItem(insertItem: InsertTodoItem): Promise<TodoItem> {
     const id = this.currentTodoId++;
-    const item: TodoItem = { ...insertItem, id };
+    const item: TodoItem = { 
+      ...insertItem, 
+      id,
+      positionX: insertItem.positionX ?? null,
+      positionY: insertItem.positionY ?? null,
+      quadrant: insertItem.quadrant ?? null
+    };
     this.todoItems.set(id, item);
     return item;
   }

@@ -6,9 +6,9 @@ export const todoItems = pgTable("todo_items", {
   id: serial("id").primaryKey(),
   text: text("text").notNull(),
   number: integer("number").notNull(),
-  positionX: real("position_x"),
-  positionY: real("position_y"),
-  quadrant: text("quadrant"),
+  positionX: real("position_x").default(null),
+  positionY: real("position_y").default(null),
+  quadrant: text("quadrant").default(null),
 });
 
 export const matrixSettings = pgTable("matrix_settings", {

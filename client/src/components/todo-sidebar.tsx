@@ -197,57 +197,10 @@ export function TodoSidebar() {
     updateMutation.mutate({ id, updates });
   };
 
-  // Helper function to determine quadrant based on chart coordinates
-  // X-axis (Urgency): 0 = Low (left), 1 = High (right)
-  // Y-axis (Impact): 0 = High (top), 1 = Low (bottom)
-  // Quadrant 1 = top-right (high urgency + high impact)
-  // Quadrant 2 = top-left (low urgency + high impact)  
-  // Quadrant 3 = bottom-left (low urgency + low impact)
-  // Quadrant 4 = bottom-right (high urgency + low impact)
-  const getQuadrant = (x: number, y: number): number => {
-    const highUrgency = x >= 0.5;  // right half of chart
-    const highImpact = y < 0.5;    // top half of chart (changed from <= to < for clearer boundary)
-    
-    if (highUrgency && highImpact) return 1;   // top-right: high urgency, high impact
-    if (!highUrgency && highImpact) return 2;  // top-left: low urgency, high impact
-    if (!highUrgency && !highImpact) return 3; // bottom-left: low urgency, low impact
-    return 4; // bottom-right: high urgency, low impact
-  };
-
-  // Sort active items: unassigned first, then by quadrant (1,2,4,3), then by height (lower y = higher), then by x position (higher x = higher priority)
+  // Simple sorting: just by item number (creation order)
   const activeItems = todoItems
     .filter(item => !item.completed)
-    .sort((a, b) => {
-      // Unassigned items (no position) come first
-      const aUnassigned = a.positionX === null || a.positionY === null;
-      const bUnassigned = b.positionX === null || b.positionY === null;
-      
-      if (aUnassigned && !bUnassigned) return -1;
-      if (!aUnassigned && bUnassigned) return 1;
-      if (aUnassigned && bUnassigned) return a.number - b.number; // Sort unassigned by number
-      
-      // Both items are assigned - sort by quadrant priority
-      const aQuadrant = getQuadrant(a.positionX!, a.positionY!);
-      const bQuadrant = getQuadrant(b.positionX!, b.positionY!);
-      
-
-      // Quadrant priority order: 1, 2, 4, 3 (as specified by user)
-      const quadrantOrder = [1, 2, 4, 3];
-      const aQuadrantPriority = quadrantOrder.indexOf(aQuadrant);
-      const bQuadrantPriority = quadrantOrder.indexOf(bQuadrant);
-      
-      if (aQuadrantPriority !== bQuadrantPriority) {
-        return aQuadrantPriority - bQuadrantPriority;
-      }
-      
-      // Same quadrant - sort by height (lower y = higher on screen = higher priority)
-      if (a.positionY! !== b.positionY!) {
-        return a.positionY! - b.positionY!;
-      }
-      
-      // Same height - sort by x position (higher x = more right = higher priority)
-      return b.positionX! - a.positionX!;
-    });
+    .sort((a, b) => a.number - b.number);
   
   const completedItems = todoItems.filter(item => item.completed);
   const existingNumbers = todoItems.map(item => item.number);

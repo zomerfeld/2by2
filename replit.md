@@ -159,6 +159,7 @@ Priority Matrix is a full-stack web application that helps users organize and pr
   - Fixed item limit validation to allow full 100-item capacity
   - Corrected coordinate system mapping: X-axis (Urgency) 0=Low→1=High, Y-axis (Impact) 0=High→1=Low
   - Fixed quadrant detection to apply coordinates across entire chart rather than per-quadrant
+  - Disabled auto-sorting feature: sidebar now displays items in simple numerical order (creation order)
 
 ## User Preferences
 

@@ -27,9 +27,9 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
       ref={drop}
       className={`relative ${bgColor} ${
         isOver ? "bg-blue-100/50" : ""
-      } ${canDrop ? "border-2 border-dashed border-blue-400" : ""} transition-colors`}
+      } ${canDrop ? "border-2 border-dashed border-blue-400" : ""} transition-colors h-full w-full`}
     >
-      <div className="absolute top-4 left-4 text-xs font-medium text-gray-500 bg-white/80 px-2 py-1 rounded">
+      <div className="absolute top-4 left-4 text-xs font-medium text-gray-500 bg-white/80 px-2 py-1 rounded z-10">
         {label}
       </div>
       
@@ -41,6 +41,7 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
             left: `${(item.positionX || 0.5) * 100}%`,
             top: `${(item.positionY || 0.5) * 100}%`,
             transform: 'translate(-50%, -50%)',
+            zIndex: 20,
           }}
         />
       ))}
@@ -202,21 +203,31 @@ export function PriorityMatrix() {
         </div>
 
         {/* Matrix Grid with Axis Labels */}
-        <div className="flex-1 relative p-16">
-          {/* Y-Axis Labels positioned on the left side */}
-          <div className="absolute -left-4 top-8 text-sm font-semibold text-gray-700 -rotate-90 origin-center">
-            High {yAxisLabel}
-          </div>
-          <div className="absolute -left-4 bottom-8 text-sm font-semibold text-gray-700 -rotate-90 origin-center">
-            Low {yAxisLabel}
+        <div className="flex-1 relative p-20">
+          {/* Y-Axis Labels - centered vertically on left side */}
+          <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 -rotate-90 text-lg font-semibold text-gray-700">
+            {yAxisLabel}
           </div>
           
-          {/* X-Axis Labels positioned on the bottom */}
-          <div className="absolute left-8 -bottom-4 text-sm font-semibold text-gray-700">
-            Low {xAxisLabel}
+          {/* Y-Axis Value Labels */}
+          <div className="absolute -left-12 top-4 text-sm font-medium text-gray-600 transform -rotate-90 origin-center">
+            High
           </div>
-          <div className="absolute right-8 -bottom-4 text-sm font-semibold text-gray-700">
-            High {xAxisLabel}
+          <div className="absolute -left-12 bottom-4 text-sm font-medium text-gray-600 transform -rotate-90 origin-center">
+            Low
+          </div>
+          
+          {/* X-Axis Labels - centered horizontally on bottom */}
+          <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-lg font-semibold text-gray-700">
+            {xAxisLabel}
+          </div>
+          
+          {/* X-Axis Value Labels */}
+          <div className="absolute left-4 -bottom-12 text-sm font-medium text-gray-600">
+            Low
+          </div>
+          <div className="absolute right-4 -bottom-12 text-sm font-medium text-gray-600">
+            High
           </div>
 
           {/* Matrix Container */}

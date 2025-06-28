@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { type DragItem, type QuadrantType, type Position } from "@/lib/types";
 import { type TodoItem } from "@shared/schema";
@@ -23,19 +24,21 @@ export const useQuadrantDrop = (
   quadrant: QuadrantType,
   onDrop: (item: DragItem, position: Position, quadrant: QuadrantType) => void
 ) => {
+  const dropRef = useRef<HTMLDivElement>(null);
+  
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: "todo-item",
     drop: (item: DragItem, monitor) => {
       const clientOffset = monitor.getClientOffset();
-      const targetElement = monitor.getDropResult() as any;
       
-      if (clientOffset && targetElement) {
-        const targetRect = targetElement.getBoundingClientRect();
-        const relativeX = (clientOffset.x - targetRect.left) / targetRect.width;
-        const relativeY = (clientOffset.y - targetRect.top) / targetRect.height;
+      if (clientOffset && dropRef.current) {
+        const targetRect = dropRef.current.getBoundingClientRect();
+        const relativeX = Math.max(0.1, Math.min(0.9, (clientOffset.x - targetRect.left) / targetRect.width));
+        const relativeY = Math.max(0.1, Math.min(0.9, (clientOffset.y - targetRect.top) / targetRect.height));
         
         onDrop(item, { x: relativeX, y: relativeY }, quadrant);
       }
+      return undefined;
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -43,5 +46,8 @@ export const useQuadrantDrop = (
     }),
   }));
 
-  return { isOver, canDrop, drop };
+  // Combine the drop ref with the drop connector
+  drop(dropRef);
+
+  return { isOver, canDrop, drop: dropRef };
 };

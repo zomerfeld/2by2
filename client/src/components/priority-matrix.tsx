@@ -79,12 +79,18 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
       document.body.removeChild(jsonLink);
       URL.revokeObjectURL(jsonUrl);
 
-      // Export PNG screenshot
-      const element = document.body;
-      const canvas = await html2canvas(element, {
+      // Export PNG screenshot - capture the matrix area with labels
+      const matrixElement = document.querySelector('[data-matrix-export]');
+      if (!matrixElement) {
+        throw new Error('Matrix export area not found');
+      }
+      
+      const canvas = await html2canvas(matrixElement as HTMLElement, {
         backgroundColor: '#ffffff',
-        scale: 1,
+        scale: 2, // Higher quality
         useCORS: true,
+        allowTaint: false,
+        foreignObjectRendering: false,
       });
       
       canvas.toBlob((blob) => {
@@ -256,7 +262,10 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
 
   return (
     <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center">
-      <div className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8">
+      <div 
+        data-matrix-export
+        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
+      >
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
           className="absolute -left-8 custom-810:-left-10 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
@@ -301,7 +310,10 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         </div>
 
         {/* Matrix Container */}
-        <div className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm">
+        <div 
+          data-matrix-container
+          className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm"
+        >
           {/* Grid Lines with axis markers */}
           <div className="absolute inset-0 flex">
             <div className="w-1/2 h-full border-r-2 border-gray-400"></div>

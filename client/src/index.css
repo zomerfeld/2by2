@@ -107,6 +107,11 @@
   select {
     font-size: 16px;
   }
+  
+  /* Ensure proper 50/50 split on mobile */
+  .h-1\/2 {
+    height: 50vh !important;
+  }
 }
 
 /* Ensure proper text selection and editing */

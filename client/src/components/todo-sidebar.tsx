@@ -220,7 +220,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
-    <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col md:max-h-full max-h-40 md:overflow-visible overflow-hidden">
+    <div className="w-full md:w-80 bg-white border-r md:border-r border-t md:border-t-0 border-gray-200 flex flex-col h-full overflow-hidden">
       <div className="p-3 md:p-6 border-b border-gray-200">
         <Button
           onClick={() => setShowModal(true)}
@@ -232,7 +232,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           Add New Item
         </Button>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {/* Active Items */}
         <div className="p-3 md:p-6">
           {isLoading ? (

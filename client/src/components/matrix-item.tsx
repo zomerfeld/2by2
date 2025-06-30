@@ -57,7 +57,7 @@ export function MatrixItem({ item, style, onClick }: MatrixItemProps) {
           style={style}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
-          className={`absolute cursor-move hover:scale-110 transition-transform group ${
+          className={`matrix-item-container absolute cursor-move hover:scale-110 transition-transform group ${
             isDragging ? "opacity-50 transform rotate-12 scale-110" : ""
           }`}
         >

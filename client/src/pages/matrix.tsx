@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoSidebar } from "@/components/todo-sidebar";
@@ -6,10 +6,53 @@ import { PriorityMatrix, PriorityMatrixControls } from "@/components/priority-ma
 
 export default function MatrixPage() {
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const clearSelection = () => {
+    setSelectedItemId(null);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+  
+  const handleItemClick = (itemId: number) => {
+    setSelectedItemId(itemId);
+    
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Set new timeout for 10 seconds
+    timeoutRef.current = setTimeout(() => {
+      setSelectedItemId(null);
+      timeoutRef.current = null;
+    }, 10000);
+  };
+  
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // Check if the click was on a matrix item or its children
+    const target = e.target as HTMLElement;
+    const isMatrixItem = target.closest('.matrix-item-container');
+    
+    if (!isMatrixItem) {
+      clearSelection();
+    }
+  };
+  
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="h-screen flex flex-col">
+      <div className="h-screen flex flex-col" onClick={handleContainerClick}>
         {/* Header */}
         <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -56,7 +99,7 @@ export default function MatrixPage() {
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           <TodoSidebar selectedItemId={selectedItemId} />
-          <PriorityMatrix onItemClick={setSelectedItemId} />
+          <PriorityMatrix onItemClick={handleItemClick} />
         </div>
       </div>
     </DndProvider>

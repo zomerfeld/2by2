@@ -120,8 +120,27 @@
   }
 }
 
-/* Prevent overlapping at all sizes by ensuring desktop layout takes precedence */
-@media (min-width: 641px) {
+/* Medium screen adjustments to prevent overlapping */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .mobile-matrix-height {
+    height: auto !important;
+    max-height: 55vh;
+    overflow: hidden;
+  }
+  
+  .mobile-sidebar-height {
+    height: auto !important;
+    min-height: 40vh;
+  }
+  
+  /* Ensure matrix doesn't exceed available space */
+  .priority-matrix-container {
+    max-height: 55vh !important;
+  }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1025px) {
   .mobile-matrix-height {
     height: auto !important;
   }

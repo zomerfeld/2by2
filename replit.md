@@ -1,4 +1,4 @@
-# Priority Matrix - Task Prioritization Tool (v1.3)
+# Priority Matrix - Task Prioritization Tool (v2.0)
 
 ## Overview
 
@@ -17,10 +17,11 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
-- **Storage**: PostgreSQL database with Drizzle ORM for performance and reliability
-- **Schema**: Drizzle ORM types with comprehensive input sanitization and validation
-- **API Design**: RESTful JSON API with UUID-based list IDs for enhanced security
-- **Backup/Recovery**: Automated data export/import system for data protection
+- **Storage**: PostgreSQL database with Drizzle ORM for production reliability and performance
+- **Security**: Crypto-secure UUID identifiers and comprehensive input sanitization with Zod validation
+- **Schema**: Type-safe Drizzle ORM with automated migrations and proper indexing
+- **API Design**: RESTful JSON API with UUID-based list IDs preventing predictable identifiers
+- **Backup/Recovery**: Production data export/import endpoints for disaster recovery
 
 ### Development Environment
 - **Hot Reload**: Vite HMR for frontend, tsx for backend development
@@ -103,15 +104,17 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 
 ### Environment Requirements
 - `NODE_ENV`: Environment flag (development/production)
-- No external database dependencies (uses local file storage)
+- `DATABASE_URL`: PostgreSQL connection string for production database
+- Database automatically provisioned in Replit environment
 
 ### Production Setup
-- Single-process deployment with static file serving
-- Express serves built React app as static assets
-- No external database dependencies (uses JSON file-based storage)
-- Data persisted in `data.json` (excluded from Git via `.gitignore` for privacy)
-- Template file `data.template.json` provides structure for new installations
-- Supports up to 100 concurrent tasks with intelligent number management
+- Single-process deployment with PostgreSQL database integration
+- Express serves built React app as static assets with database backend
+- PostgreSQL database with automated schema migrations via Drizzle ORM
+- Crypto-secure UUID identifiers for enhanced security and scalability
+- Production-ready with comprehensive input validation and error handling
+- Supports up to 100 concurrent tasks per list with intelligent number management
+- Data export/import capabilities for backup and disaster recovery
 
 ### Development Workflow
 - `npm run dev`: Starts development server with hot reload
@@ -120,6 +123,24 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - `npm run db:push`: Applies database schema changes
 
 ## Version History
+
+### v2.0 - Production Release (June 30, 2025)
+**Major Production Improvements:**
+- **PostgreSQL Migration**: Migrated from file-based to PostgreSQL database storage for enhanced reliability and performance
+- **UUID Security**: Implemented crypto-secure UUID identifiers for list IDs, replacing predictable sequential numbers
+- **Input Sanitization**: Comprehensive Zod schema validation preventing injection attacks and data corruption
+- **Performance Optimization**: Eliminated all file I/O bottlenecks and inefficient cleanup operations
+- **Backup/Recovery System**: Added data export/import endpoints for production data management
+- **Browser Persistence**: Fixed localStorage issue where root URL visits created new lists instead of returning to last used list
+- **Database Schema**: Full Drizzle ORM integration with type-safe operations and automated migrations
+- **Error Handling**: Robust error handling with proper HTTP status codes and detailed validation messages
+
+**Technical Architecture:**
+- Complete database migration preserving all existing functionality
+- Enhanced security with crypto.randomUUID() for list generation
+- Optimized query performance with proper indexing and relations
+- Production-ready deployment configuration with environment variable support
+- Comprehensive input validation preventing security vulnerabilities
 
 ### v1.3 - Multi-User System (June 30, 2025)
 **Major Features:**

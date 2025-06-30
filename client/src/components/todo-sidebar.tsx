@@ -220,20 +220,21 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
+    <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col md:max-h-full max-h-40 md:overflow-visible overflow-hidden">
+      <div className="p-3 md:p-6 border-b border-gray-200">
         <Button
           onClick={() => setShowModal(true)}
-          className="w-full"
+          className="w-full text-sm md:text-base"
+          size="sm"
           disabled={todoItems.length >= 100}
         >
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" />
           Add New Item
         </Button>
       </div>
       <div className="flex-1 overflow-y-auto">
         {/* Active Items */}
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           {isLoading ? (
             <div className="text-center text-gray-500">Loading...</div>
           ) : activeItems.length === 0 ? (
@@ -256,8 +257,8 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
         {/* Completed Items Section */}
         {completedItems.length > 0 && (
           <>
-            <Separator className="mx-6" />
-            <div className="p-6">
+            <Separator className="mx-3 md:mx-6" />
+            <div className="p-3 md:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
                 <Button
@@ -289,8 +290,8 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           </>
         )}
       </div>
-      <div className="p-6 border-t border-gray-200 pl-[8px] pr-[8px] pt-[8px] pb-[8px]">
-        <div className="text-gray-500 text-center text-[12px]">
+      <div className="p-2 md:p-6 border-t border-gray-200">
+        <div className="text-gray-500 text-center text-xs">
           {activeItems.length} active, {completedItems.length} completed
         </div>
       </div>

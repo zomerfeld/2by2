@@ -76,10 +76,10 @@ export default function MatrixPage() {
     <DndProvider backend={HTML5Backend}>
       <div className="h-screen flex flex-col" onClick={handleContainerClick}>
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3 md:py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2 md:space-x-3">
+            <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+              <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_338_303)">
                   <g style={{mixBlendMode:"lighten"}}>
                     <rect x="22" y="2" width="7" height="7" rx="3" fill="url(#paint0_linear_338_303)"/>
@@ -113,15 +113,19 @@ export default function MatrixPage() {
                 </defs>
               </svg>
             </div>
-            <h1 className="text-xl font-semibold text-gray-900">Priority Matrix</h1>
+            <h1 className="text-lg md:text-xl font-semibold text-gray-900">Priority Matrix</h1>
           </div>
           <PriorityMatrixControls listId={listId} />
         </header>
 
         {/* Main Content */}
-        <div className="flex-1 flex overflow-hidden">
-          <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
-          <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+          <div className="md:flex-shrink-0">
+            <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
+          </div>
+          <div className="flex-1 min-h-0">
+            <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
+          </div>
         </div>
       </div>
     </DndProvider>

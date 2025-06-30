@@ -83,6 +83,32 @@
   }
 }
 
+/* Mobile touch optimizations */
+@media (max-width: 768px) {
+  body {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Larger touch targets on mobile */
+  button, [role="button"] {
+    min-height: 44px;
+  }
+  
+  /* Better scrolling on mobile */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent zoom on input focus */
+  input[type="text"], 
+  input[type="number"], 
+  textarea, 
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Ensure proper text selection and editing */
 input[type="text"], 
 input[type="number"] {

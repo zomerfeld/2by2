@@ -123,13 +123,14 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <Button variant="outline" onClick={handleExport} title="Export data">
-        <Download className="h-4 w-4" />
+    <div className="flex items-center space-x-1 md:space-x-2">
+      <Button variant="outline" size="sm" onClick={handleExport} title="Export data">
+        <Download className="h-3 w-3 md:h-4 md:w-4" />
+        <span className="hidden md:inline ml-1">Export</span>
       </Button>
-      <Button variant="outline" onClick={() => clearMatrixMutation.mutate()}>
-        <RotateCcw className="mr-2 h-4 w-4" />
-        Clear
+      <Button variant="outline" size="sm" onClick={() => clearMatrixMutation.mutate()}>
+        <RotateCcw className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+        <span className="hidden md:inline">Clear</span>
       </Button>
     </div>
   );
@@ -255,15 +256,15 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-6 overflow-hidden flex items-center justify-center">
-      <div className="w-full h-full max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-400px)] relative p-8">
+    <div className="flex-1 p-2 md:p-6 overflow-hidden flex items-center justify-center">
+      <div className="w-full h-full max-w-[min(100vh-120px,100vw-20px)] md:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-120px,100vw-20px)] md:max-h-[min(100vh-200px,100vw-400px)] relative p-4 md:p-8">
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
-          className="absolute -left-8 transform -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          className="absolute -left-6 md:-left-8 transform -rotate-90 text-sm md:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-1 md:px-2 py-1 rounded"
           style={{ 
             transformOrigin: 'center center', 
-            top: '32px',
-            left: '-32px'
+            top: '24px',
+            left: '-24px'
           }}
           onDoubleClick={() => setEditingYAxis(true)}
           title="Double-click to edit"
@@ -284,7 +285,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         
         {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute right-0 -bottom-2 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[32px] pr-[32px]"
+          className="absolute right-0 -bottom-2 text-sm md:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-1 md:px-2 py-1 rounded"
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >

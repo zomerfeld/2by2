@@ -121,10 +121,10 @@ export default function MatrixPage() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col custom-810:flex-row overflow-hidden">
           {/* Matrix appears first on mobile, sidebar first on desktop */}
-          <div className="custom-810:order-2 flex-1 min-h-0">
+          <div className="custom-810:order-2 flex-1 min-h-0 custom-810:flex-1">
             <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
           </div>
-          <div className="custom-810:order-1 w-full custom-810:w-80 flex-shrink-0">
+          <div className="custom-810:order-1 w-full custom-810:w-80 flex-shrink-0 h-80 custom-810:h-auto">
             <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
           </div>
         </div>

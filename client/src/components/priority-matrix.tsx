@@ -257,7 +257,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
 
   return (
     <div className="flex-1 p-2 md:p-6 overflow-visible flex items-center justify-center priority-matrix-container">
-      <div className="w-full h-full max-w-[min(400px,100vw-40px)] max-h-[min(400px,100vh-300px)] relative p-4 md:p-8">
+      <div className="w-full h-full max-w-[min(400px,100vw-40px)] max-h-[min(400px,100vh-300px)] relative p-4 md:p-8 pb-8 md:pb-12">
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
           className="absolute -left-6 md:-left-8 transform -rotate-90 text-sm md:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-1 md:px-2 py-1 rounded"
@@ -285,21 +285,21 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         
         {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute right-0 -bottom-2 text-sm md:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-1 md:px-2 py-1 rounded"
+          className="absolute right-4 md:right-8 -bottom-6 md:-bottom-8 text-sm md:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-1 md:px-2 py-1 rounded"
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >
           {editingXAxis ? (
             <Input
-              value={yAxisLabel}
-              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+              value={xAxisLabel}
+              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
               onBlur={() => setEditingXAxis(false)}
               onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
               className="w-24 h-6 text-sm"
               autoFocus
             />
           ) : (
-            yAxisLabel
+            xAxisLabel
           )}
         </div>
 

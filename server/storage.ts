@@ -1,4 +1,19 @@
-import { type TodoItem, type InsertTodoItem, type MatrixSettings, type InsertMatrixSettings, type List, type InsertList } from "@shared/schema";
+import { 
+  lists,
+  todoItems,
+  matrixSettings,
+  users,
+  type List, 
+  type InsertList, 
+  type TodoItem, 
+  type InsertTodoItem, 
+  type MatrixSettings, 
+  type InsertMatrixSettings,
+  type User,
+  type UpsertUser
+} from "@shared/schema";
+import { db } from "./db";
+import { eq, desc, sql, count } from "drizzle-orm";
 import fs from "fs/promises";
 import path from "path";
 import { nanoid } from "nanoid";
@@ -21,8 +36,12 @@ interface StorageData {
 }
 
 export interface IStorage {
+  // User Management (for authentication)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  
   // List Management
-  createList(): Promise<string>; // Returns listId
+  createList(userId?: string): Promise<string>; // Returns listId (UUID)
   getList(listId: string): Promise<List | undefined>;
   updateList(listId: string, updates: Partial<InsertList>): Promise<List | undefined>;
   deleteList(listId: string): Promise<boolean>;
@@ -37,6 +56,10 @@ export interface IStorage {
   // Matrix Settings (now part of list)
   getMatrixSettings(listId: string): Promise<MatrixSettings>;
   updateMatrixSettings(listId: string, settings: Partial<InsertMatrixSettings>): Promise<MatrixSettings>;
+  
+  // Data backup/recovery
+  exportAllData(): Promise<any>;
+  importBackupData(data: any): Promise<void>;
 }
 
 export class FileStorage implements IStorage {
@@ -263,4 +286,239 @@ export class FileStorage implements IStorage {
   }
 }
 
-export const storage = new FileStorage();
+// Database storage implementation using PostgreSQL
+export class DatabaseStorage implements IStorage {
+  // User Management (for authentication)
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
+  // List Management with improved IDs
+  async createList(userId?: string): Promise<string> {
+    // Generate crypto-random UUID for better security than nanoid
+    const listId = crypto.randomUUID();
+    const [list] = await db
+      .insert(lists)
+      .values({
+        listId,
+        userId,
+        xAxisLabel: "Impact",
+        yAxisLabel: "Urgency",
+      })
+      .returning();
+    return list.listId;
+  }
+
+  async getList(listId: string): Promise<List | undefined> {
+    const [list] = await db.select().from(lists).where(eq(lists.listId, listId));
+    return list || undefined;
+  }
+
+  async updateList(listId: string, updates: Partial<InsertList>): Promise<List | undefined> {
+    const [list] = await db
+      .update(lists)
+      .set({ 
+        ...updates, 
+        lastUpdated: new Date() 
+      })
+      .where(eq(lists.listId, listId))
+      .returning();
+    return list || undefined;
+  }
+
+  async deleteList(listId: string): Promise<boolean> {
+    // Delete associated todo items first
+    await db.delete(todoItems).where(eq(todoItems.listId, listId));
+    
+    const result = await db.delete(lists).where(eq(lists.listId, listId));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Todo Items with proper validation
+  async getTodoItems(listId: string): Promise<TodoItem[]> {
+    return await db
+      .select()
+      .from(todoItems)
+      .where(eq(todoItems.listId, listId))
+      .orderBy(todoItems.number);
+  }
+
+  async getTodoItem(listId: string, id: number): Promise<TodoItem | undefined> {
+    const [item] = await db
+      .select()
+      .from(todoItems)
+      .where(sql`${todoItems.id} = ${id} AND ${todoItems.listId} = ${listId}`);
+    return item || undefined;
+  }
+
+  async createTodoItem(listId: string, insertItem: InsertTodoItem): Promise<TodoItem> {
+    // Get next available number if not provided
+    let itemNumber = insertItem.number;
+    if (!itemNumber) {
+      const existingItems = await this.getTodoItems(listId);
+      itemNumber = this.getNextAvailableNumber(existingItems);
+    }
+
+    const [item] = await db
+      .insert(todoItems)
+      .values({
+        listId,
+        text: insertItem.text,
+        number: itemNumber,
+        positionX: insertItem.positionX || null,
+        positionY: insertItem.positionY || null,
+        quadrant: insertItem.quadrant || null,
+        completed: false,
+        lastPositionX: insertItem.lastPositionX || null,
+        lastPositionY: insertItem.lastPositionY || null,
+        lastQuadrant: insertItem.lastQuadrant || null,
+      })
+      .returning();
+
+    // Update list timestamp
+    await db
+      .update(lists)
+      .set({ lastUpdated: new Date() })
+      .where(eq(lists.listId, listId));
+
+    return item;
+  }
+
+  async updateTodoItem(listId: string, id: number, updates: Partial<InsertTodoItem>): Promise<TodoItem | undefined> {
+    const [item] = await db
+      .update(todoItems)
+      .set(updates)
+      .where(sql`${todoItems.id} = ${id} AND ${todoItems.listId} = ${listId}`)
+      .returning();
+
+    if (item) {
+      // Update list timestamp
+      await db
+        .update(lists)
+        .set({ lastUpdated: new Date() })
+        .where(eq(lists.listId, listId));
+    }
+
+    return item || undefined;
+  }
+
+  async deleteTodoItem(listId: string, id: number): Promise<boolean> {
+    const result = await db
+      .delete(todoItems)
+      .where(sql`${todoItems.id} = ${id} AND ${todoItems.listId} = ${listId}`);
+
+    if ((result.rowCount ?? 0) > 0) {
+      // Update list timestamp
+      await db
+        .update(lists)
+        .set({ lastUpdated: new Date() })
+        .where(eq(lists.listId, listId));
+      return true;
+    }
+    return false;
+  }
+
+  // Matrix Settings
+  async getMatrixSettings(listId: string): Promise<MatrixSettings> {
+    const list = await this.getList(listId);
+    if (!list) throw new Error(`List ${listId} not found`);
+
+    return {
+      id: list.id,
+      xAxisLabel: list.xAxisLabel,
+      yAxisLabel: list.yAxisLabel,
+    };
+  }
+
+  async updateMatrixSettings(listId: string, settings: Partial<InsertMatrixSettings>): Promise<MatrixSettings> {
+    const [list] = await db
+      .update(lists)
+      .set({
+        xAxisLabel: settings.xAxisLabel,
+        yAxisLabel: settings.yAxisLabel,
+        lastUpdated: new Date(),
+      })
+      .where(eq(lists.listId, listId))
+      .returning();
+
+    if (!list) throw new Error(`List ${listId} not found`);
+
+    return {
+      id: list.id,
+      xAxisLabel: list.xAxisLabel,
+      yAxisLabel: list.yAxisLabel,
+    };
+  }
+
+  // Data backup/recovery
+  async exportAllData(): Promise<any> {
+    const allLists = await db.select().from(lists);
+    const allTodoItems = await db.select().from(todoItems);
+    const allUsers = await db.select().from(users);
+
+    return {
+      version: "1.0",
+      timestamp: new Date().toISOString(),
+      lists: allLists,
+      todoItems: allTodoItems,
+      users: allUsers,
+    };
+  }
+
+  async importBackupData(data: any): Promise<void> {
+    // Clear existing data
+    await db.delete(todoItems);
+    await db.delete(lists);
+    await db.delete(users);
+
+    // Import users
+    if (data.users && data.users.length > 0) {
+      await db.insert(users).values(data.users);
+    }
+
+    // Import lists
+    if (data.lists && data.lists.length > 0) {
+      await db.insert(lists).values(data.lists);
+    }
+
+    // Import todo items
+    if (data.todoItems && data.todoItems.length > 0) {
+      await db.insert(todoItems).values(data.todoItems);
+    }
+  }
+
+  private getNextAvailableNumber(todoItems: TodoItem[]): number {
+    const usedNumbers = new Set(
+      todoItems
+        .filter(item => !item.completed)
+        .map(item => item.number)
+    );
+
+    for (let i = 1; i <= 100; i++) {
+      if (!usedNumbers.has(i)) {
+        return i;
+      }
+    }
+    return 1; // Fallback, should never happen with 100 limit
+  }
+}
+
+// Migration from FileStorage to DatabaseStorage
+// Keep FileStorage available for migration purposes but use DatabaseStorage as primary
+export const storage = new DatabaseStorage();

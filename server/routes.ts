@@ -135,6 +135,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Data backup and recovery endpoints
+  app.get("/api/backup/export", async (req, res) => {
+    try {
+      const backupData = await storage.exportAllData();
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', 'attachment; filename="priority-matrix-backup.json"');
+      res.json(backupData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to export backup data" });
+    }
+  });
+
+  app.post("/api/backup/import", async (req, res) => {
+    try {
+      await storage.importBackupData(req.body);
+      res.json({ message: "Backup data imported successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to import backup data" });
+    }
+  });
+
   // Legacy routes - return error to force client to use new endpoints
   app.get("/api/todo-items", async (req, res) => {
     res.status(404).json({ message: "Please use /api/lists/:listId/todo-items" });

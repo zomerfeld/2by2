@@ -17,9 +17,10 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
-- **Storage**: JSON file-based storage system (data.json) with Git privacy protection
-- **Schema**: Drizzle ORM types for data validation and 128-character task description limits
-- **API Design**: RESTful JSON API with intelligent number reuse system
+- **Storage**: PostgreSQL database with Drizzle ORM for performance and reliability
+- **Schema**: Drizzle ORM types with comprehensive input sanitization and validation
+- **API Design**: RESTful JSON API with UUID-based list IDs for enhanced security
+- **Backup/Recovery**: Automated data export/import system for data protection
 
 ### Development Environment
 - **Hot Reload**: Vite HMR for frontend, tsx for backend development

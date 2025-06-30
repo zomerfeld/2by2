@@ -60,9 +60,9 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         <div className="flex items-center space-x-3 flex-1">
           <div 
             className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium ${
-              isUnplaced && !isCompleted ? "bg-red-500" : ""
+              isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
             }`}
-            style={{ backgroundColor: isUnplaced && !isCompleted ? "#ef4444" : itemColor }}
+            style={{ backgroundColor: itemColor }}
           >
             {item.number}
           </div>

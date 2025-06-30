@@ -269,7 +269,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                   className="text-xs text-gray-400 hover:text-red-500 transition-colors"
                   title="Clear all completed tasks"
                 >
-                  clear
+                  Clear All
                 </button>
               </div>
               {completedItems.map((item) => (

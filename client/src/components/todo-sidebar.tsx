@@ -43,6 +43,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
 
   const itemColor = getColorForNumber(item.number);
   const isOnMatrix = item.quadrant !== null;
+  const isUnplaced = item.positionX === null || item.positionY === null;
 
   return (
     <div
@@ -58,7 +59,9 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 flex-1">
           <div 
-            className="w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium"
+            className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium ${
+              isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
+            }`}
             style={{ backgroundColor: itemColor }}
           >
             {item.number}

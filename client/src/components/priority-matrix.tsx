@@ -255,8 +255,8 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-6 overflow-hidden flex items-center justify-center">
-      <div className="w-full h-full max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-400px)] relative p-8">
+    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center">
+      <div className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8">
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
           className="absolute -left-8 transform -rotate-90 text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"

@@ -220,7 +220,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-full custom-810:w-80 bg-white border-b custom-810:border-b-0 custom-810:border-r border-gray-200 flex flex-col h-80 custom-810:h-auto">
       <div className="px-6 pt-6 pb-1">
         <Button
           onClick={() => setShowModal(true)}

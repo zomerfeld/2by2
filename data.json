@@ -47,6 +47,18 @@
       "lastPositionX": null,
       "lastPositionY": null,
       "lastQuadrant": null
+    },
+    {
+      "id": 11,
+      "text": "Contact Blind Company",
+      "number": 5,
+      "completed": false,
+      "positionX": 0.6484375,
+      "positionY": 0.578125,
+      "quadrant": "high-urgency-high-impact",
+      "lastPositionX": null,
+      "lastPositionY": null,
+      "lastQuadrant": null
     }
   ],
   "matrixSettings": {
@@ -54,5 +66,5 @@
     "xAxisLabel": "Impact",
     "yAxisLabel": "Urgency"
   },
-  "nextId": 11
+  "nextId": 12
 }

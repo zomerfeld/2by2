@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Edit2, Trash2, Check, Undo } from "lucide-react";
+import { Plus, Edit2, Check, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -260,19 +260,17 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={() => {
                     completedItems.forEach(item => {
                       deleteMutation.mutate(item.id);
                     });
                   }}
-                  className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                  className="text-xs text-gray-400 hover:text-red-500 transition-colors"
                   title="Clear all completed tasks"
                 >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
+                  clear
+                </button>
               </div>
               {completedItems.map((item) => (
                 <TodoItemComponent

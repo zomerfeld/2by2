@@ -56,21 +56,20 @@ export const insertListSchema = createInsertSchema(lists).omit({
   lastUpdated: true,
 });
 
-export const insertTodoItemSchema = createInsertSchema(todoItems).omit({
-  id: true,
-  listId: true,
-  createdAt: true,
-}).partial({
-  number: true,
-}).extend({
+export const insertTodoItemSchema = z.object({
   text: z.string()
     .min(1, "Task description cannot be empty")
     .max(128, "Task description must be 128 characters or less")
     .trim()
     .refine(val => val.length > 0, "Task description cannot be only whitespace"),
-  positionX: z.number().min(0).max(1).optional(),
-  positionY: z.number().min(0).max(1).optional(),
   number: z.number().int().min(1).max(100).optional(),
+  positionX: z.number().min(0).max(1).optional().nullable(),
+  positionY: z.number().min(0).max(1).optional().nullable(),
+  quadrant: z.string().optional().nullable(),
+  completed: z.boolean().default(false),
+  lastPositionX: z.number().min(0).max(1).optional().nullable(),
+  lastPositionY: z.number().min(0).max(1).optional().nullable(),
+  lastQuadrant: z.string().optional().nullable(),
 });
 
 export const insertMatrixSettingsSchema = createInsertSchema(matrixSettings).omit({

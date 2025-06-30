@@ -67,8 +67,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(item);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("Validation error:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
+        console.error("Todo creation error:", error);
         res.status(500).json({ message: "Failed to create todo item" });
       }
     }

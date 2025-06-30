@@ -259,7 +259,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
       <div className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8">
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
-          className="absolute -left-6 custom-810:-left-8 top-6 custom-810:top-8 transform -rotate-90 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          className="absolute -left-8 custom-810:-left-10 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
           style={{ 
             transformOrigin: 'center center'
           }}
@@ -282,7 +282,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         
         {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute right-0 -bottom-1 custom-810:-bottom-2 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          className="absolute right-0 -bottom-4 custom-810:-bottom-6 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >

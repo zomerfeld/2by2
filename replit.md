@@ -1,4 +1,4 @@
-# Priority Matrix - Task Prioritization Tool (v2.1)
+# Priority Matrix - Task Prioritization Tool (v2.2)
 
 ## Overview
 
@@ -123,6 +123,14 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - `npm run db:push`: Applies database schema changes
 
 ## Version History
+
+### v2.2 - Mobile Responsive (June 30, 2025)
+**Mobile-First Design:**
+- **Responsive Layout**: Matrix stacks above todo list on screens < 810px for optimal mobile viewing
+- **Natural Scrolling**: Full-page scrollable experience with matrix and todo list flowing vertically
+- **Adaptive Axis Labels**: Impact and Urgency labels resize and reposition responsively across screen sizes
+- **Mobile Optimization**: Reduced padding, smaller text, and adjusted spacing for mobile devices
+- **Custom Breakpoint**: 810px threshold ensures perfect desktop/mobile transition
 
 ### v2.1 - UI Polish (June 30, 2025)
 **Interface Improvements:**

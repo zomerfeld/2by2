@@ -192,6 +192,159 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - Minimalist design without quadrant backgrounds
 - Double-click interactions for editing and removal
 
+## Local Deployment Guide
+
+This guide helps you run Priority Matrix on your own computer, even if you're new to coding.
+
+### Prerequisites (What You'll Need)
+
+Before starting, you'll need to install these programs on your computer:
+
+#### 1. Install Node.js
+- Go to [nodejs.org](https://nodejs.org)
+- Download the "LTS" version (recommended for most users)
+- Run the installer and follow the setup wizard
+- To verify it worked, open Terminal (Mac) or Command Prompt (Windows) and type:
+  ```
+  node --version
+  ```
+  You should see a version number like `v20.x.x`
+
+#### 2. Install PostgreSQL Database
+- Go to [postgresql.org/download](https://postgresql.org/download)
+- Choose your operating system and download the installer
+- During installation, remember the password you set for the "postgres" user
+- Make sure PostgreSQL service starts automatically
+
+#### 3. Install Git (Optional but Recommended)
+- Go to [git-scm.com](https://git-scm.com)
+- Download and install for your operating system
+- This helps you download and update the code easily
+
+### Getting the Code
+
+#### Option 1: Using Git (Recommended)
+Open Terminal/Command Prompt and run:
+```bash
+git clone https://github.com/your-repo/priority-matrix.git
+cd priority-matrix
+```
+
+#### Option 2: Download ZIP
+- Download the code as a ZIP file from your repository
+- Extract it to a folder like `Documents/priority-matrix`
+- Open Terminal/Command Prompt and navigate to that folder
+
+### Setting Up the Database
+
+1. **Create a Database**
+   Open Terminal/Command Prompt and run:
+   ```bash
+   createdb priority_matrix
+   ```
+   If this doesn't work, try:
+   ```bash
+   psql -U postgres -c "CREATE DATABASE priority_matrix;"
+   ```
+
+2. **Set Database Connection**
+   Create a file called `.env` in your project folder and add:
+   ```
+   DATABASE_URL=postgresql://postgres:your_password@localhost:5432/priority_matrix
+   ```
+   Replace `your_password` with the PostgreSQL password you set during installation.
+
+### Installing Dependencies
+
+In your project folder, run:
+```bash
+npm install
+```
+
+This downloads all the code libraries the app needs. It might take a few minutes.
+
+### Setting Up the Database Schema
+
+Run this command to create the necessary database tables:
+```bash
+npm run db:push
+```
+
+### Starting the Application
+
+To start the app, run:
+```bash
+npm run dev
+```
+
+You should see messages like:
+```
+[express] serving on port 5000
+```
+
+Open your web browser and go to:
+```
+http://localhost:5000
+```
+
+You should see your Priority Matrix app running!
+
+### Stopping the Application
+
+To stop the app:
+- Press `Ctrl+C` (Windows/Linux) or `Cmd+C` (Mac) in Terminal/Command Prompt
+
+### Troubleshooting Common Issues
+
+#### "npm not found" or "node not found"
+- Restart your Terminal/Command Prompt after installing Node.js
+- Make sure Node.js installed correctly by running `node --version`
+
+#### Database Connection Errors
+- Make sure PostgreSQL is running on your computer
+- Check that your `.env` file has the correct password
+- Try connecting to PostgreSQL manually: `psql -U postgres`
+
+#### Port Already in Use
+- If port 5000 is busy, the app will automatically try port 5001, 5002, etc.
+- Or stop other applications using that port
+
+#### Permission Errors
+- On Mac/Linux, you might need to use `sudo` before commands
+- Make sure you have write permissions in your project folder
+
+### Development vs Production
+
+The `npm run dev` command starts the app in development mode with:
+- Automatic reloading when you change code
+- Detailed error messages
+- Development tools enabled
+
+For production deployment (running on a server), you would use:
+```bash
+npm run build
+npm run start
+```
+
+### Keeping Your App Updated
+
+If you used Git to download the code, you can update it by running:
+```bash
+git pull
+npm install
+npm run db:push
+```
+
+This downloads any new features and updates your database if needed.
+
+### Getting Help
+
+If you run into issues:
+1. Check the error messages carefully - they often explain what's wrong
+2. Make sure all prerequisites are installed correctly
+3. Verify your database connection settings in the `.env` file
+4. Try restarting both the app and your database service
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.

@@ -7,21 +7,18 @@ import MatrixPage from "@/pages/matrix";
 import { useEffect, useState } from "react";
 
 function Router() {
-  const [newListId, setNewListId] = useState<string | null>(null);
-  const [isCheckingStorage, setIsCheckingStorage] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true);
 
-  // Handle root URL access - redirect to last list or create new one
   useEffect(() => {
-    const handleRootAccess = async () => {
+    const initializeApp = async () => {
+      // Only handle root URL redirection
       if (window.location.pathname === "/") {
         console.log("Root URL accessed, checking for existing list...");
         
-        // Check if user has a previous list stored in localStorage
         const lastListId = localStorage.getItem("lastListId");
         console.log("Found lastListId in localStorage:", lastListId);
         
         if (lastListId && lastListId.trim() !== "") {
-          // Verify the list still exists on the server
           try {
             console.log("Verifying list exists on server:", lastListId);
             const response = await fetch(`/api/lists/${lastListId}`);
@@ -29,8 +26,7 @@ function Router() {
             
             if (response.ok) {
               console.log("List exists! Redirecting to:", lastListId);
-              setNewListId(lastListId);
-              setIsCheckingStorage(false);
+              window.location.href = `/lists/${lastListId}`;
               return;
             } else {
               console.log("List not found on server, cleaning localStorage");
@@ -40,11 +36,9 @@ function Router() {
             console.log("Error verifying list existence:", error);
             localStorage.removeItem("lastListId");
           }
-        } else {
-          console.log("No previous list found in localStorage");
         }
         
-        // Create a new list if no valid previous list exists
+        // Create new list if no valid existing list
         try {
           console.log("Creating new list...");
           const response = await fetch("/api/lists", { method: "POST" });
@@ -52,33 +46,35 @@ function Router() {
           console.log("Created new list:", listId);
           localStorage.setItem("lastListId", listId);
           console.log("Stored new listId in localStorage:", listId);
-          setNewListId(listId);
+          window.location.href = `/lists/${listId}`;
+          return;
         } catch (error) {
           console.error("Failed to create new list:", error);
         }
-        
-        setIsCheckingStorage(false);
       }
+      
+      setIsInitializing(false);
     };
-    handleRootAccess();
+
+    initializeApp();
   }, []);
 
-  if (window.location.pathname === "/" && isCheckingStorage) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="text-gray-600">Loading your workspace...</div>
-    </div>;
-  }
-
-  if (window.location.pathname === "/" && newListId) {
-    return <Redirect to={`/lists/${newListId}`} />;
+  if (isInitializing && window.location.pathname === "/") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-gray-600 text-lg">Loading your workspace...</div>
+      </div>
+    );
   }
 
   return (
     <Switch>
       <Route path="/lists/:listId" component={MatrixPage} />
-      <Route path="/" component={() => <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600">Loading your workspace...</div>
-      </div>} />
+      <Route path="/" component={() => (
+        <div className="flex items-center justify-center min-h-screen bg-white">
+          <div className="text-gray-600 text-lg">Loading your workspace...</div>
+        </div>
+      )} />
       <Route path="*" component={() => <Redirect to="/" />} />
     </Switch>
   );

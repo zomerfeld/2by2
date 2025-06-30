@@ -20,6 +20,15 @@ export default function MatrixPage() {
       console.log("MatrixPage: Verified stored listId:", stored);
     }
   }, [listId]);
+
+  // Return loading state if listId is not available
+  if (!listId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-gray-600">Loading matrix...</div>
+      </div>
+    );
+  }
   
   const clearSelection = () => {
     setSelectedItemId(null);
@@ -111,8 +120,8 @@ export default function MatrixPage() {
 
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
-          <TodoSidebar selectedItemId={selectedItemId} listId={listId!} />
-          <PriorityMatrix onItemClick={handleItemClick} listId={listId!} />
+          <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
+          <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
         </div>
       </div>
     </DndProvider>

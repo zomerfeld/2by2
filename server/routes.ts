@@ -144,15 +144,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(404).json({ message: "Please use /api/lists/:listId/matrix-settings" });
   });
 
-  // Root redirect - create new list for users visiting root URL
-  app.get("/", async (req, res) => {
-    try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
-    }
-  });
+  // Root URL - let client handle localStorage and routing
+  // No redirect here - the client will check localStorage and redirect appropriately
 
   // Serve frontend for list URLs
   app.get("/lists/:listId", (req, res, next) => {

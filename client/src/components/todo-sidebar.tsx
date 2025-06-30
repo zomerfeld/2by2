@@ -47,12 +47,10 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`mb-3 p-3 rounded-lg border transition-all relative ${
+      className={`mb-3 p-2 transition-all relative ${
         isCompleted 
-          ? "bg-gray-100 border-gray-300 opacity-75" 
-          : isOnMatrix
-            ? "bg-gray-50 border-gray-200 cursor-move hover:shadow-md"
-            : "bg-red-50 border-red-200 border-2 cursor-move hover:shadow-md"
+          ? "opacity-75" 
+          : "cursor-move"
       } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
         isSelected ? "highlight-yellow" : ""
       }`}

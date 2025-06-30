@@ -15,23 +15,24 @@ interface MatrixItemProps {
   item: TodoItem;
   style?: React.CSSProperties;
   onClick?: (itemId: number) => void;
+  listId: string;
 }
 
-export function MatrixItem({ item, style, onClick }: MatrixItemProps) {
+export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isDragging, drag } = useTodoDrag(item);
 
   const removeFromMatrix = useMutation({
     mutationFn: async () => {
-      await apiRequest("PATCH", `/api/todo-items/${item.id}`, {
+      await apiRequest("PATCH", `/api/lists/${listId}/todo-items/${item.id}`, {
         positionX: null,
         positionY: null,
         quadrant: null,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
       toast({
         title: "Success",
         description: "Item moved back to sidebar",
@@ -48,6 +49,7 @@ export function MatrixItem({ item, style, onClick }: MatrixItemProps) {
   };
 
   const itemColor = getColorForNumber(item.number);
+  const isUnplaced = item.positionX === null || item.positionY === null;
 
   return (
     <Tooltip>
@@ -62,7 +64,9 @@ export function MatrixItem({ item, style, onClick }: MatrixItemProps) {
           }`}
         >
           <div 
-            className="w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
+            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow ${
+              isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
+            }`}
             style={{ backgroundColor: itemColor }}
           >
             {item.number}

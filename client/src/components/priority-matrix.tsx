@@ -142,9 +142,10 @@ interface QuadrantProps {
   bgColor: string;
   onDrop: (item: DragItem, position: Position, quadrant: QuadrantType) => void;
   onItemClick?: (itemId: number) => void;
+  listId: string;
 }
 
-function Quadrant({ type, items, label, bgColor, onDrop, onItemClick }: QuadrantProps) {
+function Quadrant({ type, items, label, bgColor, onDrop, onItemClick, listId }: QuadrantProps) {
   const { isOver, drop } = useQuadrantDrop(type, onDrop);
 
   return (
@@ -159,6 +160,7 @@ function Quadrant({ type, items, label, bgColor, onDrop, onItemClick }: Quadrant
           key={item.id}
           item={item}
           onClick={onItemClick}
+          listId={listId}
           style={{
             position: "absolute",
             left: `${item.positionX! * 100}%`,
@@ -351,6 +353,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
                 bgColor=""
                 onDrop={handleDrop}
                 onItemClick={onItemClick}
+                listId={listId}
               />
               
               {/* Top-right: High Urgency, High Impact */}
@@ -361,6 +364,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
                 bgColor=""
                 onDrop={handleDrop}
                 onItemClick={onItemClick}
+                listId={listId}
               />
               
               {/* Bottom-left: Low Urgency, Low Impact */}
@@ -371,6 +375,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
                 bgColor=""
                 onDrop={handleDrop}
                 onItemClick={onItemClick}
+                listId={listId}
               />
               
               {/* Bottom-right: Low Urgency, High Impact */}
@@ -381,6 +386,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
                 bgColor=""
                 onDrop={handleDrop}
                 onItemClick={onItemClick}
+                listId={listId}
               />
             </div>
           </TooltipProvider>

@@ -108,3 +108,30 @@ input[type="number"] {
   transform: translate(-50%, -50%) scale(1.02);
   z-index: 10;
 }
+
+/* Yellow highlighter effect */
+.highlight-yellow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 0, 0.3) 0%, 
+    rgba(255, 255, 0, 0.2) 100%
+  );
+  transform: translateY(-50%) skewY(-1deg);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.highlight-yellow {
+  position: relative;
+}
+
+.highlight-yellow > * {
+  position: relative;
+  z-index: 2;
+}

@@ -14,9 +14,10 @@ import {
 interface MatrixItemProps {
   item: TodoItem;
   style?: React.CSSProperties;
+  onClick?: (itemId: number) => void;
 }
 
-export function MatrixItem({ item, style }: MatrixItemProps) {
+export function MatrixItem({ item, style, onClick }: MatrixItemProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isDragging, drag } = useTodoDrag(item);
@@ -38,6 +39,10 @@ export function MatrixItem({ item, style }: MatrixItemProps) {
     },
   });
 
+  const handleClick = () => {
+    onClick?.(item.id);
+  };
+
   const handleDoubleClick = () => {
     removeFromMatrix.mutate();
   };
@@ -50,6 +55,7 @@ export function MatrixItem({ item, style }: MatrixItemProps) {
         <div
           ref={drag}
           style={style}
+          onClick={handleClick}
           onDoubleClick={handleDoubleClick}
           className={`absolute cursor-move hover:scale-110 transition-transform group ${
             isDragging ? "opacity-50 transform rotate-12 scale-110" : ""

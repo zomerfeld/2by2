@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoSidebar } from "@/components/todo-sidebar";
 import { PriorityMatrix, PriorityMatrixControls } from "@/components/priority-matrix";
 
 export default function MatrixPage() {
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="h-screen flex flex-col">
@@ -52,8 +55,8 @@ export default function MatrixPage() {
 
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
-          <TodoSidebar />
-          <PriorityMatrix />
+          <TodoSidebar selectedItemId={selectedItemId} />
+          <PriorityMatrix onItemClick={setSelectedItemId} />
         </div>
       </div>
     </DndProvider>

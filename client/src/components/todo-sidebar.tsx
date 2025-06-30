@@ -17,9 +17,10 @@ interface TodoItemComponentProps {
   onDelete: (id: number) => void;
   onToggleComplete: (id: number, completed: boolean) => void;
   isCompleted?: boolean;
+  isSelected?: boolean;
 }
 
-function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isCompleted = false }: TodoItemComponentProps) {
+function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
   const { isDragging, drag } = useTodoDrag(item);
@@ -46,13 +47,15 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`mb-3 p-3 rounded-lg border transition-all ${
+      className={`mb-3 p-3 rounded-lg border transition-all relative ${
         isCompleted 
           ? "bg-gray-100 border-gray-300 opacity-75" 
           : isOnMatrix
             ? "bg-gray-50 border-gray-200 cursor-move hover:shadow-md"
             : "bg-red-50 border-red-200 border-2 cursor-move hover:shadow-md"
-      } ${isDragging ? "opacity-50 transform rotate-1" : ""}`}
+      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
+        isSelected ? "highlight-yellow" : ""
+      }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 flex-1">
@@ -120,7 +123,11 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   );
 }
 
-export function TodoSidebar() {
+interface TodoSidebarProps {
+  selectedItemId?: number | null;
+}
+
+export function TodoSidebar({ selectedItemId }: TodoSidebarProps) {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -235,6 +242,7 @@ export function TodoSidebar() {
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
                 isCompleted={false}
+                isSelected={selectedItemId === item.id}
               />
             ))
           )}
@@ -269,6 +277,7 @@ export function TodoSidebar() {
                   onDelete={handleDelete}
                   onToggleComplete={handleToggleComplete}
                   isCompleted={true}
+                  isSelected={selectedItemId === item.id}
                 />
               ))}
             </div>

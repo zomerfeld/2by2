@@ -131,9 +131,10 @@ interface QuadrantProps {
   label: string;
   bgColor: string;
   onDrop: (item: DragItem, position: Position, quadrant: QuadrantType) => void;
+  onItemClick?: (itemId: number) => void;
 }
 
-function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
+function Quadrant({ type, items, label, bgColor, onDrop, onItemClick }: QuadrantProps) {
   const { isOver, drop } = useQuadrantDrop(type, onDrop);
 
   return (
@@ -147,6 +148,7 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
         <MatrixItem
           key={item.id}
           item={item}
+          onClick={onItemClick}
           style={{
             position: "absolute",
             left: `${item.positionX! * 100}%`,
@@ -159,7 +161,11 @@ function Quadrant({ type, items, label, bgColor, onDrop }: QuadrantProps) {
   );
 }
 
-export function PriorityMatrix() {
+interface PriorityMatrixProps {
+  onItemClick?: (itemId: number) => void;
+}
+
+export function PriorityMatrix({ onItemClick }: PriorityMatrixProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -323,6 +329,7 @@ export function PriorityMatrix() {
                 label=""
                 bgColor=""
                 onDrop={handleDrop}
+                onItemClick={onItemClick}
               />
               
               {/* Top-right: High Urgency, High Impact */}
@@ -332,6 +339,7 @@ export function PriorityMatrix() {
                 label=""
                 bgColor=""
                 onDrop={handleDrop}
+                onItemClick={onItemClick}
               />
               
               {/* Bottom-left: Low Urgency, Low Impact */}
@@ -341,6 +349,7 @@ export function PriorityMatrix() {
                 label=""
                 bgColor=""
                 onDrop={handleDrop}
+                onItemClick={onItemClick}
               />
               
               {/* Bottom-right: Low Urgency, High Impact */}
@@ -350,6 +359,7 @@ export function PriorityMatrix() {
                 label=""
                 bgColor=""
                 onDrop={handleDrop}
+                onItemClick={onItemClick}
               />
             </div>
           </TooltipProvider>

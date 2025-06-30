@@ -13,26 +13,38 @@ function Router() {
   useEffect(() => {
     const handleRootAccess = async () => {
       if (window.location.pathname === "/") {
+        // Add a small delay to ensure localStorage is ready
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // Check if user has a previous list stored in localStorage
         const lastListId = localStorage.getItem("lastListId");
+        console.log("Checking localStorage for lastListId:", lastListId);
         
-        if (lastListId) {
+        if (lastListId && lastListId.trim() !== "") {
           // Verify the list still exists on the server
           try {
             const response = await fetch(`/api/lists/${lastListId}`);
+            console.log("Checking if list exists on server:", response.status);
             if (response.ok) {
+              console.log("Redirecting to existing list:", lastListId);
               setNewListId(lastListId);
               return;
+            } else {
+              console.log("List not found on server, removing from localStorage");
+              localStorage.removeItem("lastListId");
             }
           } catch (error) {
-            console.log("Previous list no longer exists, creating new one");
+            console.log("Error checking list existence:", error);
+            localStorage.removeItem("lastListId");
           }
         }
         
         // Create a new list if no valid previous list exists
         try {
+          console.log("Creating new list because no valid existing list found");
           const response = await fetch("/api/lists", { method: "POST" });
           const { listId } = await response.json();
+          console.log("Created new list:", listId);
           localStorage.setItem("lastListId", listId);
           setNewListId(listId);
         } catch (error) {

@@ -109,44 +109,40 @@
   }
 }
 
-/* Mobile layout sizing - only for true mobile screens */
-@media (max-width: 640px) {
+/* Mobile and tablet layout - always stacked */
+@media (max-width: 1023px) {
   .mobile-matrix-height {
-    height: calc(50vh - 2rem); /* Account for header */
-  }
-  
-  .mobile-sidebar-height {
-    height: calc(50vh - 2rem);
-  }
-}
-
-/* Medium screen adjustments to prevent overlapping */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .mobile-matrix-height {
-    height: auto !important;
-    max-height: 55vh;
+    height: 50vh;
+    max-height: 50vh;
     overflow: hidden;
   }
   
   .mobile-sidebar-height {
-    height: auto !important;
-    min-height: 40vh;
+    height: 50vh;
+    max-height: 50vh;
+    overflow: hidden;
   }
   
   /* Ensure matrix doesn't exceed available space */
   .priority-matrix-container {
-    max-height: 55vh !important;
+    max-height: 50vh !important;
   }
 }
 
-/* Large screen adjustments */
-@media (min-width: 1025px) {
+/* Desktop layout - side by side */
+@media (min-width: 1024px) {
   .mobile-matrix-height {
     height: auto !important;
+    max-height: none !important;
   }
   
   .mobile-sidebar-height {
     height: auto !important;
+    max-height: none !important;
+  }
+  
+  .priority-matrix-container {
+    max-height: none !important;
   }
 }
 

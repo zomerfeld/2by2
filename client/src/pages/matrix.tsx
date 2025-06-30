@@ -120,14 +120,14 @@ export default function MatrixPage() {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col sm:flex-row overflow-hidden">
+          {/* Sidebar - Bottom on mobile, left on desktop */}
+          <div className="order-2 sm:order-1 sm:flex-shrink-0 sm:w-80 mobile-sidebar-height sm:flex-none min-h-0 sm:h-full sm:border-r sm:border-gray-200">
+            <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
+          </div>
+          
           {/* Matrix - Top on mobile, right on desktop */}
           <div className="order-1 sm:order-2 mobile-matrix-height sm:flex-1 min-h-0 sm:h-full">
             <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
-          </div>
-          
-          {/* Sidebar - Bottom on mobile, left on desktop */}
-          <div className="order-2 sm:order-1 sm:flex-shrink-0 sm:w-80 mobile-sidebar-height sm:flex-none min-h-0 sm:h-full">
-            <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
           </div>
         </div>
       </div>

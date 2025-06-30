@@ -120,6 +120,17 @@
   }
 }
 
+/* Prevent overlapping at all sizes by ensuring desktop layout takes precedence */
+@media (min-width: 641px) {
+  .mobile-matrix-height {
+    height: auto !important;
+  }
+  
+  .mobile-sidebar-height {
+    height: auto !important;
+  }
+}
+
 /* Ensure proper text selection and editing */
 input[type="text"], 
 input[type="number"] {

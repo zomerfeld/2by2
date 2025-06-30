@@ -215,7 +215,6 @@ export function TodoSidebar({ selectedItemId }: TodoSidebarProps) {
   return (
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">To-Do Items</h2>
         <Button
           onClick={() => setShowModal(true)}
           className="w-full"

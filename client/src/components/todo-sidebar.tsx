@@ -47,7 +47,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`mb-3 p-2 transition-all relative ${
+      className={`py-2 px-2 transition-all relative border-b border-gray-100 last:border-b-0 ${
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
@@ -74,7 +74,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             />
           ) : (
             <span 
-              className={`flex-1 font-medium cursor-text ${
+              className={`flex-1 font-medium cursor-text text-sm ${
                 isCompleted ? "text-gray-500 line-through" : "text-gray-900"
               }`}
               onClick={() => !isCompleted && setIsEditing(true)}

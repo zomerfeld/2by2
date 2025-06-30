@@ -12,20 +12,21 @@ interface AddTodoModalProps {
   open: boolean;
   onClose: () => void;
   existingNumbers: number[];
+  listId: string;
 }
 
-export function AddTodoModal({ open, onClose, existingNumbers }: AddTodoModalProps) {
+export function AddTodoModal({ open, onClose, existingNumbers, listId }: AddTodoModalProps) {
   const [text, setText] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const createTodoMutation = useMutation({
     mutationFn: async (data: InsertTodoItem) => {
-      const response = await apiRequest("POST", "/api/todo-items", data);
+      const response = await apiRequest("POST", `/api/lists/${listId}/todo-items`, data);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
       handleClose();
     },
     onError: () => {

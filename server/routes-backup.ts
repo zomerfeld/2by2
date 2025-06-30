@@ -59,11 +59,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/lists/:listId/todo-items", async (req, res) => {
+  app.post("/api/todo-items", async (req, res) => {
     try {
-      const { listId } = req.params;
       const validatedData = insertTodoItemSchema.parse(req.body);
-      const item = await storage.createTodoItem(listId, validatedData);
+      const item = await storage.createTodoItem(validatedData);
       res.status(201).json(item);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -74,12 +73,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/lists/:listId/todo-items/:id", async (req, res) => {
+  app.patch("/api/todo-items/:id", async (req, res) => {
     try {
-      const { listId } = req.params;
       const id = parseInt(req.params.id);
       const updates = req.body;
-      const item = await storage.updateTodoItem(listId, id, updates);
+      const item = await storage.updateTodoItem(id, updates);
       
       if (!item) {
         res.status(404).json({ message: "Todo item not found" });
@@ -92,11 +90,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/lists/:listId/todo-items/:id", async (req, res) => {
+  app.delete("/api/todo-items/:id", async (req, res) => {
     try {
-      const { listId } = req.params;
       const id = parseInt(req.params.id);
-      const deleted = await storage.deleteTodoItem(listId, id);
+      const deleted = await storage.deleteTodoItem(id);
       
       if (!deleted) {
         res.status(404).json({ message: "Todo item not found" });
@@ -109,65 +106,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Matrix Settings routes (with listId)
-  app.get("/api/lists/:listId/matrix-settings", async (req, res) => {
+  // Matrix Settings routes
+  app.get("/api/matrix-settings", async (req, res) => {
     try {
-      const { listId } = req.params;
-      const settings = await storage.getMatrixSettings(listId);
+      const settings = await storage.getMatrixSettings();
       res.json(settings);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch matrix settings" });
     }
   });
 
-  app.patch("/api/lists/:listId/matrix-settings", async (req, res) => {
+  app.patch("/api/matrix-settings", async (req, res) => {
     try {
-      const { listId } = req.params;
-      const validatedData = insertMatrixSettingsSchema.parse(req.body);
-      const settings = await storage.updateMatrixSettings(listId, validatedData);
+      const updates = req.body;
+      const settings = await storage.updateMatrixSettings(updates);
       res.json(settings);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid data", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Failed to update matrix settings" });
-      }
+      res.status(500).json({ message: "Failed to update matrix settings" });
     }
   });
 
-  // Legacy routes for backward compatibility - redirect to create new list
-  app.get("/api/todo-items", async (req, res) => {
+  // Export matrix state
+  app.get("/api/export", async (req, res) => {
     try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
+      const items = await storage.getTodoItems();
+      const settings = await storage.getMatrixSettings();
+      
+      const exportData = {
+        todoItems: items,
+        matrixSettings: settings,
+        exportedAt: new Date().toISOString(),
+      };
+      
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', 'attachment; filename="priority-matrix.json"');
+      res.json(exportData);
     } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
+      res.status(500).json({ message: "Failed to export matrix data" });
     }
-  });
-
-  app.get("/api/matrix-settings", async (req, res) => {
-    try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
-    }
-  });
-
-  // Root redirect - create new list for users visiting root URL
-  app.get("/", async (req, res) => {
-    try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
-    }
-  });
-
-  // Serve frontend for list URLs
-  app.get("/lists/:listId", (req, res, next) => {
-    // Let Vite handle this in development, or serve static files in production
-    next();
   });
 
   const httpServer = createServer(app);

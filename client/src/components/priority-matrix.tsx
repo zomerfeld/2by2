@@ -13,16 +13,26 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-export function PriorityMatrixControls() {
+export function PriorityMatrixControls({ listId }: { listId: string }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: todoItems = [] } = useQuery<TodoItem[]>({
-    queryKey: ["/api/todo-items"],
+    queryKey: ["/api/lists", listId, "todo-items"],
+    queryFn: async () => {
+      const response = await fetch(`/api/lists/${listId}/todo-items`);
+      if (!response.ok) throw new Error('Failed to fetch todo items');
+      return response.json();
+    },
   });
 
   const { data: settings } = useQuery<MatrixSettings>({
-    queryKey: ["/api/matrix-settings"],
+    queryKey: ["/api/lists", listId, "matrix-settings"],
+    queryFn: async () => {
+      const response = await fetch(`/api/lists/${listId}/matrix-settings`);
+      if (!response.ok) throw new Error('Failed to fetch matrix settings');
+      return response.json();
+    },
   });
 
   const [xAxisLabel, setXAxisLabel] = useState(settings?.xAxisLabel || "Impact");
@@ -33,7 +43,7 @@ export function PriorityMatrixControls() {
       const promises = todoItems
         .filter(item => item.quadrant)
         .map(item => 
-          apiRequest("PATCH", `/api/todo-items/${item.id}`, {
+          apiRequest("PATCH", `/api/lists/${listId}/todo-items/${item.id}`, {
             positionX: null,
             positionY: null,
             quadrant: null,
@@ -42,7 +52,7 @@ export function PriorityMatrixControls() {
       await Promise.all(promises);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
     },
   });
 
@@ -163,9 +173,10 @@ function Quadrant({ type, items, label, bgColor, onDrop, onItemClick }: Quadrant
 
 interface PriorityMatrixProps {
   onItemClick?: (itemId: number) => void;
+  listId: string;
 }
 
-export function PriorityMatrix({ onItemClick }: PriorityMatrixProps) {
+export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -173,11 +184,21 @@ export function PriorityMatrix({ onItemClick }: PriorityMatrixProps) {
   const [editingYAxis, setEditingYAxis] = useState(false);
 
   const { data: todoItems = [] } = useQuery<TodoItem[]>({
-    queryKey: ["/api/todo-items"],
+    queryKey: ["/api/lists", listId, "todo-items"],
+    queryFn: async () => {
+      const response = await fetch(`/api/lists/${listId}/todo-items`);
+      if (!response.ok) throw new Error('Failed to fetch todo items');
+      return response.json();
+    },
   });
 
   const { data: settings } = useQuery<MatrixSettings>({
-    queryKey: ["/api/matrix-settings"],
+    queryKey: ["/api/lists", listId, "matrix-settings"],
+    queryFn: async () => {
+      const response = await fetch(`/api/lists/${listId}/matrix-settings`);
+      if (!response.ok) throw new Error('Failed to fetch matrix settings');
+      return response.json();
+    },
   });
 
   const [xAxisLabel, setXAxisLabel] = useState(settings?.xAxisLabel || "Impact");
@@ -185,19 +206,19 @@ export function PriorityMatrix({ onItemClick }: PriorityMatrixProps) {
 
   const updateMatrixSettingsMutation = useMutation({
     mutationFn: async (data: { xAxisLabel?: string; yAxisLabel?: string }) => {
-      return apiRequest("PATCH", "/api/matrix-settings", data);
+      return apiRequest("PATCH", `/api/lists/${listId}/matrix-settings`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/matrix-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "matrix-settings"] });
     },
   });
 
   const updateTodoItemMutation = useMutation({
     mutationFn: async ({ id, ...data }: { id: number } & Partial<TodoItem>) => {
-      return apiRequest("PATCH", `/api/todo-items/${id}`, data);
+      return apiRequest("PATCH", `/api/lists/${listId}/todo-items/${id}`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
     },
   });
 

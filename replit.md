@@ -1,8 +1,8 @@
-# Priority Matrix - Task Prioritization Tool (v1.2)
+# Priority Matrix - Task Prioritization Tool (v1.3)
 
 ## Overview
 
-Priority Matrix is a full-stack web application that helps users organize and prioritize tasks using a visual 2x2 matrix interface. Users can create up to 100 tasks and drag them across customizable urgency and impact axes to effectively categorize their work priorities. The application features a collapsible sidebar, intelligent number reuse system, and comprehensive export capabilities including JSON, PDF, and PNG formats.
+Priority Matrix is a full-stack web application that helps users organize and prioritize tasks using a visual 2x2 matrix interface. Users can create up to 100 tasks and drag them across customizable urgency and impact axes to effectively categorize their work priorities. The application features multi-user support with custom shareable URLs, a collapsible sidebar, intelligent number reuse system, and comprehensive export capabilities including JSON, PDF, and PNG formats.
 
 ## System Architecture
 
@@ -53,12 +53,14 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - **PriorityMatrixControls**: Header controls for export (JSON/PDF/PNG) and clear functions
 
 ### Backend Routes
-- `GET /api/todo-items` - Fetch all tasks
-- `POST /api/todo-items` - Create new task
-- `PATCH /api/todo-items/:id` - Update task properties
-- `DELETE /api/todo-items/:id` - Remove task
-- `GET /api/matrix-settings` - Get axis labels
-- `PATCH /api/matrix-settings` - Update axis labels
+- `POST /api/lists` - Create new list (returns listId)
+- `GET /api/lists/:listId` - Fetch list details
+- `GET /api/lists/:listId/todo-items` - Fetch tasks for specific list
+- `POST /api/lists/:listId/todo-items` - Create new task in list
+- `PATCH /api/lists/:listId/todo-items/:id` - Update task properties
+- `DELETE /api/lists/:listId/todo-items/:id` - Remove task from list
+- `GET /api/lists/:listId/matrix-settings` - Get axis labels for list
+- `PATCH /api/lists/:listId/matrix-settings` - Update axis labels for list
 
 ## Data Flow
 
@@ -118,7 +120,21 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 
 ## Version History
 
-### v1.2 - Current Release (June 28, 2025)
+### v1.3 - Multi-User System (June 30, 2025)
+**Major Features:**
+- **Multi-User Support**: Custom shareable URLs for each task list (e.g., `/lists/abc123`)
+- **Automatic List Creation**: New users get unique list IDs when visiting root URL
+- **Server Storage Sync**: Efficient list-based data management with automatic cleanup
+- **100-List Capacity**: Support for up to 100 concurrent lists with oldest-first deletion
+- **List Isolation**: Each list maintains independent tasks, settings, and matrix configurations
+
+**Technical Implementation:**
+- URL-based list routing with unique identifiers
+- List-specific API endpoints (`/api/lists/:listId/...`)
+- Enhanced storage system with timestamp-based cleanup
+- Backward-compatible architecture maintaining all v1.2 features
+
+### v1.2 - Core Release (June 28, 2025)
 **Major Features:**
 - **Axis Label Swap**: Impact moved to vertical (left), Urgency to horizontal (bottom)
 - **100-Item Capacity**: Increased from 15 to 100 tasks with intelligent number reuse

@@ -3,8 +3,10 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoSidebar } from "@/components/todo-sidebar";
 import { PriorityMatrix, PriorityMatrixControls } from "@/components/priority-matrix";
+import { useParams } from "wouter";
 
 export default function MatrixPage() {
+  const { listId } = useParams<{ listId: string }>();
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -93,13 +95,13 @@ export default function MatrixPage() {
             </div>
             <h1 className="text-xl font-semibold text-gray-900">Priority Matrix</h1>
           </div>
-          <PriorityMatrixControls />
+          <PriorityMatrixControls listId={listId} />
         </header>
 
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
-          <TodoSidebar selectedItemId={selectedItemId} />
-          <PriorityMatrix onItemClick={handleItemClick} />
+          <TodoSidebar selectedItemId={selectedItemId} listId={listId!} />
+          <PriorityMatrix onItemClick={handleItemClick} listId={listId!} />
         </div>
       </div>
     </DndProvider>

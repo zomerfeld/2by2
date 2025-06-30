@@ -4,6 +4,7 @@ import path from "path";
 import { nanoid } from "nanoid";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
+const TEMPLATE_FILE = path.join(process.cwd(), "data.template.json");
 const MAX_LISTS = 100;
 
 interface ListData {
@@ -239,8 +240,8 @@ export class FileStorage implements IStorage {
 
     return {
       id: listData.list.id,
-      xAxisLabel: listData.list.xAxisLabel || "Impact",
-      yAxisLabel: listData.list.yAxisLabel || "Urgency",
+      xAxisLabel: listData.list.xAxisLabel,
+      yAxisLabel: listData.list.yAxisLabel,
     };
   }
 
@@ -257,8 +258,8 @@ export class FileStorage implements IStorage {
     
     return {
       id: listData.list.id,
-      xAxisLabel: listData.list.xAxisLabel || "Impact",
-      yAxisLabel: listData.list.yAxisLabel || "Urgency",
+      xAxisLabel: listData.list.xAxisLabel,
+      yAxisLabel: listData.list.yAxisLabel,
     };
   }
 }

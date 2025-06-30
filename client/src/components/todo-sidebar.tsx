@@ -123,24 +123,30 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
 
 interface TodoSidebarProps {
   selectedItemId?: number | null;
+  listId: string;
 }
 
-export function TodoSidebar({ selectedItemId }: TodoSidebarProps) {
+export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: todoItems = [], isLoading } = useQuery<TodoItem[]>({
-    queryKey: ["/api/todo-items"],
+    queryKey: ["/api/lists", listId, "todo-items"],
+    queryFn: async () => {
+      const response = await fetch(`/api/lists/${listId}/todo-items`);
+      if (!response.ok) throw new Error('Failed to fetch todo items');
+      return response.json();
+    },
   });
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<TodoItem> }) => {
-      const response = await apiRequest("PATCH", `/api/todo-items/${id}`, updates);
+      const response = await apiRequest("PATCH", `/api/lists/${listId}/todo-items/${id}`, updates);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
     },
     onError: () => {
       toast({
@@ -153,10 +159,10 @@ export function TodoSidebar({ selectedItemId }: TodoSidebarProps) {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/todo-items/${id}`);
+      await apiRequest("DELETE", `/api/lists/${listId}/todo-items/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/todo-items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
     },
     onError: () => {
       toast({
@@ -292,6 +298,7 @@ export function TodoSidebar({ selectedItemId }: TodoSidebarProps) {
         open={showModal}
         onClose={() => setShowModal(false)}
         existingNumbers={existingNumbers}
+        listId={listId}
       />
     </div>
   );

@@ -9,6 +9,13 @@ export default function MatrixPage() {
   const { listId } = useParams<{ listId: string }>();
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Store the current list ID in localStorage when accessing a list
+  useEffect(() => {
+    if (listId) {
+      localStorage.setItem("lastListId", listId);
+    }
+  }, [listId]);
   
   const clearSelection = () => {
     setSelectedItemId(null);

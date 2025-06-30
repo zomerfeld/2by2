@@ -123,13 +123,15 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 ### v1.3 - Multi-User System (June 30, 2025)
 **Major Features:**
 - **Multi-User Support**: Custom shareable URLs for each task list (e.g., `/lists/abc123`)
-- **Automatic List Creation**: New users get unique list IDs when visiting root URL
+- **Browser Persistence**: Users automatically return to their last used list after app restarts
 - **Server Storage Sync**: Efficient list-based data management with automatic cleanup
 - **100-List Capacity**: Support for up to 100 concurrent lists with oldest-first deletion
 - **List Isolation**: Each list maintains independent tasks, settings, and matrix configurations
+- **Red Circle Indicators**: Visual marking of unplaced items with red borders around numbers
 
 **Technical Implementation:**
 - URL-based list routing with unique identifiers
+- localStorage integration for browser-based list persistence
 - List-specific API endpoints (`/api/lists/:listId/...`)
 - Enhanced storage system with timestamp-based cleanup
 - Backward-compatible architecture maintaining all v1.2 features

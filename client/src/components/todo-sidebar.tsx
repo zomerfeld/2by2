@@ -290,7 +290,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
         )}
       </div>
       <div className="p-6 border-t border-gray-200 pl-[8px] pr-[8px] pt-[8px] pb-[8px]">
-        <div className="text-sm text-gray-500 text-center">
+        <div className="text-gray-500 text-center text-[12px]">
           {activeItems.length} active, {completedItems.length} completed
         </div>
       </div>

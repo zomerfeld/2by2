@@ -13,11 +13,11 @@ export default function MatrixPage() {
   // Store the current list ID in localStorage when accessing a list
   useEffect(() => {
     if (listId) {
-      console.log("Storing listId in localStorage:", listId);
+      console.log("MatrixPage: Storing listId in localStorage:", listId);
       localStorage.setItem("lastListId", listId);
       // Verify it was stored
       const stored = localStorage.getItem("lastListId");
-      console.log("Verified stored listId:", stored);
+      console.log("MatrixPage: Verified stored listId:", stored);
     }
   }, [listId]);
   

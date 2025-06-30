@@ -135,23 +135,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Legacy routes for backward compatibility - redirect to create new list
+  // Legacy routes - return error to force client to use new endpoints
   app.get("/api/todo-items", async (req, res) => {
-    try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
-    }
+    res.status(404).json({ message: "Please use /api/lists/:listId/todo-items" });
   });
 
   app.get("/api/matrix-settings", async (req, res) => {
-    try {
-      const listId = await storage.createList();
-      res.redirect(`/lists/${listId}`);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create new list" });
-    }
+    res.status(404).json({ message: "Please use /api/lists/:listId/matrix-settings" });
   });
 
   // Root redirect - create new list for users visiting root URL

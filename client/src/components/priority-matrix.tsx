@@ -254,7 +254,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
       >
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
-          className="absolute -left-8 custom-810:-left-10 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          className="absolute -left-8 custom-810:-left-10 top-4 custom-810:top-6 text-sm custom-810:text-lg font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
           style={{ 
             transformOrigin: 'center center'
           }}
@@ -267,11 +267,13 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
               onChange={(e) => handleAxisLabelChange('x', e.target.value)}
               onBlur={() => setEditingYAxis(false)}
               onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-              className="w-24 h-6 text-sm transform rotate-90"
+              className="w-24 h-6 text-sm"
               autoFocus
             />
           ) : (
-            xAxisLabel
+            <div className="transform -rotate-90" style={{ transformOrigin: 'center center' }}>
+              {xAxisLabel}
+            </div>
           )}
         </div>
         

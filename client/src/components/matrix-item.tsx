@@ -64,19 +64,10 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
           }`}
         >
           <div 
-            className={`rounded-full shadow-lg hover:shadow-xl transition-shadow text-white font-bold ${
+            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow ${
               isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
             }`}
-            style={{ 
-              backgroundColor: itemColor,
-              width: '32px',
-              height: '32px',
-              display: 'table-cell',
-              textAlign: 'center',
-              verticalAlign: 'middle',
-              fontSize: '14px',
-              borderRadius: '50%'
-            }}
+            style={{ backgroundColor: itemColor }}
           >
             {item.number}
           </div>

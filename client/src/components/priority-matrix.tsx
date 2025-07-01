@@ -11,7 +11,6 @@ import { type DragItem, type Position, type QuadrantType } from "@/lib/types";
 import { type TodoItem, type MatrixSettings } from "@shared/schema";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 export function PriorityMatrixControls({ listId }: { listId: string }) {
   const { toast } = useToast();
@@ -105,26 +104,9 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
         }
       });
 
-      // Export PDF using the same canvas but at 1x scale
-      const pdf = new jsPDF('l', 'mm', 'a4');
-      
-      // Create a separate 1x canvas for PDF
-      const pdfCanvas = await html2canvas(document.body, {
-        backgroundColor: '#ffffff',
-        scale: 1,
-        useCORS: true,
-      });
-      
-      const imgData = pdfCanvas.toDataURL('image/png');
-      const imgWidth = 297; // A4 landscape width
-      const imgHeight = (pdfCanvas.height * imgWidth) / pdfCanvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`priority-matrix-${timestamp}.pdf`);
-
       toast({
         title: "Export successful",
-        description: "Matrix exported as JSON, PNG, and PDF files",
+        description: "Matrix exported as JSON and PNG files",
       });
     } catch (error) {
       toast({

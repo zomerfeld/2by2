@@ -320,30 +320,30 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
           </div>
 
           {/* Internal Low/High Labels */}
-          {/* Horizontal axis labels (Urgency) */}
+          {/* Horizontal axis labels */}
           <div 
-            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium transform -translate-y-1/2"
-            style={{ left: `${labelHorizontalDistance + 4}px` }}
+            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ left: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
           >
             Low
           </div>
           <div 
-            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium transform -translate-y-1/2"
-            style={{ right: `${labelHorizontalDistance + 4}px` }}
+            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ right: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
           >
             High
           </div>
 
-          {/* Vertical axis labels (Impact) */}
+          {/* Vertical axis labels */}
           <div 
             className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ top: `${labelVerticalDistance + 4}px` }}
+            style={{ top: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
           >
             High
           </div>
           <div 
             className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ bottom: `${labelVerticalDistance + 4}px` }}
+            style={{ bottom: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
           >
             Low
           </div>

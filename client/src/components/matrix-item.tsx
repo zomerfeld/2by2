@@ -64,12 +64,20 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
           }`}
         >
           <div 
-            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow ${
+            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow leading-none ${
               isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
             }`}
-            style={{ backgroundColor: itemColor }}
+            style={{ 
+              backgroundColor: itemColor,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              lineHeight: '1'
+            }}
           >
-            {item.number}
+            <span style={{ textAlign: 'center', lineHeight: '1' }}>
+              {item.number}
+            </span>
           </div>
         </div>
       </TooltipTrigger>

@@ -79,13 +79,8 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
       document.body.removeChild(jsonLink);
       URL.revokeObjectURL(jsonUrl);
 
-      // Export PNG screenshot - capture the matrix area with labels
-      const matrixElement = document.querySelector('[data-matrix-export]');
-      if (!matrixElement) {
-        throw new Error('Matrix export area not found');
-      }
-      
-      const canvas = await html2canvas(matrixElement as HTMLElement, {
+      // Export PNG screenshot - capture entire page
+      const canvas = await html2canvas(document.body, {
         backgroundColor: '#ffffff',
         scale: 2, // Higher quality
         useCORS: true,
@@ -325,30 +320,30 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
           </div>
 
           {/* Internal Low/High Labels */}
-          {/* Horizontal axis labels */}
+          {/* Horizontal axis labels (Urgency) */}
           <div 
-            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ left: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
+            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium transform -translate-y-1/2"
+            style={{ left: `${labelHorizontalDistance + 4}px` }}
           >
             Low
           </div>
           <div 
-            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ right: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
+            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium transform -translate-y-1/2"
+            style={{ right: `${labelHorizontalDistance + 4}px` }}
           >
             High
           </div>
 
-          {/* Vertical axis labels */}
+          {/* Vertical axis labels (Impact) */}
           <div 
             className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ top: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+            style={{ top: `${labelVerticalDistance + 4}px` }}
           >
             High
           </div>
           <div 
             className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ bottom: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+            style={{ bottom: `${labelVerticalDistance + 4}px` }}
           >
             Low
           </div>

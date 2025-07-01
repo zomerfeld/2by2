@@ -105,19 +105,16 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
         }
       });
 
-      // Export PDF with 1x scale
+      // Export PDF using the same canvas but at 1x scale
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      
+      // Create a separate 1x canvas for PDF
       const pdfCanvas = await html2canvas(document.body, {
         backgroundColor: '#ffffff',
-        scale: 1, // 1x scale for PDF
+        scale: 1,
         useCORS: true,
-        allowTaint: false,
-        foreignObjectRendering: false,
-        ignoreElements: (element) => {
-          return element.tagName === 'INPUT';
-        },
       });
       
-      const pdf = new jsPDF('l', 'mm', 'a4');
       const imgData = pdfCanvas.toDataURL('image/png');
       const imgWidth = 297; // A4 landscape width
       const imgHeight = (pdfCanvas.height * imgWidth) / pdfCanvas.width;

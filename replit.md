@@ -1,4 +1,4 @@
-# Priority Matrix - Task Prioritization Tool (v2.3)
+# Priority Matrix - Task Prioritization Tool (v3.0)
 
 ## Overview
 
@@ -123,6 +123,15 @@ Priority Matrix is a full-stack web application that helps users organize and pr
 - `npm run db:push`: Applies database schema changes
 
 ## Version History
+
+### v3.0 - Production Polish Release (July 1, 2025)
+**Export & Interface Refinements:**
+- **Streamlined Exports**: Removed PDF export functionality, optimized PNG exports with silent downloads
+- **Improved User Experience**: Eliminated export success notifications for cleaner workflow
+- **Enhanced Label Editing**: Fixed Impact label editing with proper form field orientation
+- **Responsive Typography**: Scaled axis labels appropriately for desktop vs mobile viewing
+- **Precise Positioning**: Fine-tuned Impact and Urgency label positioning for optimal spacing across all screen sizes
+- **Production Ready**: Achieved final polish for professional deployment with refined visual hierarchy
 
 ### v2.3 - Stable Mobile Release (June 30, 2025)
 **Stability and Polish:**

@@ -86,6 +86,10 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
         useCORS: true,
         allowTaint: false,
         foreignObjectRendering: false,
+        ignoreElements: (element) => {
+          // Skip elements that might cause rendering issues
+          return element.tagName === 'INPUT';
+        },
       });
       
       canvas.toBlob((blob) => {
@@ -101,11 +105,22 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
         }
       });
 
-      // Export PDF
+      // Export PDF with 1x scale
+      const pdfCanvas = await html2canvas(document.body, {
+        backgroundColor: '#ffffff',
+        scale: 1, // 1x scale for PDF
+        useCORS: true,
+        allowTaint: false,
+        foreignObjectRendering: false,
+        ignoreElements: (element) => {
+          return element.tagName === 'INPUT';
+        },
+      });
+      
       const pdf = new jsPDF('l', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = pdfCanvas.toDataURL('image/png');
       const imgWidth = 297; // A4 landscape width
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgHeight = (pdfCanvas.height * imgWidth) / pdfCanvas.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       pdf.save(`priority-matrix-${timestamp}.pdf`);

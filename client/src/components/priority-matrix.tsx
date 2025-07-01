@@ -104,10 +104,7 @@ export function PriorityMatrixControls({ listId }: { listId: string }) {
         }
       });
 
-      toast({
-        title: "Export successful",
-        description: "Matrix exported as JSON and PNG files",
-      });
+
     } catch (error) {
       toast({
         title: "Export failed",

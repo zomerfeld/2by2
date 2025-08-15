@@ -74,12 +74,13 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             isCompleted 
               ? "w-5 h-5 text-white rounded-full flex items-center justify-center font-mono text-base font-bold" 
               : `w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
-                  isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
+                  isUnplaced ? "ring-2 ring-offset-1" : ""
                 }`
           }
           style={{ 
             backgroundColor: isCompleted ? '#C6C4CB' : itemColor,
-            fontSize: isCompleted ? '16px' : undefined
+            fontSize: isCompleted ? '16px' : undefined,
+            ...(isUnplaced && !isCompleted && { '--tw-ring-color': '#413B51' })
           }}
         >
           {isCompleted ? '*' : item.number}

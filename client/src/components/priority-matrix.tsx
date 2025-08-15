@@ -304,7 +304,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         {/* Matrix Container */}
         <div 
           data-matrix-container
-          className="h-full w-full aspect-square max-h-full relative rounded-xl border-2 shadow-sm"
+          className="h-full w-full aspect-square max-h-full relative border-2 shadow-sm"
           style={{ 
             borderColor: 'rgba(127, 39, 0, 0.3)'
           }}

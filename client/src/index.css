@@ -29,6 +29,11 @@
   --matrix-medium: hsl(38, 92%, 50%);
   --matrix-low: hsl(142, 76%, 36%);
   --matrix-neutral: hsl(220, 13%, 46%);
+  
+  /* Figma Design System Variables */
+  --sds-color-background-default-secondary: #f8f9fa;
+  --sds-typography-family-serif: 'Times New Roman', serif;
+  --sds-typography-scale-04: 18px;
 }
 
 .dark {

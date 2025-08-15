@@ -247,56 +247,47 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center bg-gray-50">
+    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'var(--sds-color-background-default-secondary, #f8f9fa)' }}>
       <div 
         data-matrix-export
-        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-8 custom-810:p-12"
+        className="relative flex items-center justify-center"
+        style={{ width: '941px', height: '1024px', maxWidth: '100%', maxHeight: '100%' }}
       >
-        {/* Top Axis Labels - Less Urgent | Urgent */}
-        <div className="absolute -top-8 left-0 right-0 flex justify-between text-sm font-medium text-gray-600">
-          <div 
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onDoubleClick={() => setEditingYAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingYAxis ? (
-              <Input
-                value={`Less ${yAxisLabel}`}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value.replace('Less ', ''))}
-                onBlur={() => setEditingYAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              `Less ${yAxisLabel}`
-            )}
-          </div>
-          <div 
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onDoubleClick={() => setEditingYAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingYAxis ? (
-              <Input
-                value={yAxisLabel}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                onBlur={() => setEditingYAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              yAxisLabel
-            )}
-          </div>
+        {/* Matrix Grid SVG - Based on Figma Design */}
+        <div className="relative" style={{ width: '757px', height: '757px', maxWidth: '100%', maxHeight: '100%' }}>
+          <svg width="100%" height="100%" viewBox="0 0 757 757" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.3">
+              <path d="M0 377.62H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+              <path d="M0 757H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+              <path d="M0 0H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+              <path d="M379.38 0L379.38 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+              <path d="M0 0L-3.30895e-05 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+              <path d="M757 0L757 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
+            </g>
+          </svg>
         </div>
 
-        {/* Left Axis Labels - High Impact | Low Impact */}
-        <div className="absolute -left-16 top-0 bottom-0 flex flex-col justify-between text-sm font-medium text-gray-600">
-          <div 
-            className="transform -rotate-90 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            style={{ transformOrigin: 'center center' }}
+        {/* Y-Labels: High Impact | Low Impact */}
+        <div 
+          className="absolute left-0 top-0 flex flex-col justify-between items-start"
+          style={{ 
+            opacity: 0.7,
+            height: '752px',
+            transform: 'translateX(-90px)'
+          }}
+        >
+          <span 
+            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-center flex-1 flex items-center"
+            style={{
+              color: '#7F2700',
+              fontFamily: 'var(--sds-typography-family-serif, serif)',
+              fontSize: 'var(--sds-typography-scale-04, 18px)',
+              fontWeight: 400,
+              lineHeight: '40px',
+              transform: 'rotate(-90deg)',
+              width: '376px',
+              transformOrigin: 'center center'
+            }}
             onDoubleClick={() => setEditingXAxis(true)}
             title="Double-click to edit"
           >
@@ -312,10 +303,19 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
             ) : (
               `High ${xAxisLabel}`
             )}
-          </div>
-          <div 
-            className="transform -rotate-90 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            style={{ transformOrigin: 'center center' }}
+          </span>
+          <span 
+            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-center flex-1 flex items-center"
+            style={{
+              color: '#7F2700',
+              fontFamily: 'var(--sds-typography-family-serif, serif)',
+              fontSize: 'var(--sds-typography-scale-04, 18px)',
+              fontWeight: 400,
+              lineHeight: '40px',
+              transform: 'rotate(-90deg)',
+              width: '376px',
+              transformOrigin: 'center center'
+            }}
             onDoubleClick={() => setEditingXAxis(true)}
             title="Double-click to edit"
           >
@@ -331,23 +331,78 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
             ) : (
               `Low ${xAxisLabel}`
             )}
-          </div>
+          </span>
         </div>
 
-        {/* Matrix Container */}
+        {/* X-Labels: Less Urgent | Urgent */}
+        <div 
+          className="absolute bottom-0 left-0 flex justify-between items-center"
+          style={{ 
+            opacity: 0.7,
+            width: '752px',
+            transform: 'translateY(50px)'
+          }}
+        >
+          <span 
+            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-center flex-1"
+            style={{
+              color: '#7F2700',
+              fontFamily: 'var(--sds-typography-family-serif, serif)',
+              fontSize: 'var(--sds-typography-scale-04, 18px)',
+              fontWeight: 400,
+              lineHeight: '40px',
+              height: '14px'
+            }}
+            onDoubleClick={() => setEditingYAxis(true)}
+            title="Double-click to edit"
+          >
+            {editingYAxis ? (
+              <Input
+                value={`Less ${yAxisLabel}`}
+                onChange={(e) => handleAxisLabelChange('y', e.target.value.replace('Less ', ''))}
+                onBlur={() => setEditingYAxis(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
+                className="w-24 h-6 text-sm"
+                autoFocus
+              />
+            ) : (
+              `Less ${yAxisLabel}`
+            )}
+          </span>
+          <span 
+            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-center flex-1"
+            style={{
+              color: '#7F2700',
+              fontFamily: 'var(--sds-typography-family-serif, serif)',
+              fontSize: 'var(--sds-typography-scale-04, 18px)',
+              fontWeight: 400,
+              lineHeight: '40px',
+              height: '14px'
+            }}
+            onDoubleClick={() => setEditingYAxis(true)}
+            title="Double-click to edit"
+          >
+            {editingYAxis ? (
+              <Input
+                value={yAxisLabel}
+                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+                onBlur={() => setEditingYAxis(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
+                className="w-24 h-6 text-sm"
+                autoFocus
+              />
+            ) : (
+              yAxisLabel
+            )}
+          </span>
+        </div>
+
+        {/* Matrix Container for Items */}
         <div 
           data-matrix-container
-          className="h-full w-full aspect-square max-h-full relative bg-gray-100 border border-gray-300"
+          className="absolute top-0 left-0 aspect-square"
+          style={{ width: '757px', height: '757px' }}
         >
-          {/* Grid Lines */}
-          <div className="absolute inset-0 flex">
-            <div className="w-1/2 h-full border-r border-gray-300"></div>
-            <div className="w-1/2 h-full"></div>
-          </div>
-          <div className="absolute inset-0 flex flex-col">
-            <div className="w-full h-1/2 border-b border-gray-300"></div>
-            <div className="w-full h-1/2"></div>
-          </div>
 
           <TooltipProvider>
             <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">

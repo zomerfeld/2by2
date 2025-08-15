@@ -128,28 +128,17 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           >
             {isCompleted ? <Undo className="h-3 w-3" /> : <Check className="h-3 w-3" />}
           </Button>
-          {!isCompleted && (
+          {isCompleted && (
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => setIsEditing(true)}
+              onClick={() => onDelete(item.id)}
               className="h-6 w-6 p-0"
               style={{ color: '#8D8997' }}
             >
-              <Edit2 className="h-3 w-3" />
+              <Trash2 className="h-3 w-3" />
             </Button>
           )}
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onDelete(item.id)}
-            className="h-6 w-6 p-0"
-            style={{ 
-              color: isCompleted ? '#8D8997' : '#9CA3AF'
-            }}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
         </div>
       )}
     </div>

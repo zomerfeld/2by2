@@ -68,7 +68,7 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
               isUnplaced ? "ring-2 ring-offset-1" : ""
             }`}
             style={{ 
-              backgroundColor: itemColor,
+              backgroundColor: isUnplaced ? '#413B51' : itemColor,
               ...(isUnplaced && { '--tw-ring-color': '#413B51' })
             }}
           >

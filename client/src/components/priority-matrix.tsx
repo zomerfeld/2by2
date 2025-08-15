@@ -254,9 +254,10 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
       >
         {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
-          className="absolute -left-8 custom-810:-left-8 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          className="absolute -left-8 custom-810:-left-8 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-base font-semibold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
           style={{ 
-            transformOrigin: 'center center'
+            transformOrigin: 'center center',
+            color: '#7F2700'
           }}
           onDoubleClick={() => setEditingYAxis(true)}
           title="Double-click to edit"
@@ -277,7 +278,8 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         
         {/* X-Axis Labels - right aligned with chart */}
         <div 
-          className="absolute right-0 -bottom-4 custom-810:-bottom-3 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          className="absolute right-0 -bottom-4 custom-810:-bottom-3 text-sm custom-810:text-base font-semibold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          style={{ color: '#7F2700' }}
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
         >
@@ -298,43 +300,69 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         {/* Matrix Container */}
         <div 
           data-matrix-container
-          className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm"
+          className="h-full w-full aspect-square max-h-full relative rounded-xl border-2 shadow-sm"
+          style={{ 
+            backgroundColor: 'rgba(255, 220, 204, 0.4)',
+            borderColor: 'rgba(127, 39, 0, 0.3)'
+          }}
         >
           {/* Grid Lines with axis markers */}
           <div className="absolute inset-0 flex">
-            <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
+            <div 
+              className="w-1/2 h-full border-r-2"
+              style={{ borderColor: 'rgba(127, 39, 0, 0.3)' }}
+            ></div>
             <div className="w-1/2 h-full"></div>
           </div>
           <div className="absolute inset-0 flex flex-col">
-            <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
+            <div 
+              className="w-full h-1/2 border-b-2"
+              style={{ borderColor: 'rgba(127, 39, 0, 0.3)' }}
+            ></div>
             <div className="w-full h-1/2"></div>
           </div>
 
           {/* Internal Low/High Labels */}
           {/* Horizontal axis labels */}
           <div 
-            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ left: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
+            className="absolute left-0 bottom-1/2 text-xs font-medium"
+            style={{ 
+              left: `${labelHorizontalDistance + 2}px`, 
+              bottom: `calc(50% - 20px)`,
+              color: '#7F2700'
+            }}
           >
             Low
           </div>
           <div 
-            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
-            style={{ right: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
+            className="absolute right-0 bottom-1/2 text-xs font-medium"
+            style={{ 
+              right: `${labelHorizontalDistance + 2}px`, 
+              bottom: `calc(50% - 20px)`,
+              color: '#7F2700'
+            }}
           >
             High
           </div>
 
           {/* Vertical axis labels */}
           <div 
-            className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ top: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+            className="absolute left-1/2 top-0 text-xs font-medium transform -translate-x-1/2"
+            style={{ 
+              top: `${labelVerticalDistance}px`, 
+              left: `calc(50% + 20px)`,
+              color: '#7F2700'
+            }}
           >
             High
           </div>
           <div 
-            className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
-            style={{ bottom: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+            className="absolute left-1/2 bottom-0 text-xs font-medium transform -translate-x-1/2"
+            style={{ 
+              bottom: `${labelVerticalDistance}px`, 
+              left: `calc(50% + 20px)`,
+              color: '#7F2700'
+            }}
           >
             Low
           </div>

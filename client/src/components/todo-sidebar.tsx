@@ -78,7 +78,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
                 }`
           }
           style={{ 
-            backgroundColor: isCompleted ? '#C6C4CB' : itemColor,
+            backgroundColor: isCompleted ? '#C6C4CB' : (isUnplaced ? '#413B51' : itemColor),
             fontSize: isCompleted ? '16px' : undefined,
             ...(isUnplaced && !isCompleted && { '--tw-ring-color': '#413B51' })
           }}

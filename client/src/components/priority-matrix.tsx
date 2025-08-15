@@ -247,7 +247,10 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center">
+    <div 
+      className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center"
+      style={{ backgroundColor: 'rgba(255, 220, 204, 0.4)' }}
+    >
       <div 
         data-matrix-export
         className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"

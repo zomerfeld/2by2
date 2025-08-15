@@ -33,5 +33,5 @@ export const TODO_COLORS = [
 ];
 
 export const getColorForNumber = (number: number): string => {
-  return TODO_COLORS[(number - 1) % TODO_COLORS.length];
+  return '#CC3F00'; // TaskNum color for all active tasks
 };

@@ -291,10 +291,10 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
           {/* Impact Labels on left side */}
           <div className="absolute -left-16 custom-810:-left-20 top-0 bottom-0 flex flex-col text-sm custom-810:text-base font-normal" style={{ color: '#7F2700' }}>
             <div className="h-1/2 flex items-center">
-              <div className="transform -rotate-90 whitespace-nowrap">Low Impact</div>
+              <div className="transform -rotate-90 whitespace-nowrap">High Impact</div>
             </div>
             <div className="h-1/2 flex items-center">
-              <div className="transform -rotate-90 whitespace-nowrap">High Impact</div>
+              <div className="transform -rotate-90 whitespace-nowrap">Low Impact</div>
             </div>
           </div>
 

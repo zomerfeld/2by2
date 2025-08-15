@@ -272,7 +272,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           <>
             <Separator className="mx-6" />
             <div className="p-6 pl-[0px] pr-[0px]">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 pl-[24px] pr-[24px]">
                 <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
                 <button
                   onClick={() => {

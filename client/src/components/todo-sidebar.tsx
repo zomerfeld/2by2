@@ -86,21 +86,23 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           {isCompleted ? '*' : item.number}
         </div>
         {isEditing ? (
-          <Input
+          <textarea
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
             onBlur={handleSaveEdit}
             onKeyDown={handleKeyPress}
-            className="flex-1 border-none shadow-none bg-transparent focus:ring-0 focus:ring-offset-0"
+            className="flex-1 resize-none border-none outline-none bg-transparent font-medium"
             style={{ 
               fontSize: '14px', 
               lineHeight: '1.2',
-              height: '16.8px',
+              fontWeight: '500',
+              color: '#4B1700',
               padding: '0',
               margin: '0',
-              fontWeight: '500',
-              color: '#4B1700'
+              minHeight: 'auto',
+              overflow: 'hidden'
             }}
+            rows={1}
             autoFocus
           />
         ) : (
@@ -111,8 +113,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             onClick={() => !isCompleted && setIsEditing(true)}
             style={{ 
               color: isCompleted ? '#8D8997' : '#4B1700',
-              lineHeight: '1.2',
-              height: '16.8px'
+              lineHeight: '1.2'
             }}
           >
             {item.text}

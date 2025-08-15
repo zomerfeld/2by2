@@ -1,0 +1,69 @@
+Implement the following design in React. Use the following files generated from a Figma design as a specification and guide:
+
+```src/styles/LogoNew.module.css
+.LogoNew_207_3282 {
+  border-bottom: 1px solid var(--colorPrimitives-orange-10, #7f2700);
+  background: var(--Colors-TextColor-Default-Brand---A, #7f2700);
+  box-sizing: border-box;
+  width: 499px;
+  height: 180px;
+}
+.Group_2_94_1059 {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+.AddButton_101_1186 {
+  padding: var(--sds-size-space-300);
+  justify-content: center;
+  align-items: center;
+  gap: var(--sds-size-space-200);
+  border-radius: var(--sds-size-radius-200);
+  border: 2px solid var(--colorPrimitives-orange-90, #ffdccc);
+  background: var(--Colors-Brand---E, #cc3f00);
+  box-sizing: border-box;
+  width: 121px;
+  display: flex;
+}
+.Plus_131_1399 {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+```
+
+---
+
+```src/components/LogoNew.tsx
+import React from 'react';
+import styles from '../styles/LogoNew.module.css';
+
+
+export default function LogoNew() {
+  return (
+    <div className={styles.LogoNew_207_3282}>
+      <div className={styles.Group_2_94_1059}><svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clipPath="url(#clip0_94_1059)">
+            <rect x="-32.3286" y="107.58" width="131.434" height="17.1429" rx="8.57143" transform="rotate(-45 -32.3286 107.58)" fill="white" />
+            <rect x="-27.8765" y="135.266" width="191.295" height="17.1429" rx="8.57143" transform="rotate(-45 -27.8765 135.266)" fill="white" />
+            <path d="M101.215 115.196C101.215 117.711 99.1761 119.75 96.6611 119.75H87.5537C85.0388 119.75 83 117.711 83 115.196V115.196C83 112.681 85.0388 110.643 87.5537 110.643H96.6611C99.1761 110.643 101.215 112.681 101.215 115.196V115.196ZM119.429 115.196C119.429 117.711 117.39 119.75 114.875 119.75V119.75C112.361 119.75 110.322 117.711 110.322 115.196V115.196C110.322 112.682 112.361 110.643 114.875 110.643V110.643C117.39 110.643 119.429 112.682 119.429 115.196V115.196ZM101.036 101.981C101.036 104.496 98.9974 106.535 96.4824 106.535V106.535C93.9675 106.535 91.9287 104.496 91.9287 101.981V101.981C91.9287 99.4665 93.9675 97.4277 96.4824 97.4277V97.4277C98.9974 97.4277 101.036 99.4665 101.036 101.981V101.981ZM110.322 94.125C110.322 96.6399 108.283 98.6787 105.769 98.6787V98.6787C103.254 98.6787 101.215 96.6399 101.215 94.125V94.125C101.215 91.6101 103.254 89.5713 105.769 89.5713V89.5713C108.283 89.5713 110.322 91.6101 110.322 94.125V94.125ZM99.6074 76.3574C99.6074 78.4285 97.9285 80.1074 95.8574 80.1074V80.1074C93.7864 80.1074 92.1074 81.7864 92.1074 83.8574V84.6606C92.1074 87.1753 90.0684 89.2139 87.5537 89.2139V89.2139C85.039 89.2139 83 87.1753 83 84.6606V83.8574C83 81.7864 84.6789 80.1074 86.75 80.1074V80.1074C88.8211 80.1074 90.5 78.4285 90.5 76.3574V75.5537C90.5 73.0388 92.5388 71 95.0537 71V71C97.5687 71 99.6074 73.0388 99.6074 75.5537V76.3574ZM113.179 76.8037C113.179 78.6283 114.658 80.1074 116.482 80.1074V80.1074C118.307 80.1074 119.786 81.5865 119.786 83.4111V84.6606C119.786 87.1753 117.747 89.2139 115.232 89.2139V89.2139C112.718 89.2139 110.679 87.1753 110.679 84.6606V83.4111C110.679 81.5865 109.2 80.1074 107.375 80.1074V80.1074C105.55 80.1074 104.071 78.6283 104.071 76.8037V75.5537C104.071 73.0388 106.11 71 108.625 71V71C111.14 71 113.179 73.0388 113.179 75.5537V76.8037Z" fill="white" />
+          </g>
+          <defs>
+            <clipPath id="clip0_94_1059">
+              <rect width="120" height="120" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <div className={styles.AddButton_101_1186}>
+        <div className={styles.Plus_131_1399}><svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.50016 3.33333V12.6667M3.8335 7.99999H13.1668" stroke="#F5F5F5" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+

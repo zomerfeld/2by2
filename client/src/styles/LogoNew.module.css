@@ -1,0 +1,71 @@
+.LogoNew_207_3282 {
+  border-bottom: 1px solid #7f2700;
+  background: #7f2700;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+@media (min-width: 810px) {
+  .LogoNew_207_3282 {
+    padding: 32px 24px;
+  }
+}
+
+.Group_2_94_1059 {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 810px) {
+  .Group_2_94_1059 {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.AddButton_101_1186 {
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 2px solid #ffdccc;
+  background: #cc3f00;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 200px;
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.AddButton_101_1186:hover {
+  background: #b03600;
+  border-color: #ffccb3;
+}
+
+.AddButton_101_1186:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.Plus_131_1399 {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

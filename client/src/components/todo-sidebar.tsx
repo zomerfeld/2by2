@@ -60,7 +60,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
       }`}
       style={{
         display: 'flex',
-        padding: '16px 24px 16px 32px',
+        padding: isCompleted ? '8px 24px 8px 32px' : '16px 24px 16px 32px',
         justifyContent: 'space-between',
         alignItems: 'center',
         alignSelf: 'stretch',

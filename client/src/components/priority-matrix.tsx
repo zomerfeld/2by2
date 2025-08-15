@@ -256,9 +256,9 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         data-matrix-export
         className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
       >
-        {/* Y-Axis Labels - vertical on left side, aligned to top */}
+        {/* Y-Axis Labels - vertical on left side */}
         <div 
-          className="absolute -left-8 custom-810:-left-8 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-base font-semibold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          className="absolute -left-16 custom-810:-left-20 top-1/2 transform -rotate-90 text-sm custom-810:text-base font-normal cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
           style={{ 
             transformOrigin: 'center center',
             color: '#7F2700'
@@ -280,9 +280,9 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
           )}
         </div>
         
-        {/* X-Axis Labels - right aligned with chart */}
+        {/* X-Axis Labels - above the matrix */}
         <div 
-          className="absolute right-0 -bottom-4 custom-810:-bottom-3 text-sm custom-810:text-base font-semibold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          className="absolute left-1/2 -top-8 custom-810:-top-10 transform -translate-x-1/2 text-sm custom-810:text-base font-normal cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
           style={{ color: '#7F2700' }}
           onDoubleClick={() => setEditingXAxis(true)}
           title="Double-click to edit"
@@ -325,49 +325,20 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
             <div className="w-full h-1/2"></div>
           </div>
 
-          {/* Internal Low/High Labels */}
-          {/* Horizontal axis labels */}
-          <div 
-            className="absolute left-0 bottom-1/2 text-xs font-medium"
-            style={{ 
-              left: `${labelHorizontalDistance + 2}px`, 
-              bottom: `calc(50% - 20px)`,
-              color: '#7F2700'
-            }}
-          >
-            Low
+          {/* Quadrant Labels above matrix */}
+          <div className="absolute -top-6 left-0 right-0 flex text-xs font-normal" style={{ color: '#7F2700' }}>
+            <div className="w-1/2 text-center">Less Urgent</div>
+            <div className="w-1/2 text-center">Urgent</div>
           </div>
-          <div 
-            className="absolute right-0 bottom-1/2 text-xs font-medium"
-            style={{ 
-              right: `${labelHorizontalDistance + 2}px`, 
-              bottom: `calc(50% - 20px)`,
-              color: '#7F2700'
-            }}
-          >
-            High
-          </div>
-
-          {/* Vertical axis labels */}
-          <div 
-            className="absolute left-1/2 top-0 text-xs font-medium transform -translate-x-1/2"
-            style={{ 
-              top: `${labelVerticalDistance}px`, 
-              left: `calc(50% + 20px)`,
-              color: '#7F2700'
-            }}
-          >
-            High
-          </div>
-          <div 
-            className="absolute left-1/2 bottom-0 text-xs font-medium transform -translate-x-1/2"
-            style={{ 
-              bottom: `${labelVerticalDistance}px`, 
-              left: `calc(50% + 20px)`,
-              color: '#7F2700'
-            }}
-          >
-            Low
+          
+          {/* Impact Labels on left side */}
+          <div className="absolute -left-12 top-0 bottom-0 flex flex-col text-xs font-normal" style={{ color: '#7F2700' }}>
+            <div className="h-1/2 flex items-center">
+              <div className="transform -rotate-90 whitespace-nowrap">Low Impact</div>
+            </div>
+            <div className="h-1/2 flex items-center">
+              <div className="transform -rotate-90 whitespace-nowrap">High Impact</div>
+            </div>
           </div>
 
           <TooltipProvider>

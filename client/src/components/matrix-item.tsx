@@ -64,7 +64,7 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
           }`}
         >
           <div 
-            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow ${
+            className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium shadow-lg hover:shadow-xl transition-shadow ${
               isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
             }`}
             style={{ backgroundColor: itemColor }}

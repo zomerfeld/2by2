@@ -3,7 +3,8 @@
   background: #7f2700;
   box-sizing: border-box;
   width: 100%;
-  height: auto;
+  height: 180px;
+  align-self: stretch;
   padding: 24px;
   display: flex;
   flex-direction: row;

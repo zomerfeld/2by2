@@ -62,7 +62,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         display: 'flex',
         padding: isCompleted ? '8px 16px 8px 24px' : '12px 16px 12px 24px',
         justifyContent: 'space-between',
-        alignItems: isEditing ? 'flex-start' : 'center',
+        alignItems: 'center',
         alignSelf: 'stretch',
         borderBottom: isCompleted ? 'none' : '1px solid #4B1700',
         background: 'var(--sds-color-background-default-default, #fff)'
@@ -86,30 +86,12 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           {isCompleted ? '*' : item.number}
         </div>
         {isEditing ? (
-          <textarea
+          <Input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
             onBlur={handleSaveEdit}
             onKeyDown={handleKeyPress}
-            className="flex-1 resize-none border-0 outline-none bg-transparent font-medium text-[14px] focus:ring-0"
-            style={{ 
-              fontSize: '14px', 
-              lineHeight: '1.2',
-              fontWeight: '500',
-              color: '#4B1700',
-              padding: '0',
-              margin: '0',
-              minHeight: '16.8px',
-              maxHeight: 'none',
-              overflow: 'hidden',
-              boxSizing: 'border-box',
-              verticalAlign: 'baseline',
-              paddingTop: '0',
-              paddingBottom: '0',
-              marginTop: '0',
-              marginBottom: '0'
-            }}
-            rows={1}
+            className="flex-1 h-auto p-2 text-base border-none shadow-none bg-transparent"
             autoFocus
           />
         ) : (
@@ -118,11 +100,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
               isCompleted ? "line-through" : ""
             }`}
             onClick={() => !isCompleted && setIsEditing(true)}
-            style={{ 
-              color: isCompleted ? '#8D8997' : '#4B1700',
-              lineHeight: '1.2',
-              display: 'block'
-            }}
+            style={{ color: isCompleted ? '#8D8997' : '#4B1700' }}
           >
             {item.text}
           </span>

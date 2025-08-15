@@ -91,7 +91,8 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             onChange={(e) => setEditText(e.target.value)}
             onBlur={handleSaveEdit}
             onKeyDown={handleKeyPress}
-            className="flex-1 h-6 py-1 px-2 text-sm border-none shadow-none bg-transparent"
+            className="flex-1 h-auto py-0 px-0 text-sm border-none shadow-none bg-transparent"
+            style={{ fontSize: '14px', lineHeight: '1.2' }}
             autoFocus
           />
         ) : (

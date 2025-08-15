@@ -62,7 +62,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         background: 'var(--sds-color-background-default-default, #fff)'
       }}
     >
-      <div className="flex items-center gap-6 flex-1">
+      <div className="flex items-center gap-6 flex-1 min-h-0">
         <div 
           className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
             isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
@@ -82,9 +82,9 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           />
         ) : (
           <span 
-            className="flex-1 font-medium cursor-text text-gray-900 text-[14px] w-full"
+            className="flex-1 font-medium cursor-text text-gray-900 text-[14px]"
             onClick={() => !isCompleted && setIsEditing(true)}
-            style={{ color: '#4B1700', display: 'flex', width: '100%' }}
+            style={{ color: '#4B1700' }}
           >
             {item.text}
           </span>
@@ -100,7 +100,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           <Check className="h-5 w-5" />
         </Button>
       ) : (
-        <div className="flex items-center space-x-2 ml-2">
+        <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
           <Button
             size="sm"
             variant="ghost"

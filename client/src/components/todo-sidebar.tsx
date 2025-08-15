@@ -88,9 +88,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           />
         ) : (
           <span 
-            className={`flex-1 font-medium cursor-text text-base ${
-              isCompleted ? "text-gray-500 line-through" : "text-gray-900"
-            }`}
+            className="flex-1 font-medium cursor-text text-gray-900 text-[14px]"
             onClick={() => !isCompleted && setIsEditing(true)}
             style={{ color: '#4B1700' }}
           >
@@ -98,7 +96,6 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           </span>
         )}
       </div>
-      
       {showCheckmarkOnly ? (
         <Button
           variant="ghost"

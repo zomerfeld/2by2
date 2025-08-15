@@ -256,50 +256,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
         data-matrix-export
         className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
       >
-        {/* Y-Axis Labels - vertical on left side */}
-        <div 
-          className="absolute -left-16 custom-810:-left-20 top-1/2 transform -rotate-90 text-sm custom-810:text-base font-normal cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-          style={{ 
-            transformOrigin: 'center center',
-            color: '#7F2700'
-          }}
-          onDoubleClick={() => setEditingYAxis(true)}
-          title="Double-click to edit"
-        >
-          {editingYAxis ? (
-            <Input
-              value={xAxisLabel}
-              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-              onBlur={() => setEditingYAxis(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-              className="w-24 h-6 text-sm"
-              autoFocus
-            />
-          ) : (
-            xAxisLabel
-          )}
-        </div>
-        
-        {/* X-Axis Labels - above the matrix */}
-        <div 
-          className="absolute left-1/2 -top-8 custom-810:-top-10 transform -translate-x-1/2 text-sm custom-810:text-base font-normal cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-          style={{ color: '#7F2700' }}
-          onDoubleClick={() => setEditingXAxis(true)}
-          title="Double-click to edit"
-        >
-          {editingXAxis ? (
-            <Input
-              value={yAxisLabel}
-              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-              onBlur={() => setEditingXAxis(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
-              className="w-24 h-6 text-sm"
-              autoFocus
-            />
-          ) : (
-            yAxisLabel
-          )}
-        </div>
+
 
         {/* Matrix Container */}
         <div 
@@ -326,13 +283,13 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
           </div>
 
           {/* Quadrant Labels above matrix */}
-          <div className="absolute -top-6 left-0 right-0 flex text-xs font-normal" style={{ color: '#7F2700' }}>
+          <div className="absolute -top-8 custom-810:-top-10 left-0 right-0 flex text-sm custom-810:text-base font-normal" style={{ color: '#7F2700' }}>
             <div className="w-1/2 text-center">Less Urgent</div>
             <div className="w-1/2 text-center">Urgent</div>
           </div>
           
           {/* Impact Labels on left side */}
-          <div className="absolute -left-12 top-0 bottom-0 flex flex-col text-xs font-normal" style={{ color: '#7F2700' }}>
+          <div className="absolute -left-16 custom-810:-left-20 top-0 bottom-0 flex flex-col text-sm custom-810:text-base font-normal" style={{ color: '#7F2700' }}>
             <div className="h-1/2 flex items-center">
               <div className="transform -rotate-90 whitespace-nowrap">Low Impact</div>
             </div>

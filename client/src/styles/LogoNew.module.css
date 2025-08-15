@@ -8,7 +8,7 @@
   padding: 12px;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
 }
@@ -38,6 +38,7 @@
 .AddButton_101_1186 {
   display: flex;
   width: 120px;
+  max-height: 88px;
   padding: 12px;
   justify-content: center;
   align-items: center;

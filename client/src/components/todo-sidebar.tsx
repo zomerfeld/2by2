@@ -226,14 +226,18 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3L10 3L10 10L3 10L3 3Z" fill="white" stroke="white" strokeWidth="1.5"/>
-              <path d="M14 3L21 3L21 10L14 10L14 3Z" fill="white" stroke="white" strokeWidth="1.5"/>
-              <path d="M3 14L10 14L10 21L3 21L3 14Z" fill="white" stroke="white" strokeWidth="1.5"/>
-              <path d="M14 14L21 14L21 21L14 21L14 14Z" fill="white" stroke="white" strokeWidth="1.5"/>
-              <circle cx="6.5" cy="6.5" r="1.5" fill="white"/>
-              <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
-              <circle cx="6.5" cy="17.5" r="1.5" fill="white"/>
-              <circle cx="17.5" cy="17.5" r="1.5" fill="white"/>
+              {/* Diagonal lines */}
+              <path d="M3 19L13 9" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M7 21L19 9" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+              
+              {/* Circular dots pattern */}
+              <circle cx="17" cy="14" r="1.2" fill="white"/>
+              <circle cx="19.5" cy="14" r="1.2" fill="white"/>
+              <circle cx="17" cy="16.5" r="1.2" fill="white"/>
+              <circle cx="19.5" cy="16.5" r="1.2" fill="white"/>
+              <circle cx="17" cy="19" r="1.2" fill="white"/>
+              <circle cx="19.5" cy="19" r="1.2" fill="white"/>
+              <circle cx="18.25" cy="21" r="1.2" fill="white"/>
             </svg>
           </div>
         </div>

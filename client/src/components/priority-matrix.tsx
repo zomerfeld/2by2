@@ -247,41 +247,26 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-6 relative">
-      <div className="w-full h-full relative">
-        {/* Y-Axis Label - vertical on left side */}
+    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center">
+      <div 
+        data-matrix-export
+        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
+      >
+        {/* Y-Axis Labels - vertical on left side, aligned to top */}
         <div 
-          className="absolute left-8 top-1/2 transform -rotate-90 text-base font-medium text-[#7F2700] opacity-70 cursor-pointer"
-          style={{ transformOrigin: 'center center' }}
+          className="absolute -left-8 custom-810:-left-8 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          style={{ 
+            transformOrigin: 'center center'
+          }}
           onDoubleClick={() => setEditingYAxis(true)}
           title="Double-click to edit"
         >
           {editingYAxis ? (
             <Input
-              value={yAxisLabel}
-              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-              onBlur={() => setEditingYAxis(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-              className="w-24 h-6 text-sm"
-              autoFocus
-            />
-          ) : (
-            yAxisLabel
-          )}
-        </div>
-        
-        {/* X-Axis Label - horizontal at bottom */}
-        <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-base font-medium text-[#7F2700] opacity-70 cursor-pointer"
-          onDoubleClick={() => setEditingXAxis(true)}
-          title="Double-click to edit"
-        >
-          {editingXAxis ? (
-            <Input
               value={xAxisLabel}
               onChange={(e) => handleAxisLabelChange('x', e.target.value)}
-              onBlur={() => setEditingXAxis(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
+              onBlur={() => setEditingYAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
               className="w-24 h-6 text-sm"
               autoFocus
             />
@@ -289,23 +274,40 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
             xAxisLabel
           )}
         </div>
+        
+        {/* X-Axis Labels - right aligned with chart */}
+        <div 
+          className="absolute right-0 -bottom-4 custom-810:-bottom-3 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          onDoubleClick={() => setEditingXAxis(true)}
+          title="Double-click to edit"
+        >
+          {editingXAxis ? (
+            <Input
+              value={yAxisLabel}
+              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+              onBlur={() => setEditingXAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
+              className="w-24 h-6 text-sm"
+              autoFocus
+            />
+          ) : (
+            yAxisLabel
+          )}
+        </div>
 
         {/* Matrix Container */}
         <div 
           data-matrix-container
-          className="absolute inset-0 mx-16 my-16"
+          className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm"
         >
-          {/* Grid Lines with 30% opacity matching Figma */}
-          <div className="absolute inset-0 opacity-30">
-            {/* Horizontal lines */}
-            <div className="absolute w-full border-t border-[#7F2700]" style={{ top: '0%' }}></div>
-            <div className="absolute w-full border-t border-[#7F2700]" style={{ top: '50%' }}></div>
-            <div className="absolute w-full border-t border-[#7F2700]" style={{ top: '100%' }}></div>
-            
-            {/* Vertical lines */}
-            <div className="absolute h-full border-l border-[#7F2700]" style={{ left: '0%' }}></div>
-            <div className="absolute h-full border-l border-[#7F2700]" style={{ left: '50%' }}></div>
-            <div className="absolute h-full border-l border-[#7F2700]" style={{ right: '0%' }}></div>
+          {/* Grid Lines with axis markers */}
+          <div className="absolute inset-0 flex">
+            <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
+            <div className="w-1/2 h-full"></div>
+          </div>
+          <div className="absolute inset-0 flex flex-col">
+            <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
+            <div className="w-full h-1/2"></div>
           </div>
 
           {/* Internal Low/High Labels */}

@@ -3,6 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { type TodoItem } from "@shared/schema";
 import { useTodoDrag } from "@/hooks/use-drag-drop";
+import { getColorForNumber } from "@/lib/colors";
 import {
   Tooltip,
   TooltipContent,
@@ -47,7 +48,8 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
     removeFromMatrix.mutate();
   };
 
-  // All items now use consistent red color scheme
+  const itemColor = getColorForNumber(item.number);
+  const isUnplaced = item.positionX === null || item.positionY === null;
 
   return (
     <Tooltip>
@@ -62,7 +64,10 @@ export function MatrixItem({ item, style, onClick, listId }: MatrixItemProps) {
           }`}
         >
           <div 
-            className="w-10 h-10 bg-[#CC3F00] text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
+            className={`w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:shadow-xl transition-shadow ${
+              isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
+            }`}
+            style={{ backgroundColor: itemColor }}
           >
             {item.number}
           </div>

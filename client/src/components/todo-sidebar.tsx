@@ -46,60 +46,79 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   const isUnplaced = item.positionX === null || item.positionY === null;
 
   return (
-    <div className="h-[73px] border-b border-[#4B1700] bg-white flex items-center px-8">
-      <div className="flex items-center w-full">
-        {/* Red circle with number */}
-        <div 
-          ref={isCompleted ? undefined : drag}
-          className={`w-10 h-10 bg-[#CC3F00] text-white rounded-full flex items-center justify-center text-sm font-bold mr-6 flex-shrink-0 ${
-            !isCompleted ? "cursor-move" : ""
-          } ${isDragging ? "opacity-50" : ""}`}
-        >
-          {item.number}
-        </div>
-        
-        {/* Task text */}
-        <div className="flex-1 mr-4">
+    <div
+      ref={isCompleted ? undefined : drag}
+      className={`py-2 px-2 transition-all relative border-b border-gray-100 last:border-b-0 ${
+        isCompleted 
+          ? "opacity-75" 
+          : "cursor-move"
+      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
+        isSelected ? "highlight-yellow" : ""
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3 flex-1">
+          <div 
+            className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium ${
+              isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
+            }`}
+            style={{ backgroundColor: itemColor }}
+          >
+            {item.number}
+          </div>
           {isEditing ? (
             <Input
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onBlur={handleSaveEdit}
               onKeyDown={handleKeyPress}
-              className="text-sm font-medium border-0 p-0 h-auto focus-visible:ring-0"
+              className="flex-1 h-auto p-1 text-sm"
               autoFocus
             />
           ) : (
-            <div 
-              className={`text-sm font-medium ${
-                isCompleted 
-                  ? "line-through text-gray-400" 
-                  : "text-gray-900"
-              } ${isSelected ? "font-semibold" : ""}`}
+            <span 
+              className={`flex-1 font-medium cursor-text text-sm ${
+                isCompleted ? "text-gray-500 line-through" : "text-gray-900"
+              }`}
               onClick={() => !isCompleted && setIsEditing(true)}
             >
               {item.text}
-            </div>
+            </span>
           )}
         </div>
-
-        {/* Checkbox */}
-        <button
-          onClick={() => onToggleComplete(item.id, !item.completed)}
-          className="w-6 h-6 flex items-center justify-center"
-        >
-          {isCompleted ? (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7F2700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 12 2 2 4-4"/>
-              <path d="M21.801 4.056a51.7 51.7 0 0 0-3.257 8.337 52.01 52.01 0 0 1-4.153 8.4l-1.1-.55a50.847 50.847 0 0 0 4.7-9.45 49.05 49.05 0 0 1 3.321-8.287l.489 1.55Z"/>
-              <path d="M9 12a9 9 0 1 1 9-9"/>
-            </svg>
-          ) : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7F2700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-            </svg>
+        <div className="flex items-center space-x-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onToggleComplete(item.id, !isCompleted)}
+            className={`h-6 w-6 p-0 ${
+              isCompleted 
+                ? "text-green-600 hover:text-green-700" 
+                : "text-gray-400 hover:text-green-600"
+            }`}
+          >
+            {isCompleted ? <Undo className="h-3 w-3" /> : <Check className="h-3 w-3" />}
+          </Button>
+          {!isCompleted && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsEditing(true)}
+              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+            >
+              <Edit2 className="h-3 w-3" />
+            </Button>
           )}
-        </button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onDelete(item.id)}
+            className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+
+        </div>
       </div>
     </div>
   );
@@ -201,17 +220,26 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
   const existingNumbers = todoItems.map(item => item.number);
 
   return (
-    <div className="h-full bg-white flex flex-col">
-      {/* All Items - Both Active and Completed */}
+    <div className="w-full custom-810:w-80 bg-white border-b custom-810:border-b-0 custom-810:border-r border-gray-200 flex flex-col custom-810:h-full">
+      <div className="px-6 pt-6 pb-1">
+        <Button
+          onClick={() => setShowModal(true)}
+          className="w-full"
+          disabled={todoItems.length >= 100}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add New Item
+        </Button>
+      </div>
       <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32 text-gray-500">Loading...</div>
-        ) : todoItems.length === 0 ? (
-          <div className="flex items-center justify-center h-32 text-gray-500">No items</div>
-        ) : (
-          <>
-            {/* Active Items */}
-            {activeItems.map((item) => (
+        {/* Active Items */}
+        <div className="px-6 pt-2 pb-6">
+          {isLoading ? (
+            <div className="text-center text-gray-500">Loading...</div>
+          ) : activeItems.length === 0 ? (
+            <div className="text-center text-gray-500">No active items</div>
+          ) : (
+            activeItems.map((item) => (
               <TodoItemComponent
                 key={item.id}
                 item={item}
@@ -221,24 +249,49 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                 isCompleted={false}
                 isSelected={selectedItemId === item.id}
               />
-            ))}
-            
-            {/* Completed Items */}
-            {completedItems.map((item) => (
-              <TodoItemComponent
-                key={item.id}
-                item={item}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onToggleComplete={handleToggleComplete}
-                isCompleted={true}
-                isSelected={selectedItemId === item.id}
-              />
-            ))}
+            ))
+          )}
+        </div>
+
+        {/* Completed Items Section */}
+        {completedItems.length > 0 && (
+          <>
+            <Separator className="mx-6" />
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
+                <button
+                  onClick={() => {
+                    completedItems.forEach(item => {
+                      deleteMutation.mutate(item.id);
+                    });
+                  }}
+                  className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                  title="Clear all completed tasks"
+                >
+                  Clear All
+                </button>
+              </div>
+              {completedItems.map((item) => (
+                <TodoItemComponent
+                  key={item.id}
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onToggleComplete={handleToggleComplete}
+                  isCompleted={true}
+                  isSelected={selectedItemId === item.id}
+                />
+              ))}
+            </div>
           </>
         )}
       </div>
-      
+      <div className="p-6 border-t border-gray-200 pl-[8px] pr-[8px] pt-[8px] pb-[8px]">
+        <div className="text-gray-500 text-center text-[12px]">
+          {activeItems.length} active, {completedItems.length} completed
+        </div>
+      </div>
       <AddTodoModal
         open={showModal}
         onClose={() => setShowModal(false)}

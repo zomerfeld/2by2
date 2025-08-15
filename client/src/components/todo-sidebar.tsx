@@ -51,13 +51,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`transition-all relative ${
-        isCompleted 
-          ? "opacity-75" 
-          : "cursor-move"
-      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
-        isSelected ? "highlight-yellow" : ""
-      }`}
+      className="transition-all relative cursor-move pl-[16px] pr-[16px]"
       style={{
         display: 'flex',
         padding: '16px 24px 16px 32px',

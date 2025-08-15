@@ -51,7 +51,13 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className="transition-all relative cursor-move pl-[16px] pr-[16px]"
+      className={`transition-all relative ${
+        isCompleted 
+          ? "opacity-75" 
+          : "cursor-move"
+      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
+        isSelected ? "highlight-yellow" : ""
+      }`}
       style={{
         display: 'flex',
         padding: '16px 24px 16px 32px',
@@ -62,7 +68,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         background: 'var(--sds-color-background-default-default, #fff)'
       }}
     >
-      <div className="flex items-center gap-6 flex-1 min-h-0">
+      <div className="flex items-center gap-6 flex-1">
         <div 
           className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
             isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
@@ -100,7 +106,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           <Check className="h-5 w-5" />
         </Button>
       ) : (
-        <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
+        <div className="flex items-center space-x-2 ml-2">
           <Button
             size="sm"
             variant="ghost"

@@ -91,8 +91,16 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             onChange={(e) => setEditText(e.target.value)}
             onBlur={handleSaveEdit}
             onKeyDown={handleKeyPress}
-            className="flex-1 h-auto py-0 px-0 text-sm border-none shadow-none bg-transparent"
-            style={{ fontSize: '14px', lineHeight: '1.2' }}
+            className="flex-1 border-none shadow-none bg-transparent focus:ring-0 focus:ring-offset-0"
+            style={{ 
+              fontSize: '14px', 
+              lineHeight: '1.2',
+              height: '16.8px',
+              padding: '0',
+              margin: '0',
+              fontWeight: '500',
+              color: '#4B1700'
+            }}
             autoFocus
           />
         ) : (
@@ -101,7 +109,11 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
               isCompleted ? "line-through" : ""
             }`}
             onClick={() => !isCompleted && setIsEditing(true)}
-            style={{ color: isCompleted ? '#8D8997' : '#4B1700' }}
+            style={{ 
+              color: isCompleted ? '#8D8997' : '#4B1700',
+              lineHeight: '1.2',
+              height: '16.8px'
+            }}
           >
             {item.text}
           </span>

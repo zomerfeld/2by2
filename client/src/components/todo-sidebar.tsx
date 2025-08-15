@@ -106,7 +106,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           <Check className="h-5 w-5" />
         </Button>
       ) : (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 ml-2">
           <Button
             size="sm"
             variant="ghost"

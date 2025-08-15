@@ -46,47 +46,69 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   const isOnMatrix = item.quadrant !== null;
   const isUnplaced = item.positionX === null || item.positionY === null;
 
+  const showCheckmarkOnly = !isCompleted && !isEditing;
+
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`py-2 px-2 transition-all relative border-b border-gray-100 last:border-b-0 ${
+      className={`transition-all relative ${
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
       } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
         isSelected ? "highlight-yellow" : ""
       }`}
+      style={{
+        display: 'flex',
+        padding: '16px 24px 16px 32px',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        alignSelf: 'stretch',
+        borderBottom: '1px solid #4B1700',
+        background: 'var(--sds-color-background-default-default, #fff)'
+      }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3 flex-1">
-          <div 
-            className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium ${
-              isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
-            }`}
-            style={{ backgroundColor: itemColor }}
-          >
-            {item.number}
-          </div>
-          {isEditing ? (
-            <Input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onBlur={handleSaveEdit}
-              onKeyDown={handleKeyPress}
-              className="flex-1 h-auto p-1 text-sm"
-              autoFocus
-            />
-          ) : (
-            <span 
-              className={`flex-1 font-medium cursor-text text-sm ${
-                isCompleted ? "text-gray-500 line-through" : "text-gray-900"
-              }`}
-              onClick={() => !isCompleted && setIsEditing(true)}
-            >
-              {item.text}
-            </span>
-          )}
+      <div className="flex items-center gap-6 flex-1">
+        <div 
+          className={`w-12 h-12 text-white rounded-full flex items-center justify-center text-lg font-medium ${
+            isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
+          }`}
+          style={{ backgroundColor: itemColor }}
+        >
+          {item.number}
         </div>
+        {isEditing ? (
+          <Input
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onBlur={handleSaveEdit}
+            onKeyDown={handleKeyPress}
+            className="flex-1 h-auto p-2 text-base border-none shadow-none bg-transparent"
+            autoFocus
+          />
+        ) : (
+          <span 
+            className={`flex-1 font-medium cursor-text text-base ${
+              isCompleted ? "text-gray-500 line-through" : "text-gray-900"
+            }`}
+            onClick={() => !isCompleted && setIsEditing(true)}
+            style={{ color: '#4B1700' }}
+          >
+            {item.text}
+          </span>
+        )}
+      </div>
+      
+      {showCheckmarkOnly ? (
+        <Button
+          variant="ghost"
+          onClick={() => onToggleComplete(item.id, true)}
+          className="h-8 w-8 p-0 text-brown-700 hover:text-brown-800"
+          style={{ color: '#4B1700' }}
+        >
+          <Check className="h-5 w-5" />
+        </Button>
+      ) : (
         <div className="flex items-center space-x-2">
           <Button
             size="sm"
@@ -118,9 +140,8 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           >
             <Trash2 className="h-3 w-3" />
           </Button>
-
         </div>
-      </div>
+      )}
     </div>
   );
 }

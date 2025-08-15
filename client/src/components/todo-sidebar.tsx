@@ -62,7 +62,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         display: 'flex',
         padding: isCompleted ? '8px 16px 8px 24px' : '12px 16px 12px 24px',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: isEditing ? 'flex-start' : 'center',
         alignSelf: 'stretch',
         borderBottom: isCompleted ? 'none' : '1px solid #4B1700',
         background: 'var(--sds-color-background-default-default, #fff)'
@@ -99,10 +99,15 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
               color: '#4B1700',
               padding: '0',
               margin: '0',
-              minHeight: 'auto',
+              minHeight: '16.8px',
+              maxHeight: 'none',
               overflow: 'hidden',
               boxSizing: 'border-box',
-              verticalAlign: 'top'
+              verticalAlign: 'baseline',
+              paddingTop: '0',
+              paddingBottom: '0',
+              marginTop: '0',
+              marginBottom: '0'
             }}
             rows={1}
             autoFocus

@@ -48,21 +48,21 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
   return (
     <div
       ref={isCompleted ? undefined : drag}
-      className={`py-3 px-4 transition-all relative border-b border-gray-100 last:border-b-0 bg-white hover:bg-gray-50 ${
+      className={`py-2 px-2 transition-all relative border-b border-gray-100 last:border-b-0 ${
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
       } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
-        isSelected ? "bg-yellow-50" : ""
+        isSelected ? "highlight-yellow" : ""
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 flex-1">
           <div 
-            className={`w-7 h-7 text-white rounded-full flex items-center justify-center text-sm font-medium ${
+            className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-xs font-medium ${
               isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
             }`}
-            style={{ backgroundColor: isCompleted ? '#9CA3AF' : itemColor }}
+            style={{ backgroundColor: itemColor }}
           >
             {item.number}
           </div>
@@ -86,17 +86,16 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             </span>
           )}
         </div>
-        <div className="flex items-center space-x-1">
-          {!isCompleted && (
-            <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
-              <Check className="h-2.5 w-2.5 text-white" />
-            </div>
-          )}
+        <div className="flex items-center space-x-2">
           <Button
             size="sm"
             variant="ghost"
             onClick={() => onToggleComplete(item.id, !isCompleted)}
-            className="h-6 w-6 p-0 text-gray-400 hover:text-green-600"
+            className={`h-6 w-6 p-0 ${
+              isCompleted 
+                ? "text-green-600 hover:text-green-700" 
+                : "text-gray-400 hover:text-green-600"
+            }`}
           >
             {isCompleted ? <Undo className="h-3 w-3" /> : <Check className="h-3 w-3" />}
           </Button>
@@ -118,6 +117,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           >
             <Trash2 className="h-3 w-3" />
           </Button>
+
         </div>
       </div>
     </div>
@@ -221,33 +221,14 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
 
   return (
     <div className="w-full custom-810:w-80 bg-white border-b custom-810:border-b-0 custom-810:border-r border-gray-200 flex flex-col custom-810:h-full">
-      {/* Logo Header */}
-      <div className="bg-amber-900 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Diagonal lines */}
-              <path d="M3 19L13 9" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M7 21L19 9" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              
-              {/* Circular dots pattern */}
-              <circle cx="17" cy="14" r="1.2" fill="white"/>
-              <circle cx="19.5" cy="14" r="1.2" fill="white"/>
-              <circle cx="17" cy="16.5" r="1.2" fill="white"/>
-              <circle cx="19.5" cy="16.5" r="1.2" fill="white"/>
-              <circle cx="17" cy="19" r="1.2" fill="white"/>
-              <circle cx="19.5" cy="19" r="1.2" fill="white"/>
-              <circle cx="18.25" cy="21" r="1.2" fill="white"/>
-            </svg>
-          </div>
-        </div>
+      <div className="px-6 pt-6 pb-1">
         <Button
           onClick={() => setShowModal(true)}
+          className="w-full"
           disabled={todoItems.length >= 100}
-          size="sm"
-          className="bg-orange-600 hover:bg-orange-700 text-white border-none h-8 w-8 p-0 rounded"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="mr-2 h-4 w-4" />
+          Add New Item
         </Button>
       </div>
       <div className="flex-1 overflow-y-auto">

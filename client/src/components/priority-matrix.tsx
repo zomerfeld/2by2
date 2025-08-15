@@ -247,114 +247,97 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   const labelHorizontalDistance = 2; // px from left/right edges
 
   return (
-    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'var(--sds-color-background-default-secondary, #f8f9fa)' }}>
+    <div className="flex-1 p-3 custom-810:p-6 overflow-hidden flex items-center justify-center">
       <div 
         data-matrix-export
-        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-8 custom-810:p-12"
+        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
       >
-        {/* Left Axis Labels - High Impact | Low Impact */}
-        <div className="absolute -left-16 top-0 bottom-0 flex flex-col justify-between text-sm font-medium text-gray-600">
-          <div 
-            className="transform -rotate-90 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            style={{ transformOrigin: 'center center' }}
-            onDoubleClick={() => setEditingXAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingXAxis ? (
-              <Input
-                value={`High ${xAxisLabel}`}
-                onChange={(e) => handleAxisLabelChange('x', e.target.value.replace('High ', ''))}
-                onBlur={() => setEditingXAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              `High ${xAxisLabel}`
-            )}
-          </div>
-          <div 
-            className="transform -rotate-90 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            style={{ transformOrigin: 'center center' }}
-            onDoubleClick={() => setEditingXAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingXAxis ? (
-              <Input
-                value={`Low ${xAxisLabel}`}
-                onChange={(e) => handleAxisLabelChange('x', e.target.value.replace('Low ', ''))}
-                onBlur={() => setEditingXAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              `Low ${xAxisLabel}`
-            )}
-          </div>
+        {/* Y-Axis Labels - vertical on left side, aligned to top */}
+        <div 
+          className="absolute -left-8 custom-810:-left-8 top-4 custom-810:top-6 transform -rotate-90 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pt-[4px] pb-[4px] mt-[16px] mb-[16px]"
+          style={{ 
+            transformOrigin: 'center center'
+          }}
+          onDoubleClick={() => setEditingYAxis(true)}
+          title="Double-click to edit"
+        >
+          {editingYAxis ? (
+            <Input
+              value={xAxisLabel}
+              onChange={(e) => handleAxisLabelChange('x', e.target.value)}
+              onBlur={() => setEditingYAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
+              className="w-24 h-6 text-sm"
+              autoFocus
+            />
+          ) : (
+            xAxisLabel
+          )}
         </div>
-
-        {/* Top Axis Labels - Less Urgent | Urgent */}
-        <div className="absolute -top-8 left-0 right-0 flex justify-between text-sm font-medium text-gray-600">
-          <div 
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onDoubleClick={() => setEditingYAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingYAxis ? (
-              <Input
-                value={`Less ${yAxisLabel}`}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value.replace('Less ', ''))}
-                onBlur={() => setEditingYAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              `Less ${yAxisLabel}`
-            )}
-          </div>
-          <div 
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onDoubleClick={() => setEditingYAxis(true)}
-            title="Double-click to edit"
-          >
-            {editingYAxis ? (
-              <Input
-                value={yAxisLabel}
-                onChange={(e) => handleAxisLabelChange('y', e.target.value)}
-                onBlur={() => setEditingYAxis(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingYAxis(false)}
-                className="w-24 h-6 text-sm"
-                autoFocus
-              />
-            ) : (
-              yAxisLabel
-            )}
-          </div>
+        
+        {/* X-Axis Labels - right aligned with chart */}
+        <div 
+          className="absolute right-0 -bottom-4 custom-810:-bottom-3 text-sm custom-810:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded pl-[16px] custom-810:pl-[32px] pr-[16px] custom-810:pr-[32px]"
+          onDoubleClick={() => setEditingXAxis(true)}
+          title="Double-click to edit"
+        >
+          {editingXAxis ? (
+            <Input
+              value={yAxisLabel}
+              onChange={(e) => handleAxisLabelChange('y', e.target.value)}
+              onBlur={() => setEditingXAxis(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingXAxis(false)}
+              className="w-24 h-6 text-sm"
+              autoFocus
+            />
+          ) : (
+            yAxisLabel
+          )}
         </div>
 
         {/* Matrix Container */}
         <div 
           data-matrix-container
-          className="h-full w-full aspect-square max-h-full relative"
+          className="h-full w-full aspect-square max-h-full relative bg-white rounded-xl border-2 border-gray-300 shadow-sm"
         >
-          {/* Figma Grid SVG Background */}
-          <svg 
-            className="absolute inset-0 w-full h-full" 
-            viewBox="0 0 757 757" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
+          {/* Grid Lines with axis markers */}
+          <div className="absolute inset-0 flex">
+            <div className="w-1/2 h-full border-r-2 border-gray-400"></div>
+            <div className="w-1/2 h-full"></div>
+          </div>
+          <div className="absolute inset-0 flex flex-col">
+            <div className="w-full h-1/2 border-b-2 border-gray-400"></div>
+            <div className="w-full h-1/2"></div>
+          </div>
+
+          {/* Internal Low/High Labels */}
+          {/* Horizontal axis labels */}
+          <div 
+            className="absolute left-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ left: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
           >
-            <g opacity="0.3">
-              <path d="M0 377.62H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-              <path d="M0 757H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-              <path d="M0 0H757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-              <path d="M379.38 0L379.38 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-              <path d="M0 0L-3.30895e-05 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-              <path d="M757 0L757 757" stroke="#7F2700" strokeWidth="1.74884" strokeLinecap="round" />
-            </g>
-          </svg>
+            Low
+          </div>
+          <div 
+            className="absolute right-0 bottom-1/2 text-xs text-gray-500 font-medium"
+            style={{ right: `${labelHorizontalDistance + 2}px`, bottom: `calc(50% - 20px)` }}
+          >
+            High
+          </div>
+
+          {/* Vertical axis labels */}
+          <div 
+            className="absolute left-1/2 top-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
+            style={{ top: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+          >
+            High
+          </div>
+          <div 
+            className="absolute left-1/2 bottom-0 text-xs text-gray-500 font-medium transform -translate-x-1/2"
+            style={{ bottom: `${labelVerticalDistance}px`, left: `calc(50% + 20px)` }}
+          >
+            Low
+          </div>
 
           <TooltipProvider>
             <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">

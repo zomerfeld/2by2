@@ -70,12 +70,19 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
     >
       <div className="flex items-center gap-6 flex-1">
         <div 
-          className={`w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
-            isUnplaced && !isCompleted ? "ring-2 ring-red-500 ring-offset-1" : ""
-          }`}
-          style={{ backgroundColor: itemColor }}
+          className={
+            isCompleted 
+              ? "w-4 h-4 text-gray-700 rounded-full flex items-center justify-center font-mono text-base" 
+              : `w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
+                  isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
+                }`
+          }
+          style={{ 
+            backgroundColor: isCompleted ? '#C6C4CB' : itemColor,
+            fontSize: isCompleted ? '16px' : undefined
+          }}
         >
-          {item.number}
+          {isCompleted ? '*' : item.number}
         </div>
         {isEditing ? (
           <Input
@@ -269,9 +276,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
 
         {/* Completed Items Section */}
         {completedItems.length > 0 && (
-          <>
-            <Separator className="mx-6" />
-            <div className="p-6 pl-[0px] pr-[0px]">
+          <div className="p-6 pl-[0px] pr-[0px]">
               <div className="flex items-center justify-between mb-4 pl-[24px] pr-[24px]">
                 <h3 className="text-sm font-medium text-gray-600">Completed ({completedItems.length})</h3>
                 <button
@@ -297,8 +302,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                   isSelected={selectedItemId === item.id}
                 />
               ))}
-            </div>
-          </>
+          </div>
         )}
       </div>
       <div className="p-6 border-t border-gray-200 pl-[8px] pr-[8px] pt-[8px] pb-[8px]">

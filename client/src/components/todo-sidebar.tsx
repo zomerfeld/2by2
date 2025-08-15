@@ -64,7 +64,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         justifyContent: 'space-between',
         alignItems: 'center',
         alignSelf: 'stretch',
-        borderBottom: '1px solid #4B1700',
+        borderBottom: isCompleted ? 'none' : '1px solid #4B1700',
         background: 'var(--sds-color-background-default-default, #fff)'
       }}
     >
@@ -72,7 +72,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
         <div 
           className={
             isCompleted 
-              ? "w-4 h-4 text-gray-700 rounded-full flex items-center justify-center font-mono text-base" 
+              ? "w-5 h-5 text-white rounded-full flex items-center justify-center font-mono text-base font-bold" 
               : `w-6 h-6 text-white rounded-full flex items-center justify-center text-sm font-medium ${
                   isUnplaced ? "ring-2 ring-red-500 ring-offset-1" : ""
                 }`
@@ -95,9 +95,11 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           />
         ) : (
           <span 
-            className="flex-1 font-medium cursor-text text-gray-900 text-[14px]"
+            className={`flex-1 font-medium cursor-text text-[14px] ${
+              isCompleted ? "line-through" : ""
+            }`}
             onClick={() => !isCompleted && setIsEditing(true)}
-            style={{ color: '#4B1700' }}
+            style={{ color: isCompleted ? '#8D8997' : '#4B1700' }}
           >
             {item.text}
           </span>
@@ -118,11 +120,10 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             size="sm"
             variant="ghost"
             onClick={() => onToggleComplete(item.id, !isCompleted)}
-            className={`h-6 w-6 p-0 ${
-              isCompleted 
-                ? "text-green-600 hover:text-green-700" 
-                : "text-gray-400 hover:text-green-600"
-            }`}
+            className="h-6 w-6 p-0"
+            style={{ 
+              color: isCompleted ? '#8D8997' : '#9CA3AF'
+            }}
           >
             {isCompleted ? <Undo className="h-3 w-3" /> : <Check className="h-3 w-3" />}
           </Button>
@@ -131,7 +132,8 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
               size="sm"
               variant="ghost"
               onClick={() => setIsEditing(true)}
-              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+              className="h-6 w-6 p-0"
+              style={{ color: '#8D8997' }}
             >
               <Edit2 className="h-3 w-3" />
             </Button>
@@ -140,7 +142,10 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
             size="sm"
             variant="ghost"
             onClick={() => onDelete(item.id)}
-            className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+            className="h-6 w-6 p-0"
+            style={{ 
+              color: isCompleted ? '#8D8997' : '#9CA3AF'
+            }}
           >
             <Trash2 className="h-3 w-3" />
           </Button>

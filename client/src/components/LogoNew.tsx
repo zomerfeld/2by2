@@ -9,7 +9,7 @@ interface LogoNewProps {
 
 export default function LogoNew({ onAddClick, disabled = false }: LogoNewProps) {
   return (
-    <div className="_LogoNew_207_3282_t68kq_1 pt-[12px] pb-[12px]">
+    <div className="_LogoNew_207_3282_t68kq_1 pt-[16px] pb-[16px]">
       <div className={styles.Group_2_94_1059}>
         <img 
           src={newLogoPath} 

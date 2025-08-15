@@ -6,8 +6,9 @@
   height: auto;
   padding: 24px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
 }
 
@@ -19,8 +20,8 @@
 
 .Group_2_94_1059 {
   flex-shrink: 0;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,27 +29,28 @@
 
 @media (min-width: 810px) {
   .Group_2_94_1059 {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 }
 
 .AddButton_101_1186 {
-  padding: 12px;
+  padding: 8px 12px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
   border-radius: 8px;
   border: 2px solid #ffdccc;
   background: #cc3f00;
   box-sizing: border-box;
-  width: 100%;
-  max-width: 200px;
+  width: auto;
+  min-width: 40px;
+  height: 40px;
   display: flex;
   cursor: pointer;
   transition: all 0.2s ease;
   color: white;
   font-weight: 500;
+  flex-shrink: 0;
 }
 
 .AddButton_101_1186:hover {

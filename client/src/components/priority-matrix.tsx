@@ -249,7 +249,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
   return (
     <div 
       data-testid="MatrixArea"
-      className="h-screen p-3 custom-810:p-6 overflow-hidden flex items-center justify-center"
+      className="custom-810:h-screen pt-4 custom-810:pt-6 pb-3 custom-810:pb-6 px-3 custom-810:px-6 overflow-hidden flex items-center justify-center"
       style={{ backgroundColor: 'rgba(255, 220, 204, 0.4)' }}
     >
       <div 

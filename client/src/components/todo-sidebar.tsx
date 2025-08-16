@@ -331,7 +331,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
-                onReorder={handleReorder}
+                onReorder={item.quadrant === null ? handleReorder : undefined}
                 isCompleted={false}
                 isSelected={selectedItemId === item.id}
               />

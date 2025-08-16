@@ -77,7 +77,7 @@ export default function MatrixPage() {
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen flex flex-col custom-810:flex-row" onClick={handleContainerClick}>
         {/* Logo at top on mobile only */}
-        <div className="block custom-810:hidden p-4 flex justify-center" style={{ backgroundColor: '#7F2700' }}>
+        <div className="custom-810:hidden p-4 flex justify-center pt-[8px] pb-[8px]" style={{ backgroundColor: '#7F2700' }}>
           <div className="h-12 w-auto flex items-center">
             <img 
               src={newLogoPath} 

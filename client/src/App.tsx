@@ -13,8 +13,26 @@ function Router() {
     const initializeApp = async () => {
       // Only handle root URL redirection
       if (window.location.pathname === "/") {
-        console.log("Root URL accessed, checking for existing list...");
+        console.log("Root URL accessed, checking for session and localStorage...");
         
+        // First check if session has an existing list
+        try {
+          console.log("Checking for session list...");
+          const sessionResponse = await fetch("/api/session/list");
+          console.log("Session response status:", sessionResponse.status);
+          
+          if (sessionResponse.ok) {
+            const sessionList = await sessionResponse.json();
+            console.log("Found session list! Redirecting to:", sessionList.listId);
+            localStorage.setItem("lastListId", sessionList.listId);
+            window.location.href = `/lists/${sessionList.listId}`;
+            return;
+          }
+        } catch (error) {
+          console.log("No session list found:", error);
+        }
+        
+        // Fallback: check localStorage for existing list
         const lastListId = localStorage.getItem("lastListId");
         console.log("Found lastListId in localStorage:", lastListId);
         

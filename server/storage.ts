@@ -41,8 +41,9 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   
   // List Management
-  createList(userId?: string): Promise<string>; // Returns listId (UUID)
+  createList(sessionId?: string, userId?: string): Promise<string>; // Returns listId (UUID)
   getList(listId: string): Promise<List | undefined>;
+  getListBySessionId(sessionId: string): Promise<List | undefined>;
   updateList(listId: string, updates: Partial<InsertList>): Promise<List | undefined>;
   deleteList(listId: string): Promise<boolean>;
   
@@ -136,7 +137,7 @@ export class FileStorage implements IStorage {
     throw new Error("Maximum number of items (100) reached");
   }
 
-  async createList(): Promise<string> {
+  async createList(sessionId?: string, userId?: string): Promise<string> {
     await this.cleanupOldLists();
     
     const listId = nanoid(10);
@@ -146,6 +147,8 @@ export class FileStorage implements IStorage {
       list: {
         id: Object.keys(data.lists).length + 1,
         listId,
+        sessionId: sessionId || null,
+        userId: userId || null,
         lastUpdated: new Date(),
         xAxisLabel: "Impact",
         yAxisLabel: "Urgency",
@@ -161,6 +164,16 @@ export class FileStorage implements IStorage {
   async getList(listId: string): Promise<List | undefined> {
     const data = await this.loadData();
     return data.lists[listId]?.list;
+  }
+
+  async getListBySessionId(sessionId: string): Promise<List | undefined> {
+    const data = await this.loadData();
+    for (const listData of Object.values(data.lists)) {
+      if (listData.list.sessionId === sessionId) {
+        return listData.list;
+      }
+    }
+    return undefined;
   }
 
   async updateList(listId: string, updates: Partial<InsertList>): Promise<List | undefined> {
@@ -216,6 +229,7 @@ export class FileStorage implements IStorage {
       lastPositionX: insertItem.lastPositionX ?? null,
       lastPositionY: insertItem.lastPositionY ?? null,
       lastQuadrant: insertItem.lastQuadrant ?? null,
+      createdAt: new Date(),
     };
 
     listData.todoItems.push(item);
@@ -284,6 +298,23 @@ export class FileStorage implements IStorage {
       yAxisLabel: listData.list.yAxisLabel || "Urgency",
     };
   }
+
+  // Stub methods for authentication (not implemented in FileStorage)
+  async getUser(id: string): Promise<User | undefined> {
+    return undefined;
+  }
+
+  async upsertUser(user: UpsertUser): Promise<User> {
+    throw new Error("User management not supported in FileStorage");
+  }
+
+  async exportAllData(): Promise<any> {
+    return await this.loadData();
+  }
+
+  async importBackupData(data: any): Promise<void> {
+    await this.saveData(data);
+  }
 }
 
 // Database storage implementation using PostgreSQL
@@ -310,13 +341,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   // List Management with improved IDs
-  async createList(userId?: string): Promise<string> {
+  async createList(sessionId?: string, userId?: string): Promise<string> {
     // Generate crypto-random UUID for better security than nanoid
     const listId = crypto.randomUUID();
     const [list] = await db
       .insert(lists)
       .values({
         listId,
+        sessionId,
         userId,
         xAxisLabel: "Impact",
         yAxisLabel: "Urgency",
@@ -327,6 +359,11 @@ export class DatabaseStorage implements IStorage {
 
   async getList(listId: string): Promise<List | undefined> {
     const [list] = await db.select().from(lists).where(eq(lists.listId, listId));
+    return list || undefined;
+  }
+
+  async getListBySessionId(sessionId: string): Promise<List | undefined> {
+    const [list] = await db.select().from(lists).where(eq(lists.sessionId, sessionId));
     return list || undefined;
   }
 

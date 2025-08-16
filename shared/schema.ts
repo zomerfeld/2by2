@@ -23,6 +23,7 @@ export const users = pgTable("users", {
 export const lists = pgTable("lists", {
   id: serial("id").primaryKey(),
   listId: text("list_id").notNull().unique(), // Keep as text for now, can migrate to UUID later
+  sessionId: text("session_id"), // Session ID for device-based persistence
   userId: text("user_id"), // Optional user association for future auth
   lastUpdated: timestamp("last_updated").defaultNow().notNull(),
   xAxisLabel: text("x_axis_label").notNull().default("Impact"),
@@ -54,6 +55,8 @@ export const matrixSettings = pgTable("matrix_settings", {
 export const insertListSchema = createInsertSchema(lists).omit({
   id: true,
   lastUpdated: true,
+}).extend({
+  sessionId: z.string().optional(),
 });
 
 export const insertTodoItemSchema = z.object({

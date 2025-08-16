@@ -4,15 +4,70 @@ import { storage } from "./storage";
 import { insertTodoItemSchema, insertMatrixSettingsSchema, insertListSchema } from "@shared/schema";
 import { z } from "zod";
 
+// Extend session interface to include sessionId
+declare module 'express-session' {
+  interface SessionData {
+    sessionId: string;
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session management middleware
+  app.use((req, res, next) => {
+    if (!req.session.sessionId) {
+      req.session.sessionId = crypto.randomUUID();
+    }
+    next();
+  });
+
+  // Root route - handles session-based list management
+  app.get("/", async (req, res, next) => {
+    try {
+      const sessionId = req.session.sessionId!;
+      
+      // Check if this session already has a list
+      const existingList = await storage.getListBySessionId(sessionId);
+      
+      if (existingList) {
+        // Redirect to existing list
+        res.redirect(`/lists/${existingList.listId}`);
+        return;
+      }
+      
+      // No existing list, let frontend handle (will create new list)
+      next();
+    } catch (error) {
+      console.error("Error in root route:", error);
+      next();
+    }
+  });
+
   // List management routes
   app.post("/api/lists", async (req, res) => {
     try {
-      const listId = await storage.createList();
+      const sessionId = req.session.sessionId!;
+      const listId = await storage.createList(sessionId);
       const list = await storage.getList(listId);
       res.status(201).json({ listId, list });
     } catch (error) {
       res.status(500).json({ message: "Failed to create list" });
+    }
+  });
+
+  // Get session's current list
+  app.get("/api/session/list", async (req, res) => {
+    try {
+      const sessionId = req.session.sessionId!;
+      const list = await storage.getListBySessionId(sessionId);
+      
+      if (!list) {
+        res.status(404).json({ message: "No list found for session" });
+        return;
+      }
+      
+      res.json(list);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch session list" });
     }
   });
 

@@ -17,13 +17,12 @@ Preferred communication style: Simple, everyday language.
 - **Build Tool**: Vite
 - **UI/UX Decisions**: Full-screen peach matrix area (#FFDCCC at 40%), collapsible sidebar, interactive 2x2 matrix with transparent background and sharp corners, draggable TaskNums (32px in matrix, 24px in sidebar), external quadrant labels for clean appearance, brown theme (#7F2700 labels, #CC3F00 active tasks, #413B51 unplaced), Space Mono typography, responsive layout for various screen sizes, minimalist design focusing on core functionality.
 
-## Recent Changes (August 15, 2025)
-- **Matrix area redesign**: Full-screen peach background for dedicated workspace experience
-- **TaskNum sizing optimization**: Increased matrix TaskNums to 32px for better visibility and interaction
-- **Unplaced task indicators**: Unified #413B51 background and ring styling across sidebar and matrix
-- **Grid refinements**: Transparent matrix background, sharp corners, brown grid lines at 30% opacity
-- **Label system overhaul**: Removed inner labels, positioned quadrant labels outside matrix with consistent non-bold styling
-- **Typography upgrade**: Space Mono font implementation for clean monospace aesthetic
+## Recent Changes (August 16, 2025)
+- **Matrix sizing optimization**: Significantly improved space utilization on widescreen displays by reducing padding constraints (80px more height, 50px more width) and optimizing viewport calculations
+- **Mobile layout refinements**: Added brown separator line (#4B1700) above first todo item in stacked view for better visual hierarchy
+- **Sticky matrix behavior**: Matrix area remains fixed while sidebar scrolls on desktop (810px+) for enhanced user experience
+- **Mobile interface improvements**: Logo moved to top with brown background, matrix centered with 32px spacing, "Add New Item" button positioned above todo list
+- **Edit interface polish**: Removed edit/trash buttons from active tasks, reduced input height, borderless design with exact typography matching
 
 ### Backend
 - **Runtime**: Node.js with Express.js

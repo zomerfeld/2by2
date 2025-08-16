@@ -25,13 +25,19 @@ interface TodoItemComponentProps {
 function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
-  const { isDragging, drag } = useTodoDrag(item);
-  const { isDragging: isReorderDragging, drag: reorderDrag } = useSidebarReorderDrag(item);
+  
+  // Use sidebar reordering if onReorder is provided, otherwise use matrix drag
+  const { isDragging: matrixDragging, drag: matrixDrag } = useTodoDrag(item);
+  const { isDragging: sidebarDragging, drag: sidebarDrag } = useSidebarReorderDrag(item);
   const { isOver, canDrop, drop } = useSidebarReorderDrop(item.number, (draggedId, targetNumber) => {
     if (onReorder) {
       onReorder(draggedId, targetNumber);
     }
   });
+
+  // Choose which drag behavior to use
+  const isDragging = onReorder ? sidebarDragging : matrixDragging;
+  const dragRef = onReorder ? sidebarDrag : matrixDrag;
 
   const handleSaveEdit = () => {
     if (editText.trim() && editText !== item.text) {
@@ -55,11 +61,10 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
 
   const showCheckmarkOnly = !isCompleted && !isEditing;
 
-  // Combine refs for both drag types
+  // Combine refs for drag and drop
   const combinedRef = (el: HTMLDivElement | null) => {
     if (!isCompleted) {
-      drag(el);
-      reorderDrag(el);
+      dragRef(el);
     }
     drop(el);
   };
@@ -73,7 +78,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
-      } ${isDragging || isReorderDragging ? "opacity-50 transform rotate-1" : ""} ${
+      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
         isSelected ? "highlight-yellow" : ""
       }`}
       style={{
@@ -191,7 +196,8 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Reorder error:', error);
       toast({
         title: "Error",
         description: "Failed to reorder items",

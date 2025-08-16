@@ -78,11 +78,13 @@ export default function MatrixPage() {
       <div className="min-h-screen flex flex-col custom-810:flex-row" onClick={handleContainerClick}>
         {/* Logo at top on mobile only */}
         <div className="block custom-810:hidden p-4 flex justify-center">
-          <img 
-            src={newLogoPath} 
-            alt="Priority Matrix Logo" 
-            className="h-12 w-auto"
-          />
+          <div className="h-12 w-auto flex items-center">
+            <img 
+              src={newLogoPath} 
+              alt="Priority Matrix Logo" 
+              className="h-full w-auto object-contain"
+            />
+          </div>
         </div>
         
         {/* Matrix appears first on mobile, sidebar first on desktop */}

@@ -254,7 +254,7 @@ export function PriorityMatrix({ onItemClick, listId }: PriorityMatrixProps) {
     >
       <div 
         data-matrix-export
-        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-400px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-400px)] relative p-4 custom-810:p-8"
+        className="w-full h-full max-w-[min(100vh-200px,100vw-48px)] custom-810:max-w-[min(100vh-200px,100vw-350px)] max-h-[min(100vh-200px,100vw-48px)] custom-810:max-h-[min(100vh-200px,100vw-350px)] relative p-4 custom-810:p-8"
       >
 
 

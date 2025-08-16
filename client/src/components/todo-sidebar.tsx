@@ -290,16 +290,16 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
         {completedItems.length > 0 && (
           <div className="p-6 pl-[0px] pr-[0px]">
               <div className="flex items-center justify-between mb-4 pl-[24px] pr-[24px]">
-                <h3 
+                <h5 
                   className="font-mono uppercase"
                   style={{
                     color: 'black',
-                    fontSize: '12px',
+                    fontSize: '10px',
                     fontWeight: 400
                   }}
                 >
                   // Completed Tasks
-                </h3>
+                </h5>
                 <button
                   onClick={() => {
                     completedItems.forEach(item => {

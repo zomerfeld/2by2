@@ -295,10 +295,10 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                   style={{
                     color: 'black',
                     fontSize: '10px',
-                    fontWeight: 400
+                    fontWeight: 700
                   }}
                 >
-                  // Completed Tasks
+                  COMPLETED TASKS
                 </h5>
                 <button
                   onClick={() => {

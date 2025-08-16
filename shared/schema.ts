@@ -34,7 +34,6 @@ export const todoItems = pgTable("todo_items", {
   listId: text("list_id").notNull(), // Keep as text for compatibility
   text: text("text").notNull(),
   number: integer("number").notNull(),
-  sortOrder: real("sort_order").notNull().default(0), // For reordering without changing numbers
   positionX: real("position_x"),
   positionY: real("position_y"),
   quadrant: text("quadrant"),
@@ -64,7 +63,6 @@ export const insertTodoItemSchema = z.object({
     .trim()
     .refine(val => val.length > 0, "Task description cannot be only whitespace"),
   number: z.number().int().min(1).max(100).optional(),
-  sortOrder: z.number().optional(),
   positionX: z.number().min(0).max(1).optional().nullable(),
   positionY: z.number().min(0).max(1).optional().nullable(),
   quadrant: z.string().optional().nullable(),

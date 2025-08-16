@@ -81,9 +81,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listId } = req.params;
       const id = parseInt(req.params.id);
       const updates = req.body;
-      
-      console.log(`Updating item ${id} in list ${listId}:`, updates);
-      
       const item = await storage.updateTodoItem(listId, id, updates);
       
       if (!item) {
@@ -93,7 +90,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(item);
     } catch (error) {
-      console.error("Error updating todo item:", error);
       res.status(500).json({ message: "Failed to update todo item" });
     }
   });
@@ -112,24 +108,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete todo item" });
-    }
-  });
-
-  app.post("/api/lists/:listId/todo-items/reorder", async (req, res) => {
-    try {
-      const { listId } = req.params;
-      const { draggedId, targetNumber } = req.body;
-      
-      if (!draggedId || !targetNumber) {
-        res.status(400).json({ message: "Missing draggedId or targetNumber" });
-        return;
-      }
-      
-      await storage.reorderTodoItems(listId, draggedId, targetNumber);
-      res.status(200).json({ success: true });
-    } catch (error) {
-      console.error("Reorder error:", error);
-      res.status(500).json({ message: "Failed to reorder todo items" });
     }
   });
 

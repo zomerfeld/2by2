@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { AddTodoModal } from "./add-todo-modal";
 import { type TodoItem } from "@shared/schema";
-import { useTodoDrag, useSidebarReorderDrag, useSidebarReorderDrop } from "@/hooks/use-drag-drop";
+import { useTodoDrag } from "@/hooks/use-drag-drop";
 import { getColorForNumber } from "@/lib/colors";
 import LogoNew from "./LogoNew";
 
@@ -17,29 +17,14 @@ interface TodoItemComponentProps {
   onEdit: (id: number, text: string) => void;
   onDelete: (id: number) => void;
   onToggleComplete: (id: number, completed: boolean) => void;
-  onReorder?: (draggedId: number, targetNumber: number) => void;
   isCompleted?: boolean;
   isSelected?: boolean;
 }
 
-function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
+function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
-  
-  // Use sidebar reordering if onReorder is provided, otherwise use matrix drag
-  const { isDragging: matrixDragging, drag: matrixDrag } = useTodoDrag(item);
-  const { isDragging: sidebarDragging, drag: sidebarDrag } = useSidebarReorderDrag(item);
-  const { isOver, canDrop, drop } = useSidebarReorderDrop(item.number, (draggedId, targetNumber) => {
-    if (onReorder) {
-      onReorder(draggedId, targetNumber);
-    }
-  });
-
-  // Items not in matrix: use matrix drag for positioning
-  // Items in matrix: use matrix drag for repositioning (they can also be reordered via drop zones)
-  const isInMatrix = item.quadrant !== null;
-  const isDragging = matrixDragging || sidebarDragging;
-  const dragRef = matrixDrag;
+  const { isDragging, drag } = useTodoDrag(item);
 
   const handleSaveEdit = () => {
     if (editText.trim() && editText !== item.text) {
@@ -63,26 +48,10 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
 
   const showCheckmarkOnly = !isCompleted && !isEditing;
 
-  // Combine refs for drag and drop
-  const combinedRef = (el: HTMLDivElement | null) => {
-    if (!isCompleted) {
-      // All items use matrix drag for positioning/repositioning
-      matrixDrag(el);
-      // Items in matrix also get sidebar drag functionality for reordering
-      if (isInMatrix) {
-        sidebarDrag(el);
-      }
-    }
-    // All items get drop capability for reordering
-    drop(el);
-  };
-
   return (
     <div
-      ref={combinedRef}
+      ref={isCompleted ? undefined : drag}
       className={`transition-all relative ${
-        isOver && canDrop ? 'bg-blue-50 border-blue-200' : ''
-      } ${
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
@@ -194,26 +163,6 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     },
   });
 
-  const reorderMutation = useMutation({
-    mutationFn: async ({ draggedId, targetNumber }: { draggedId: number; targetNumber: number }) => {
-      await apiRequest("POST", `/api/lists/${listId}/todo-items/reorder`, {
-        draggedId,
-        targetNumber,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
-    },
-    onError: (error) => {
-      console.error('Reorder error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to reorder items",
-        variant: "destructive",
-      });
-    },
-  });
-
   const updateMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<TodoItem> }) => {
       const response = await apiRequest("PATCH", `/api/lists/${listId}/todo-items/${id}`, updates);
@@ -282,19 +231,10 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     updateMutation.mutate({ id, updates });
   };
 
-  const handleReorder = (draggedId: number, targetNumber: number) => {
-    reorderMutation.mutate({ draggedId, targetNumber });
-  };
-
-  // Sort by sortOrder to maintain custom order, fallback to number for older items
+  // Simple sorting: just by item number (creation order)
   const activeItems = todoItems
     .filter(item => !item.completed)
-    .sort((a, b) => {
-      // Use sortOrder if available, otherwise fallback to number
-      const aSortOrder = a.sortOrder ?? a.number;
-      const bSortOrder = b.sortOrder ?? b.number;
-      return aSortOrder - bSortOrder;
-    });
+    .sort((a, b) => a.number - b.number);
   
   const completedItems = todoItems.filter(item => item.completed);
   const existingNumbers = todoItems.map(item => item.number);
@@ -339,7 +279,6 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
-                onReorder={handleReorder}
                 isCompleted={false}
                 isSelected={selectedItemId === item.id}
               />

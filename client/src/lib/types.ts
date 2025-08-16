@@ -7,7 +7,7 @@ export type QuadrantType =
 
 export interface DragItem {
   id: number;
-  type: "todo-item" | "sidebar-reorder";
+  type: "todo-item";
   text: string;
   number: number;
 }

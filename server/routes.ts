@@ -81,6 +81,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listId } = req.params;
       const id = parseInt(req.params.id);
       const updates = req.body;
+      
+      console.log(`Updating item ${id} in list ${listId}:`, updates);
+      
       const item = await storage.updateTodoItem(listId, id, updates);
       
       if (!item) {
@@ -90,6 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(item);
     } catch (error) {
+      console.error("Error updating todo item:", error);
       res.status(500).json({ message: "Failed to update todo item" });
     }
   });

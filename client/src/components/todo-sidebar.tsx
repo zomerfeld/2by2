@@ -256,7 +256,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
         <button
           onClick={() => setShowModal(true)}
           disabled={todoItems.length >= 100}
-          className="flex w-[120px] max-h-[88px] p-3 justify-center items-center gap-2 rounded-lg border-2 bg-[#CC3F00] hover:bg-[#B03600] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 ease-in-out text-white font-medium cursor-pointer"
+          className="flex px-4 py-3 justify-center items-center gap-2 rounded-lg border-2 bg-[#CC3F00] hover:bg-[#B03600] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 ease-in-out text-white font-medium cursor-pointer text-sm"
           style={{ borderColor: '#4B1700' }}
         >
           <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center">
@@ -264,6 +264,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
               <path d="M8.50016 3.33333V12.6667M3.8335 7.99999H13.1668" stroke="#F5F5F5" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
+          Add New Item
         </button>
       </div>
 

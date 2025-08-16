@@ -35,11 +35,11 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
     }
   });
 
-  // For items not in matrix, use matrix drag for positioning
-  // For items in matrix, use sidebar drag for reordering
+  // Items not in matrix: use matrix drag for positioning
+  // Items in matrix: use matrix drag for repositioning (they can also be reordered via drop zones)
   const isInMatrix = item.quadrant !== null;
-  const isDragging = isInMatrix ? sidebarDragging : matrixDragging;
-  const dragRef = isInMatrix ? sidebarDrag : matrixDrag;
+  const isDragging = matrixDragging || sidebarDragging;
+  const dragRef = matrixDrag;
 
   const handleSaveEdit = () => {
     if (editText.trim() && editText !== item.text) {
@@ -66,8 +66,14 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
   // Combine refs for drag and drop
   const combinedRef = (el: HTMLDivElement | null) => {
     if (!isCompleted) {
-      dragRef(el);
+      // All items use matrix drag for positioning/repositioning
+      matrixDrag(el);
+      // Items in matrix also get sidebar drag functionality for reordering
+      if (isInMatrix) {
+        sidebarDrag(el);
+      }
     }
+    // All items get drop capability for reordering
     drop(el);
   };
 

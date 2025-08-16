@@ -250,13 +250,12 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           disabled={todoItems.length >= 100}
         />
       </div>
-      
       {/* Mobile Add Button - centered above todo list */}
       <div className="block custom-810:hidden p-4 flex justify-center">
         <button
           onClick={() => setShowModal(true)}
           disabled={todoItems.length >= 100}
-          className="flex px-4 py-3 justify-center items-center gap-2 rounded-lg border-2 bg-[#CC3F00] hover:bg-[#B03600] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 ease-in-out text-white font-medium cursor-pointer text-sm"
+          className="flex px-4 py-3 justify-center items-center gap-2 rounded-lg border-2 hover:bg-[#B03600] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 ease-in-out text-white font-medium cursor-pointer text-sm bg-[#CC3F00]"
           style={{ borderColor: '#4B1700' }}
         >
           <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center">
@@ -267,7 +266,6 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           Add New Item
         </button>
       </div>
-
       <div className="flex-1 overflow-y-auto">
         {/* Active Items */}
         <div className="px-6 pl-[0px] pr-[0px] pt-[0px] pb-[0px]">

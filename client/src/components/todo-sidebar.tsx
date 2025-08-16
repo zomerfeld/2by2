@@ -97,7 +97,7 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
           />
         ) : (
           <span 
-            className="flex-1 font-medium cursor-text text-[12px]"
+            className="flex-1 font-medium cursor-text text-[13px]"
             onClick={() => !isCompleted && setIsEditing(true)}
             style={{ color: isCompleted ? '#8D8997' : '#4B1700' }}
           >

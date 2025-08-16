@@ -295,7 +295,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                   style={{
                     color: 'black',
                     fontSize: '10px',
-                    fontWeight: 500
+                    fontWeight: 400
                   }}
                 >
                   COMPLETED TASKS

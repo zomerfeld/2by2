@@ -35,9 +35,11 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder
     }
   });
 
-  // Choose which drag behavior to use
-  const isDragging = onReorder ? sidebarDragging : matrixDragging;
-  const dragRef = onReorder ? sidebarDrag : matrixDrag;
+  // For items not in matrix, use matrix drag for positioning
+  // For items in matrix, use sidebar drag for reordering
+  const isInMatrix = item.quadrant !== null;
+  const isDragging = isInMatrix ? sidebarDragging : matrixDragging;
+  const dragRef = isInMatrix ? sidebarDrag : matrixDrag;
 
   const handleSaveEdit = () => {
     if (editText.trim() && editText !== item.text) {
@@ -331,7 +333,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
-                onReorder={item.quadrant === null ? handleReorder : undefined}
+                onReorder={handleReorder}
                 isCompleted={false}
                 isSelected={selectedItemId === item.id}
               />

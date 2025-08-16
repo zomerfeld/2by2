@@ -4,6 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoSidebar } from "@/components/todo-sidebar";
 import { PriorityMatrix, PriorityMatrixControls } from "@/components/priority-matrix";
 import { useParams } from "wouter";
+import newLogoPath from "@assets/newlogo_1755243319561.png";
 
 export default function MatrixPage() {
   const { listId } = useParams<{ listId: string }>();
@@ -75,6 +76,15 @@ export default function MatrixPage() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen flex flex-col custom-810:flex-row" onClick={handleContainerClick}>
+        {/* Logo at top on mobile only */}
+        <div className="block custom-810:hidden p-4 flex justify-center">
+          <img 
+            src={newLogoPath} 
+            alt="Priority Matrix Logo" 
+            className="h-12 w-auto"
+          />
+        </div>
+        
         {/* Matrix appears first on mobile, sidebar first on desktop */}
         <div className="custom-810:order-2 custom-810:flex-1 custom-810:sticky custom-810:top-0 custom-810:h-screen">
           <PriorityMatrix onItemClick={handleItemClick} listId={listId} />

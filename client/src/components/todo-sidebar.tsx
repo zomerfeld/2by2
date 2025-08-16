@@ -243,11 +243,28 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
 
   return (
     <div className="w-full custom-810:w-80 bg-white border-b custom-810:border-b-0 custom-810:border-r border-gray-200 flex flex-col custom-810:h-full">
-      {/* New Header Design */}
-      <LogoNew 
-        onAddClick={() => setShowModal(true)} 
-        disabled={todoItems.length >= 100}
-      />
+      {/* Logo Header - Desktop only */}
+      <div className="hidden custom-810:block">
+        <LogoNew 
+          onAddClick={() => setShowModal(true)} 
+          disabled={todoItems.length >= 100}
+        />
+      </div>
+      
+      {/* Mobile Add Button - centered above todo list */}
+      <div className="block custom-810:hidden p-4 flex justify-center">
+        <button
+          onClick={() => setShowModal(true)}
+          disabled={todoItems.length >= 100}
+          className="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 3.33333V12.6667M3.33333 8H12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Add New Item
+        </button>
+      </div>
+
       <div className="flex-1 overflow-y-auto">
         {/* Active Items */}
         <div className="px-6 pl-[0px] pr-[0px] pt-[0px] pb-[0px]">

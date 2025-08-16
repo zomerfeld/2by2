@@ -403,7 +403,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(todoItems)
       .where(eq(todoItems.listId, listId))
-      .orderBy(todoItems.number);
+      .orderBy(todoItems.sortOrder, todoItems.id);
   }
 
   async getTodoItem(listId: string, id: number): Promise<TodoItem | undefined> {
@@ -422,12 +422,20 @@ export class DatabaseStorage implements IStorage {
       itemNumber = this.getNextAvailableNumber(existingItems);
     }
 
+    // Get existing items to find highest sortOrder and add to end
+    const existingItems = await this.getTodoItems(listId);
+    const maxSortOrder = existingItems.length > 0 
+      ? Math.max(...existingItems.map(item => item.sortOrder || 0))
+      : 0;
+    const sortOrder = maxSortOrder + 1;
+
     const [item] = await db
       .insert(todoItems)
       .values({
         listId,
         text: insertItem.text,
         number: itemNumber,
+        sortOrder,
         positionX: insertItem.positionX || null,
         positionY: insertItem.positionY || null,
         quadrant: insertItem.quadrant || null,
@@ -482,37 +490,64 @@ export class DatabaseStorage implements IStorage {
   }
 
   async reorderTodoItems(listId: string, draggedId: number, targetNumber: number): Promise<void> {
-    // Get all todo items for this list
-    const items = await this.getTodoItems(listId);
-    const draggedItem = items.find(item => item.id === draggedId);
+    // Get all todo items for this list, sorted by current sortOrder
+    const items = await db
+      .select()
+      .from(todoItems)
+      .where(eq(todoItems.listId, listId))
+      .orderBy(todoItems.sortOrder, todoItems.id);
     
-    if (!draggedItem) {
-      throw new Error(`Todo item ${draggedId} not found`);
+    const draggedItem = items.find(item => item.id === draggedId);
+    const targetItem = items.find(item => item.number === targetNumber);
+    
+    if (!draggedItem || !targetItem) {
+      throw new Error(`Todo item not found`);
     }
 
-    const currentNumber = draggedItem.number;
-    
-    // If target number is the same, no need to reorder
-    if (currentNumber === targetNumber) {
+    // If it's the same item, no need to reorder
+    if (draggedItem.id === targetItem.id) {
       return;
     }
 
-    // Find the item that currently has the target number
-    const targetItem = items.find(item => item.number === targetNumber);
+    // Get the target item's current sortOrder
+    const targetSortOrder = targetItem.sortOrder;
     
-    if (targetItem) {
-      // Swap the numbers
-      await db
-        .update(todoItems)
-        .set({ number: currentNumber })
-        .where(sql`${todoItems.id} = ${targetItem.id} AND ${todoItems.listId} = ${listId}`);
-    }
-
-    // Update the dragged item to have the target number
+    // Move the dragged item to the target position
     await db
       .update(todoItems)
-      .set({ number: targetNumber })
+      .set({ sortOrder: targetSortOrder })
       .where(sql`${todoItems.id} = ${draggedId} AND ${todoItems.listId} = ${listId}`);
+
+    // Update all other items' sortOrder to maintain proper order
+    // If moving up (draggedItem.sortOrder > targetSortOrder), shift items down
+    // If moving down (draggedItem.sortOrder < targetSortOrder), shift items up
+    if (draggedItem.sortOrder > targetSortOrder) {
+      // Moving up - shift other items down
+      await db
+        .update(todoItems)
+        .set({ 
+          sortOrder: sql`${todoItems.sortOrder} + 1`
+        })
+        .where(sql`
+          ${todoItems.listId} = ${listId} 
+          AND ${todoItems.id} != ${draggedId}
+          AND ${todoItems.sortOrder} >= ${targetSortOrder}
+          AND ${todoItems.sortOrder} < ${draggedItem.sortOrder}
+        `);
+    } else {
+      // Moving down - shift other items up
+      await db
+        .update(todoItems)
+        .set({ 
+          sortOrder: sql`${todoItems.sortOrder} - 1`
+        })
+        .where(sql`
+          ${todoItems.listId} = ${listId} 
+          AND ${todoItems.id} != ${draggedId}
+          AND ${todoItems.sortOrder} <= ${targetSortOrder}
+          AND ${todoItems.sortOrder} > ${draggedItem.sortOrder}
+        `);
+    }
 
     // Update list timestamp
     await db

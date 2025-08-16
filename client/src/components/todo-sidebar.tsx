@@ -278,10 +278,15 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     reorderMutation.mutate({ draggedId, targetNumber });
   };
 
-  // Simple sorting: just by item number (creation order)
+  // Sort by sortOrder to maintain custom order, fallback to number for older items
   const activeItems = todoItems
     .filter(item => !item.completed)
-    .sort((a, b) => a.number - b.number);
+    .sort((a, b) => {
+      // Use sortOrder if available, otherwise fallback to number
+      const aSortOrder = a.sortOrder ?? a.number;
+      const bSortOrder = b.sortOrder ?? b.number;
+      return aSortOrder - bSortOrder;
+    });
   
   const completedItems = todoItems.filter(item => item.completed);
   const existingNumbers = todoItems.map(item => item.number);

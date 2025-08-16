@@ -34,6 +34,7 @@ export const todoItems = pgTable("todo_items", {
   listId: text("list_id").notNull(), // Keep as text for compatibility
   text: text("text").notNull(),
   number: integer("number").notNull(),
+  sortOrder: real("sort_order").notNull().default(0), // For reordering without changing numbers
   positionX: real("position_x"),
   positionY: real("position_y"),
   quadrant: text("quadrant"),

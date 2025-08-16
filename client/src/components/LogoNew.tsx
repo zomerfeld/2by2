@@ -14,7 +14,7 @@ export default function LogoNew({ onAddClick, disabled = false }: LogoNewProps) 
         <img 
           src={newLogoPath} 
           alt="Priority Matrix Logo" 
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          style={{ width: '100%', height: '100%', objectFit: 'contain', marginTop: '-1px' }}
         />
       </div>
       <button 

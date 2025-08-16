@@ -268,7 +268,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
       </div>
       <div className="flex-1 overflow-y-auto">
         {/* Active Items */}
-        <div className="px-6 pl-[0px] pr-[0px] pt-[0px] pb-[0px] border-t custom-810:border-t-0 border-gray-200">
+        <div className="px-6 pl-[0px] pr-[0px] pt-[0px] pb-[0px] border-t custom-810:border-t-0" style={{ borderColor: '#4B1700' }}>
           {isLoading ? (
             <div className="text-center text-gray-500">Loading...</div>
           ) : activeItems.length === 0 ? (

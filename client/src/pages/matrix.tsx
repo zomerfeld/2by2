@@ -76,10 +76,10 @@ export default function MatrixPage() {
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen flex flex-col custom-810:flex-row" onClick={handleContainerClick}>
         {/* Matrix appears first on mobile, sidebar first on desktop */}
-        <div className="custom-810:order-2 custom-810:flex-1">
+        <div className="custom-810:order-2 custom-810:flex-1 custom-810:sticky custom-810:top-0 custom-810:h-screen">
           <PriorityMatrix onItemClick={handleItemClick} listId={listId} />
         </div>
-        <div className="custom-810:order-1 w-full custom-810:w-80 flex-shrink-0">
+        <div className="custom-810:order-1 w-full custom-810:w-80 flex-shrink-0 custom-810:overflow-y-auto custom-810:h-screen">
           <TodoSidebar selectedItemId={selectedItemId} listId={listId} />
         </div>
       </div>

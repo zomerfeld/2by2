@@ -51,3 +51,40 @@ export const useQuadrantDrop = (
 
   return { isOver, canDrop, drop: dropRef };
 };
+
+export const useSidebarReorderDrag = (item: TodoItem) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "sidebar-reorder",
+    item: {
+      id: item.id,
+      type: "sidebar-reorder" as const,
+      text: item.text,
+      number: item.number,
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return { isDragging, drag };
+};
+
+export const useSidebarReorderDrop = (
+  targetNumber: number,
+  onReorder: (draggedId: number, targetNumber: number) => void
+) => {
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+    accept: "sidebar-reorder",
+    drop: (item: DragItem) => {
+      if (item.number !== targetNumber) {
+        onReorder(item.id, targetNumber);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
+
+  return { isOver, canDrop, drop };
+};

@@ -111,6 +111,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/lists/:listId/todo-items/reorder", async (req, res) => {
+    try {
+      const { listId } = req.params;
+      const { draggedId, targetNumber } = req.body;
+      
+      if (!draggedId || !targetNumber) {
+        res.status(400).json({ message: "Missing draggedId or targetNumber" });
+        return;
+      }
+      
+      await storage.reorderTodoItems(listId, draggedId, targetNumber);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Reorder error:", error);
+      res.status(500).json({ message: "Failed to reorder todo items" });
+    }
+  });
+
   // Matrix Settings routes (with listId)
   app.get("/api/lists/:listId/matrix-settings", async (req, res) => {
     try {

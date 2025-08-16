@@ -52,6 +52,7 @@ export interface IStorage {
   createTodoItem(listId: string, item: InsertTodoItem): Promise<TodoItem>;
   updateTodoItem(listId: string, id: number, updates: Partial<InsertTodoItem>): Promise<TodoItem | undefined>;
   deleteTodoItem(listId: string, id: number): Promise<boolean>;
+  reorderTodoItems(listId: string, draggedId: number, targetNumber: number): Promise<void>;
   
   // Matrix Settings (now part of list)
   getMatrixSettings(listId: string): Promise<MatrixSettings>;
@@ -136,7 +137,7 @@ export class FileStorage implements IStorage {
     throw new Error("Maximum number of items (100) reached");
   }
 
-  async createList(): Promise<string> {
+  async createList(userId?: string): Promise<string> {
     await this.cleanupOldLists();
     
     const listId = nanoid(10);
@@ -146,6 +147,7 @@ export class FileStorage implements IStorage {
       list: {
         id: Object.keys(data.lists).length + 1,
         listId,
+        userId: userId || null,
         lastUpdated: new Date(),
         xAxisLabel: "Impact",
         yAxisLabel: "Urgency",
@@ -216,6 +218,7 @@ export class FileStorage implements IStorage {
       lastPositionX: insertItem.lastPositionX ?? null,
       lastPositionY: insertItem.lastPositionY ?? null,
       lastQuadrant: insertItem.lastQuadrant ?? null,
+      createdAt: new Date(),
     };
 
     listData.todoItems.push(item);
@@ -283,6 +286,50 @@ export class FileStorage implements IStorage {
       xAxisLabel: listData.list.xAxisLabel || "Impact",
       yAxisLabel: listData.list.yAxisLabel || "Urgency",
     };
+  }
+
+  // User Management (stub implementation for FileStorage)
+  async getUser(id: string): Promise<User | undefined> {
+    // FileStorage doesn't support user management
+    return undefined;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    // FileStorage doesn't support user management
+    throw new Error("User management not supported in FileStorage");
+  }
+
+  async reorderTodoItems(listId: string, draggedId: number, targetNumber: number): Promise<void> {
+    const data = await this.loadData();
+    const listData = data.lists[listId];
+    if (!listData) throw new Error(`List ${listId} not found`);
+
+    const draggedItem = listData.todoItems.find(item => item.id === draggedId);
+    if (!draggedItem) throw new Error(`Todo item ${draggedId} not found`);
+
+    const currentNumber = draggedItem.number;
+    if (currentNumber === targetNumber) return;
+
+    // Find the item that currently has the target number
+    const targetItem = listData.todoItems.find(item => item.number === targetNumber);
+    
+    if (targetItem) {
+      // Swap the numbers
+      targetItem.number = currentNumber;
+    }
+
+    // Update the dragged item to have the target number
+    draggedItem.number = targetNumber;
+    listData.list.lastUpdated = new Date();
+    await this.saveData(data);
+  }
+
+  async exportAllData(): Promise<any> {
+    return await this.loadData();
+  }
+
+  async importBackupData(data: any): Promise<void> {
+    await this.saveData(data);
   }
 }
 
@@ -432,6 +479,46 @@ export class DatabaseStorage implements IStorage {
       return true;
     }
     return false;
+  }
+
+  async reorderTodoItems(listId: string, draggedId: number, targetNumber: number): Promise<void> {
+    // Get all todo items for this list
+    const items = await this.getTodoItems(listId);
+    const draggedItem = items.find(item => item.id === draggedId);
+    
+    if (!draggedItem) {
+      throw new Error(`Todo item ${draggedId} not found`);
+    }
+
+    const currentNumber = draggedItem.number;
+    
+    // If target number is the same, no need to reorder
+    if (currentNumber === targetNumber) {
+      return;
+    }
+
+    // Find the item that currently has the target number
+    const targetItem = items.find(item => item.number === targetNumber);
+    
+    if (targetItem) {
+      // Swap the numbers
+      await db
+        .update(todoItems)
+        .set({ number: currentNumber })
+        .where(sql`${todoItems.id} = ${targetItem.id} AND ${todoItems.listId} = ${listId}`);
+    }
+
+    // Update the dragged item to have the target number
+    await db
+      .update(todoItems)
+      .set({ number: targetNumber })
+      .where(sql`${todoItems.id} = ${draggedId} AND ${todoItems.listId} = ${listId}`);
+
+    // Update list timestamp
+    await db
+      .update(lists)
+      .set({ lastUpdated: new Date() })
+      .where(eq(lists.listId, listId));
   }
 
   // Matrix Settings

@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { AddTodoModal } from "./add-todo-modal";
 import { type TodoItem } from "@shared/schema";
-import { useTodoDrag } from "@/hooks/use-drag-drop";
+import { useTodoDrag, useSidebarReorderDrag, useSidebarReorderDrop } from "@/hooks/use-drag-drop";
 import { getColorForNumber } from "@/lib/colors";
 import LogoNew from "./LogoNew";
 
@@ -17,14 +17,21 @@ interface TodoItemComponentProps {
   onEdit: (id: number, text: string) => void;
   onDelete: (id: number) => void;
   onToggleComplete: (id: number, completed: boolean) => void;
+  onReorder?: (draggedId: number, targetNumber: number) => void;
   isCompleted?: boolean;
   isSelected?: boolean;
 }
 
-function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
+function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, onReorder, isCompleted = false, isSelected = false }: TodoItemComponentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
   const { isDragging, drag } = useTodoDrag(item);
+  const { isDragging: isReorderDragging, drag: reorderDrag } = useSidebarReorderDrag(item);
+  const { isOver, canDrop, drop } = useSidebarReorderDrop(item.number, (draggedId, targetNumber) => {
+    if (onReorder) {
+      onReorder(draggedId, targetNumber);
+    }
+  });
 
   const handleSaveEdit = () => {
     if (editText.trim() && editText !== item.text) {
@@ -48,14 +55,25 @@ function TodoItemComponent({ item, onEdit, onDelete, onToggleComplete, isComplet
 
   const showCheckmarkOnly = !isCompleted && !isEditing;
 
+  // Combine refs for both drag types
+  const combinedRef = (el: HTMLDivElement | null) => {
+    if (!isCompleted) {
+      drag(el);
+      reorderDrag(el);
+    }
+    drop(el);
+  };
+
   return (
     <div
-      ref={isCompleted ? undefined : drag}
+      ref={combinedRef}
       className={`transition-all relative ${
+        isOver && canDrop ? 'bg-blue-50 border-blue-200' : ''
+      } ${
         isCompleted 
           ? "opacity-75" 
           : "cursor-move"
-      } ${isDragging ? "opacity-50 transform rotate-1" : ""} ${
+      } ${isDragging || isReorderDragging ? "opacity-50 transform rotate-1" : ""} ${
         isSelected ? "highlight-yellow" : ""
       }`}
       style={{
@@ -163,6 +181,25 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     },
   });
 
+  const reorderMutation = useMutation({
+    mutationFn: async ({ draggedId, targetNumber }: { draggedId: number; targetNumber: number }) => {
+      await apiRequest("POST", `/api/lists/${listId}/todo-items/reorder`, {
+        draggedId,
+        targetNumber,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/lists", listId, "todo-items"] });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to reorder items",
+        variant: "destructive",
+      });
+    },
+  });
+
   const updateMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<TodoItem> }) => {
       const response = await apiRequest("PATCH", `/api/lists/${listId}/todo-items/${id}`, updates);
@@ -231,6 +268,10 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
     updateMutation.mutate({ id, updates });
   };
 
+  const handleReorder = (draggedId: number, targetNumber: number) => {
+    reorderMutation.mutate({ draggedId, targetNumber });
+  };
+
   // Simple sorting: just by item number (creation order)
   const activeItems = todoItems
     .filter(item => !item.completed)
@@ -279,6 +320,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
+                onReorder={handleReorder}
                 isCompleted={false}
                 isSelected={selectedItemId === item.id}
               />

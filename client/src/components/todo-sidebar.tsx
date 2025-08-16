@@ -270,7 +270,7 @@ export function TodoSidebar({ selectedItemId, listId }: TodoSidebarProps) {
           {isLoading ? (
             <div className="text-center text-gray-500">Loading...</div>
           ) : activeItems.length === 0 ? (
-            <div className="text-center text-gray-500">No active items</div>
+            <div className="text-center text-gray-500 pt-[8px] pb-[8px]">No active items</div>
           ) : (
             activeItems.map((item) => (
               <TodoItemComponent

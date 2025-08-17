@@ -22,16 +22,27 @@ app.use(session({
   }
 }));
 
-// Serve favicon and related files with correct MIME types
+// Serve favicon and related files with correct MIME types and cache-busting
 app.get('/favicon.svg', (req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(process.cwd(), 'favicon.svg'));
+});
+
+app.get('/favicon.ico', (req, res) => {
+  res.setHeader('Content-Type', 'image/x-icon');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Expires', '0');
+  res.sendFile(path.join(process.cwd(), 'favicon.ico'));
 });
 
 // Serve PNG favicons
 app.get('/favicon-:size.png', (req, res) => {
   const { size } = req.params;
   res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(process.cwd(), `favicon-${size}.png`));
 });
 
@@ -39,6 +50,8 @@ app.get('/favicon-:size.png', (req, res) => {
 app.get('/apple-touch-icon-:size.png', (req, res) => {
   const { size } = req.params;
   res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(process.cwd(), `apple-touch-icon-${size}.png`));
 });
 

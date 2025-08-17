@@ -1,4 +1,4 @@
-# Priority Matrix - Task Prioritization Tool
+# 2by2 - To Do List
 
 ## Overview
 Priority Matrix is a full-stack web application designed to help users prioritize tasks using a visual 2x2 matrix. It enables users to create up to 100 tasks and drag them across customizable urgency and impact axes. Key capabilities include multi-user support with shareable URLs, a collapsible sidebar, an intelligent number reuse system, and comprehensive export options (JSON, PDF, PNG). The project aims to provide an intuitive and efficient tool for personal and professional task management, enhancing productivity through visual prioritization.

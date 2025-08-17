@@ -22,10 +22,24 @@ app.use(session({
   }
 }));
 
-// Serve favicon with correct MIME type
+// Serve favicon and related files with correct MIME types
 app.get('/favicon.svg', (req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
   res.sendFile(path.join(process.cwd(), 'favicon.svg'));
+});
+
+// Serve PNG favicons
+app.get('/favicon-:size.png', (req, res) => {
+  const { size } = req.params;
+  res.setHeader('Content-Type', 'image/png');
+  res.sendFile(path.join(process.cwd(), `favicon-${size}.png`));
+});
+
+// Serve Apple Touch icons
+app.get('/apple-touch-icon-:size.png', (req, res) => {
+  const { size } = req.params;
+  res.setHeader('Content-Type', 'image/png');
+  res.sendFile(path.join(process.cwd(), `apple-touch-icon-${size}.png`));
 });
 
 app.use((req, res, next) => {
